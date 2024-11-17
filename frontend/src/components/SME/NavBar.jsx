@@ -47,7 +47,7 @@ export const NavBar = () => {
             <div className="space-y-2">
               {/* Notifications */}
               <div className="flex items-center gap-2 p-2 rounded-md hover-item">
-                <div className="w-[7px] h-[7px] absolute bg-red-600 rounded mt-[-10px] ml-[12px]"></div>
+                <div className="w-[7px] h-[7px] absolute bg-[#E74C3C] rounded mt-[-10px] ml-[13px]"></div>
                 <IoMdNotificationsOutline className="font" size={22} />
                 <span className="text-sm font-medium">Notifications</span>
               </div>
