@@ -1,4 +1,5 @@
 import React from 'react'
+import "../../App.css";
 import { IoIosNotifications } from "react-icons/io";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { FiDownload } from "react-icons/fi";
@@ -8,7 +9,7 @@ import { RiSpeedUpLine } from "react-icons/ri";
 
 export const Dashboard = () => {
   return (
-    <div className="bg-[#e9e9e9] min-h-[100%] h-full text-[#333333]">
+    <div className="bg-[#f7f7f7] min-h-[100%] h-full text-[#333333]">
     {/* Header */}
     <div className="flex justify-between bg-white items-center mb-[15px] rounded-[10px] p-[10px] px-[15px]">
       <div>
@@ -31,9 +32,9 @@ export const Dashboard = () => {
     </div>
 
     {/* Grid Layout */}
-    <div className="grid grid-cols-1 w-full md:grid-cols-2 lg:grid-cols-3 gap-[15px]" style={{ height: '87%' }}>
+    <div className="grid grid-cols-1 scrollbar-container w-full h-full md:grid-cols-2 lg:grid-cols-3 gap-[15px] overflow-y-auto" style={{ height: '87%' }}>
       {/* Credit Overview */}
-      <div className="flex flex-col bg-white p-4 rounded-lg shadow-md h-full">
+      <div className="flex flex-col bg-white p-4 rounded-lg shadow-sm h-full">
         {/* Header Section */}
         <div className="flex flex-row justify-between items-center mb-2">
           <div className="flex items-center">
@@ -82,7 +83,7 @@ export const Dashboard = () => {
       </div>
 
       {/* Score */}
-      <div className="bg-white p-4 rounded-lg shadow-md">
+      <div className="bg-white p-4 rounded-lg shadow-sm">
         {/* Header Section */}
         <div className="flex flex-row justify-between items-center mb-2">
           <div className="flex items-center">
@@ -115,7 +116,7 @@ export const Dashboard = () => {
       </div>
 
       {/* Payments */}
-      <div className="bg-white p-4 rounded-lg shadow-md">
+      <div className="bg-white p-4 rounded-lg shadow-sm">
         <h2 className="text-gray-500 font-medium mb-2">Payments</h2>
         <ul className="space-y-2">
           <li className="flex justify-between">
@@ -141,11 +142,20 @@ export const Dashboard = () => {
       </div>
 
       {/* Recent Transactions */}
-      <div className="col-span-2 md:col-span-1 bg-white p-4 rounded-lg shadow-md">
-        <h2 className="text-gray-500 font-medium mb-2">Recent Transactions</h2>
+      <div className="flex flex-col justify-between col-span-2 md:col-span-1 bg-white p-4 rounded-lg shadow-sm">
+        {/* Header Section */}
+        <div className="flex flex-row justify-between items-center mb-2">
+          <div className="flex items-center">
+            <h2 className="text-gray-600 text-[14px] font-medium">Recent Transactions</h2>
+          </div>
+          <div className="flex justify-center items-center hover:cursor-pointer w-[25px] h-[25px] hover:bg-gray-100 rounded-full">
+            <MdNavigateNext size={20} className="text-gray-600" />
+          </div>
+        </div>
+        
         <table className="w-full text-sm text-left">
           <thead>
-            <tr className="text-gray-500">
+            <tr className="text-gray-500 border-b-[1px] border-b-gray-200">
               <th>Name</th>
               <th>Date</th>
               <th>Amount</th>
@@ -174,13 +184,13 @@ export const Dashboard = () => {
             </tr>
           </tbody>
         </table>
-        <button className="mt-4 bg-blue-500 text-white w-full py-2 rounded-lg hover:bg-blue-600">
+        <button className="mt-4 bg-[#1E88E5] text-white w-full py-2 rounded-lg hover:bg-blue-600">
           Show all transactions
         </button>
       </div>
 
       {/* Financial Insight */}
-      <div className="col-span-2 h-full bg-white p-4 rounded-lg shadow-md">
+      <div className="col-span-2 h-full bg-white p-4 rounded-lg shadow-sm">
         <h2 className="text-gray-500 font-medium mb-2">Financial Insight</h2>
         <p className="text-3xl font-bold mb-2">R105 385.40</p>
         <p className="text-sm text-green-500 mb-4">↑ 3.8%</p>
