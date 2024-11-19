@@ -7,6 +7,7 @@ import { TbCreditCardPay } from "react-icons/tb";
 import { MdNavigateNext } from "react-icons/md";
 import { RiSpeedUpLine } from "react-icons/ri";
 import { IoCalendarClearOutline } from "react-icons/io5";
+import { MdOutlineRestore } from "react-icons/md";
 import ReactApexChart from 'react-apexcharts';
 import ApexCharts from 'apexcharts';
 
@@ -152,7 +153,7 @@ export const Dashboard = () => {
         </div>
 
         {/* Divider */}
-        <div className="w-full h-[1px] bg-[#e3e4e7] rounded"></div>
+        <div className="w-full h-[1px] bg-[#F4F4F4] rounded"></div>
 
         {/* Balance Text */}
         <p className="text-[25px] text-[#1E88E5] font-medium my-2">R16 480.50</p>
@@ -201,7 +202,7 @@ export const Dashboard = () => {
         </div>
 
         {/* Divider */}
-        <div className="w-full h-[1px] bg-[#e3e4e7] rounded"></div>
+        <div className="w-full h-[1px] bg-[#F4F4F4] rounded"></div>
         <div className="flex flex-col justify-between mt-[7px]">
           <div className="flex flex-row mt-[4px]">
             <div className="flex items-center justify-center w-[90px] h-[38px] border-[1px] border-[#e3e4e7] text-[16px] rounded-lg mr-[8px]">
@@ -304,12 +305,12 @@ export const Dashboard = () => {
             </div>
           </div>
           {/* Divider */}
-          <div className="w-full h-[1px] bg-[#e3e4e7] rounded"></div>
+          <div className="w-full h-[1px] bg-[#F4F4F4] rounded"></div>
         </div>
 
         <ul className="mt-[8px]">
           {Array(4).fill(null).map((_, index) => (
-            <li className="flex justify-between items-center h-[40px] font-normal border-b-[1px] border-b-[#e3e4e7] text-[15px] hover:bg-gray-100 hover:cursor-pointer">
+            <li className="flex justify-between items-center h-[40px] font-normal border-b-[1px] border-b-[#F4F4F4] text-[15px] hover:bg-gray-100 hover:cursor-pointer">
             <div className="flex flex-rol items-center">
               <div className="flex" style={{ position: 'relative' }}>
                 <div className="w-[20px] h-[20px]" style={{ position: 'relative' }}>
@@ -346,6 +347,7 @@ export const Dashboard = () => {
         {/* Header Section */}
         <div className="flex flex-row justify-between items-center mb-2">
           <div className="flex items-center">
+            <MdOutlineRestore className="text-gray-600 mr-[6px]" size={22} />
             <h2 className="text-gray-600 text-[14px] font-medium">Recent Transactions</h2>
           </div>
           <div className="flex justify-center items-center hover:cursor-pointer w-[25px] h-[25px] hover:bg-gray-100 rounded-full">
@@ -384,7 +386,7 @@ export const Dashboard = () => {
           </thead>
           
           <tbody className="font-normal text-sm">
-            {Array(4).fill(null).map((_, index) => (
+            {Array(5).fill(null).map((_, index) => (
               <tr className="font-normal text-[12px]">
                 <td className="pt-[5px]">Pick n Pay</td>
                 <td className="pt-[5px]">7 Nov 2024</td>
