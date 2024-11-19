@@ -34,9 +34,10 @@ const TransactionsPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-6 space-y-6">
+        {/* Header Card */}
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-semibold text-black">Transactions</h1>
               <p className="text-gray-500 text-sm">View all transactions</p>
@@ -53,7 +54,10 @@ const TransactionsPage = () => {
               </button>
             </div>
           </div>
+        </div>
 
+        {/* Table Card */}
+        <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-medium text-black">Transactions List</h2>
             <button className="flex items-center gap-2 px-3 py-1 border rounded-lg hover:bg-gray-50">
@@ -62,70 +66,78 @@ const TransactionsPage = () => {
             </button>
           </div>
 
-          <div className="mb-4 flex items-center gap-4">
-            <div className="flex border rounded-lg overflow-hidden">
-              <button className="px-3 py-1 text-xs text-gray-600 border-r hover:bg-gray-100 flex-1">All</button>
-              <button className="px-3 py-1 text-xs text-gray-600 border-r hover:bg-gray-100 flex-1">Credit</button>
-              <button className="px-3 py-1 text-xs text-gray-600 hover:bg-gray-100 flex-1">Debit</button>
+          {/* First horizontal line */}
+          <div className="w-full h-px bg-gray-200 mb-4"></div>
+
+          <div className="mb-4 flex flex-col gap-4">
+            <div className="flex items-center gap-4">
+              <div className="flex border rounded-lg overflow-hidden">
+                <button className="px-3 py-1 text-xs text-gray-600 border-r hover:bg-gray-100 flex-1">All</button>
+                <button className="px-3 py-1 text-xs text-gray-600 border-r hover:bg-gray-100 flex-1">Credit</button>
+                <button className="px-3 py-1 text-xs text-gray-600 hover:bg-gray-100 flex-1">Debit</button>
+              </div>
+              <div className="relative flex-grow pr-6">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="pl-9 pr-6 py-2 border rounded-lg w-full text-sm"
+                />
+              </div>
+              <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50">
+                <Filter className="w-4 h-4" />
+                <span className="text-sm">Filters</span>
+              </button>
             </div>
-            <div className="flex">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search"
-                className="pl-9 pr-4 py-2 border rounded-lg w-full text-sm"
-              />
-            </div>
-            <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50">
-              <Filter className="w-4 h-4" />
-              <span className="text-sm">Filters</span>
-            </button>
           </div>
+
+          {/* Second horizontal line */}
+          <div className="w-full h-px bg-gray-200 mb-4"></div>
 
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="text-left text-gray-500 border-b">
+                <tr className="text-left text-gray-500 border-b border-gray-200">
                   <th className="pb-4 pr-4">
                     <input type="checkbox" className="rounded" />
                   </th>
-                  <th className="pb-4 text-sm text-black">
+                  <th className="pb-4 text-sm text-black font-normal">
                     <div className="flex items-center gap-2">
                       Name/Company
                       <ArrowUpDown className="w-4 h-4" />
                     </div>
                   </th>
-                  <th className="pb-4 text-sm text-black">
+                  <th className="pb-4 text-sm text-black font-normal">
                     <div className="flex items-center gap-2">
                       Date
                       <ArrowUpDown className="w-4 h-4" />
                     </div>
                   </th>
-                  <th className="pb-4 text-sm text-black">
+                  <th className="pb-4 text-sm text-black font-normal">
                     <div className="flex items-center gap-2">
                       Type
                       <ArrowUpDown className="w-4 h-4" />
                     </div>
                   </th>
-                  <th className="pb-4 text-sm text-black">
+                  <th className="pb-4 text-sm text-black font-normal">
                     <div className="flex items-center gap-2">
                       Invoice ID
                       <ArrowUpDown className="w-4 h-4" />
                     </div>
                   </th>
-                  <th className="pb-4 text-sm text-black">
+                  <th className="pb-4 text-sm text-black font-normal">
                     <div className="flex items-center gap-2">
                       Fees
                       <ArrowUpDown className="w-4 h-4" />
                     </div>
                   </th>
-                  <th className="pb-4 text-sm text-black">
+                  <th className="pb-4 text-sm text-black font-normal">
                     <div className="flex items-center gap-2">
                       Amount
                       <ArrowUpDown className="w-4 h-4" />
                     </div>
                   </th>
-                  <th className="pb-4 text-sm text-black">
+                  <th className="pb-4 text-sm text-black font-normal">
                     <div className="flex items-center gap-2">
                       Status
                       <ArrowUpDown className="w-4 h-4" />
@@ -135,7 +147,7 @@ const TransactionsPage = () => {
               </thead>
               <tbody>
                 {transactions.map((transaction) => (
-                  <tr key={transaction.id} className="border-b">
+                  <tr key={transaction.id} className="border-b border-gray-200">
                     <td className="py-4 pr-4">
                       <input type="checkbox" className="rounded" />
                     </td>
