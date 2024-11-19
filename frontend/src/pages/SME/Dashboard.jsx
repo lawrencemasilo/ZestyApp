@@ -329,7 +329,7 @@ export const Dashboard = () => {
                   </span>
                 </div>
               </div>
-              <span className="text-[14px] ml-[8px]">BNPL</span>
+              <span className="text-[14px] ml-[10px]">BNPL</span>
               <span className="text-gray-500 text-[13px] ml-[2px]">(Bi-Monthly)</span>
             </div>
             <span className="text-red-500 text-[14px]">-R1 570.00</span>
@@ -375,7 +375,7 @@ export const Dashboard = () => {
               </div>
             </th>
             <th className="font-normal text-left pb-1">
-              <div className="flex flex-row items-center hover:cursor-pointer">
+              <div className="flex flex-row justify-end items-center hover:cursor-pointer">
                 Amount
                 <span>
                   <MdNavigateNext size={15} className="text-gray-400 rotate-90 mt-[1px]" />
@@ -390,7 +390,11 @@ export const Dashboard = () => {
               <tr className="font-normal text-[12px]">
                 <td className="pt-[5px]">Pick n Pay</td>
                 <td className="pt-[5px]">7 Nov 2024</td>
-                <td className="text-red-500 pt-[5px]">-R1 220.40</td>
+                <td className="text-red-500 pt-[5px]">
+                  <div className="flex justify-end item-center">
+                    -R1 220.40
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
