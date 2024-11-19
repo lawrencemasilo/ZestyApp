@@ -1,7 +1,8 @@
 import React from 'react'
 
-export const Suppliers = () => {
+ function Suppliers() {
   return (
     <div>Suppliers</div>
   )
 }
+export default Suppliers

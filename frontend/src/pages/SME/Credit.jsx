@@ -1,7 +1,8 @@
 import React from 'react'
 
-export const Credit = () => {
+ function Credit() {
   return (
     <div>Credit</div>
   )
 }
+export default Credit
