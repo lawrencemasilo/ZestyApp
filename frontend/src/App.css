@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.hover-item, .hover {
+    color: #363636;
+}
+
+.hover:hover {
+    cursor: pointer;
+}
+
+.hover-item:hover {
+    background-color: #1E88E5;
+    color: #FFFFFF !important;
+    cursor: pointer;
+}
+
+.scrollbar-container {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d3d3d3 transparent;
+}
