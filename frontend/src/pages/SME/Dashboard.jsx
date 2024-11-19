@@ -310,20 +310,30 @@ export const Dashboard = () => {
         <ul className="mt-[8px]">
           {Array(4).fill(null).map((_, index) => (
             <li className="flex justify-between items-center h-[40px] font-normal border-b-[1px] border-b-[#e3e4e7] text-[15px] hover:bg-gray-100 hover:cursor-pointer">
-              <div className="flex flex-rol items-center">
-                <div className="flex" style={{ border: '1px solid red' }}>
-                  <div className="w-[20px] h-[20px]" style={{ border: '1px solid yellow' }}>
-                    <div className="flex flex-col items-center">
-                      <p className="text-[10px] ml-[3px] mt-[7px] z-[0]">20</p>
-                    </div>
-                  </div>
-                  <span className="mr-[8px]"><IoCalendarClearOutline className="text-[#4d4d4d]" size={24} /></span>
+            <div className="flex flex-rol items-center">
+              <div className="flex" style={{ position: 'relative' }}>
+                <div className="w-[20px] h-[20px]" style={{ position: 'relative' }}>
+                  <p
+                    className="absolute text-[10px] z-[10] ml-[2px] mt-[4px]"
+                    style={{
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  >
+                    21
+                  </p>
+                  <span className="">
+                    <IoCalendarClearOutline className="text-[#4d4d4d]" size={24} />
+                  </span>
                 </div>
-                <span className="text-[14px]">BNPL</span>
-                <span className="text-gray-500 text-[13px] ml-[2px]">(Bi-Monthly)</span>
               </div>
-              <span className="text-red-500 text-[14px]">-R1 570.00</span>
-            </li>
+              <span className="text-[14px] ml-[8px]">BNPL</span>
+              <span className="text-gray-500 text-[13px] ml-[2px]">(Bi-Monthly)</span>
+            </div>
+            <span className="text-red-500 text-[14px]">-R1 570.00</span>
+          </li>
+          
           ))}
         </ul>
         <button className="mt-4 bg-[#1E88E5] text-white w-full py-2 rounded-lg hover:bg-[#157dd8]">
