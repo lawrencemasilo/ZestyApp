@@ -4,7 +4,7 @@ import { Dashboard } from "./pages/SME/Dashboard"
 function App() {
   return (
     <div className="flex flex-row h-screen w-[100%] bg-[#f7f7f7]" style={{ fontFamily: '"Inter", serif' }}>
-      <div className="w-[300px] bg-[#F0F5F7] opacity-[100%] h-full">
+      <div className="w-[310px] bg-[#F0F5F7] opacity-[100%] h-full">
         <NavBar />
       </div>
 

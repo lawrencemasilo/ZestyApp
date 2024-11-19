@@ -6,6 +6,7 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { RiCustomerService2Line } from "react-icons/ri";
 import { TbCreditCardPay } from "react-icons/tb";
 import { MdOutlineDashboard } from "react-icons/md"
+import { IoStorefrontOutline } from "react-icons/io5";
 import test from "../../assets/images/test.jpg"
 
 export const NavBar = () => {
@@ -30,16 +31,16 @@ export const NavBar = () => {
                 <span className="text-sm font-medium ">Transactions</span>
               </div>
 
-              {/* Suppliers */}
-              {/*<div className="item flex items-center gap-2 p-2 rounded-md hover-item">
-                <BsCart className="" size={20} />
-                <span className="text-sm font-medium">Suppliers</span>
-              </div>/}
-
               {/* Credit */}
               <div className="flex items-center gap-2 p-2 rounded-md hover-item">
                 <TbCreditCardPay className="" size={20} />
                 <span className="text-sm font-medium ">Credit</span>
+              </div>
+              
+              {/* Suppliers */}
+              <div className="item flex items-center gap-2 p-2 rounded-md hover-item">
+                <IoStorefrontOutline className="" size={20} />
+                <span className="text-sm font-medium">Suppliers</span>
               </div>
             </div>
 
