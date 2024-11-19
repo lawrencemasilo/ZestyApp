@@ -11,12 +11,11 @@ import ReactApexChart from 'react-apexcharts';
 import ApexCharts from 'apexcharts';
 
 export const Dashboard = () => {
-  const [value, setValue] = useState(50); // Default value
+  const [value, setValue] = useState(50);
 
   // Simulate fetching data from the backend
   const fetchDataFromBackend = async () => {
-    // Simulate an API call with a delay
-    const simulatedBackendValue = 75; // Replace this with actual backend logic
+    const simulatedBackendValue = 75;
     return new Promise((resolve) =>
       setTimeout(() => resolve(simulatedBackendValue), 1000)
     );
@@ -24,17 +23,17 @@ export const Dashboard = () => {
 
   useEffect(() => {
     const fetchValue = async () => {
-      const backendValue = await fetchDataFromBackend(); // Fetch the value
-      setValue(backendValue); // Update the slider with the backend value
+      const backendValue = await fetchDataFromBackend(); 
+      setValue(backendValue); 
     };
     fetchValue();
   }, []);
 
   const DynamicChart = () => {
-    const XAXISRANGE = 10000; // 10 seconds range
-    let lastDate = new Date().getTime(); // Initial timestamp
+    const XAXISRANGE = 10000; 
+    let lastDate = new Date().getTime();
   
-    // Initial data series
+    
     const initialData = Array.from({ length: 10 }).map((_, i) => ({
       x: new Date(lastDate - (9 - i) * 1000).getTime(),
       y: Math.random() * 100,
@@ -78,15 +77,15 @@ export const Dashboard = () => {
       },
     });
   
-    // Function to generate new data
+    
     const getNewSeries = (lastDate, range) => {
-      const timestamp = new Date(lastDate).getTime() + 1000; // Increment time by 1 second
+      const timestamp = new Date(lastDate).getTime() + 1000;
       const value = Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
   
       initialData.push({ x: timestamp, y: value });
   
       if (initialData.length > 20) {
-        initialData.shift(); // Maintain only the latest 20 points
+        initialData.shift();
       }
     };
   
@@ -94,17 +93,17 @@ export const Dashboard = () => {
       const interval = setInterval(() => {
         getNewSeries(lastDate, { min: 10, max: 90 });
   
-        // Update chart dynamically
+        
         ApexCharts.exec('realtime', 'updateSeries', [
           {
-            data: [...initialData], // Use updated data
+            data: [...initialData], 
           },
         ]);
   
-        lastDate = new Date().getTime(); // Update lastDate
+        lastDate = new Date().getTime(); 
       }, 1000);
   
-      return () => clearInterval(interval); // Cleanup interval on component unmount
+      return () => clearInterval(interval);
     }, []);
   
     return (
@@ -251,7 +250,7 @@ export const Dashboard = () => {
               <div
                 className="absolute top-0 h-2 rounded-full  z-0 bg-gradient-to-r from-[#00BFFF] via-[#00BFFF] to-[#1E88E5]"
                 style={{
-                  width: `${value}%`, // Adjust the width dynamically based on the value
+                  width: `${value}%`,
                 }}
               />
 
@@ -259,8 +258,8 @@ export const Dashboard = () => {
               <div
                 className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 rounded-full bg-white shadow border border-gray-300"
                 style={{
-                  left: `${value}%`, // Position the thumb based on the value
-                  transform: "translate(-50%, -50%)", // Center the thumb on the progress bar
+                  left: `${value}%`, 
+                  transform: "translate(-50%, -50%)", 
                 }}
               />
             </div>
