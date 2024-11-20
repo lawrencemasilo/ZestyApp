@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Filter, Download, MoreVertical, Bell, Wallet, ArrowUpDown } from 'lucide-react';
+import { Search, Filter, Download, MoreVertical, Bell, Wallet, ArrowUpDown,  } from 'lucide-react';
 import { NavBar } from '../../components/SME/NavBar';
 
 const TransactionsPage = () => {

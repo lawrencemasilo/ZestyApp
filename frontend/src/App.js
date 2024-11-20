@@ -1,11 +1,11 @@
 import { Routes, Route, Link, Outlet } from 'react-router-dom';
-import Login from '../src/pages/Auth/Login';
-import ForgotPassword from '../src/pages/Auth/ForgotPassword';
-import Register from '../src/pages/Auth/Register';
-import Dashboard from '../src/pages/SME/Dashboard';
-import Credit from '../src/pages/SME/Credit';
-import Settings from '../src/pages/SME/Settings';
-import Suppliers from '../src/pages/SME/Suppliers';
+import {Login} from '../src/pages/Auth/Login';
+import {ForgotPassword} from '../src/pages/Auth/ForgotPassword';
+import {Register} from '../src/pages/Auth/Register';
+import {Dashboard} from '../src/pages/SME/Dashboard';
+import {Credit} from '../src/pages/SME/Credit';
+import {Settings} from '../src/pages/SME/Settings';
+import {Suppliers} from '../src/pages/SME/Suppliers';
 import Transactions from '../src/pages/SME/Transactions';
 import SupDashboard from '../src/pages/Supplier/Dashboard';
 import SupTransaction from '../src/pages/Supplier/Transactions';
@@ -15,7 +15,7 @@ function Layout() {
   return (
     <>
      
-      <Outlet /> {/* This is where nested routes will render */}
+      
     </>
   );
 }
