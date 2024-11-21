@@ -9,6 +9,7 @@ import {Suppliers} from '../src/pages/SME/Suppliers';
 import Transactions from '../src/pages/SME/Transactions';
 import SupDashboard from '../src/pages/Supplier/Dashboard';
 import SupTransaction from '../src/pages/Supplier/Transactions';
+import { NavBar } from "./components/SME/NavBar";
 
 // Layout component
 function Layout() {
@@ -52,6 +53,18 @@ function App() {
       </Route>
     </Routes>
     </>
+
+function App() {
+  return (
+    <div className="flex flex-row h-screen w-[100%] bg-[#f7f7f7]" style={{ fontFamily: '"Inter", serif' }}>
+      <div className="w-[310px] bg-[#F0F5F7] opacity-[100%] h-full">
+        <NavBar />
+      </div>
+
+      <div className="w-[100%] m-[15px]">
+        <Dashboard />
+      </div>
+  </div>
   );
 }
 
