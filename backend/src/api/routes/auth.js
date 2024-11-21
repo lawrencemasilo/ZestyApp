@@ -7,7 +7,7 @@ const {
   loginUser,
   whoami,
   refreshToken,
-} = require("../controllers/auth");
+} = require("../controllers/user");
 const validator = require("../middleware/validator");
 /**
  * @swagger
