@@ -1,5 +1,5 @@
 const RefreshToken = require("../models/RefreshToken");
-const User = require("../models/User");
+const User = require("../models/user");
 const helper = require("../utils/helper");
 
 async function listUsers(req, res) {
