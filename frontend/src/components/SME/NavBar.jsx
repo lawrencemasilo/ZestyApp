@@ -8,8 +8,11 @@ import { TbCreditCardPay } from "react-icons/tb";
 import { MdOutlineDashboard } from "react-icons/md"
 import { IoStorefrontOutline } from "react-icons/io5";
 import test from "../../assets/images/test.jpg"
+import { Navigate } from 'react-router-dom';
 
 export const NavBar = () => {
+  const navigate = Navigate();
+
   return (
     <div className="flex flex-col h-full pl-[15px]">
       <div className="flex items-center h-[10%]">
@@ -20,25 +23,25 @@ export const NavBar = () => {
             {/* Top Section */}
             <div className="space-y-2">
               {/* Dashboard */}
-              <div className="flex items-center gap-2 p-2 rounded-md hover-item">
+              <div className="flex items-center gap-2 p-2 rounded-md hover-item" onClick={() => navigate()}>
                 <MdOutlineDashboard className="" size={20} />
                 <span className="text-sm font-medium">Dashboard</span>
               </div>
 
               {/* Transactions */}
-              <div className="flex items-center gap-2 p-2 rounded-md hover-item">
+              <div className="flex items-center gap-2 p-2 rounded-md hover-item" onClick={() => navigate()}>
                 <GrTransaction className="" size={19} />
                 <span className="text-sm font-medium ">Transactions</span>
               </div>
 
               {/* Credit */}
-              <div className="flex items-center gap-2 p-2 rounded-md hover-item">
+              <div className="flex items-center gap-2 p-2 rounded-md hover-item" onClick={() => navigate("credit")}>
                 <TbCreditCardPay className="" size={20} />
                 <span className="text-sm font-medium ">Credit</span>
               </div>
               
               {/* Suppliers */}
-              <div className="item flex items-center gap-2 p-2 rounded-md hover-item">
+              <div className="item flex items-center gap-2 p-2 rounded-md hover-item" onClick={() => navigate()}>
                 <IoStorefrontOutline className="" size={20} />
                 <span className="text-sm font-medium">Suppliers</span>
               </div>
@@ -47,20 +50,20 @@ export const NavBar = () => {
             {/* Bottom Section */}
             <div className="space-y-2">
               {/* Notifications */}
-              <div className="flex items-center gap-2 p-2 rounded-md hover-item">
+              <div className="flex items-center gap-2 p-2 rounded-md hover-item" onClick={() => navigate()}>
                 <div className="w-[7px] h-[7px] absolute bg-[#E74C3C] rounded mt-[-10px] ml-[13px]"></div>
                 <IoMdNotificationsOutline className="font" size={22} />
                 <span className="text-sm font-medium">Notifications</span>
               </div>
 
               {/* Help Centre */}
-              <div className="flex items-center gap-2 p-2 rounded-md hover-item">
+              <div className="flex items-center gap-2 p-2 rounded-md hover-item" onClick={() => navigate()}>
                 <RiCustomerService2Line className="" size={20} />
                 <span className="text-sm font-medium">Help Centre</span>
               </div>
 
               {/* Settings */}
-              <div className="flex items-center gap-2 p-2 rounded-md hover-item">
+              <div className="flex items-center gap-2 p-2 rounded-md hover-item" onClick={() => navigate()}>
                 <BsGear className="" size={19} />
                 <span className="text-sm font-medium">Settings</span>
               </div>
@@ -84,3 +87,4 @@ export const NavBar = () => {
       </div>
     </div>
   )
+}
