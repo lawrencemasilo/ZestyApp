@@ -3,6 +3,7 @@ import { Search, Filter, Download, MoreVertical, Bell, Wallet, ArrowUpDown,  } f
 
 const TransactionsPage = () => {
   const [isAllSelected, setIsAllSelected] = useState(false);
+  const [sortBy, setSortBy] = useState('');
 
   const transactions = [
     {
@@ -137,9 +138,9 @@ const TransactionsPage = () => {
           <div className="mb-4 flex flex-col gap-4">
             <div className="flex items-center gap-4">
               <div className="flex border rounded-lg overflow-hidden">
-                <button className="px-3 py-1 text-xs text-gray-600 border-r hover:bg-gray-100 flex-1">All</button>
-                <button className="px-3 py-1 text-xs text-gray-600 border-r hover:bg-gray-100 flex-1">Credit</button>
-                <button className="px-3 py-1 text-xs text-gray-600 hover:bg-gray-100 flex-1">Debit</button>
+                <button className="px-3 py-1 text-xs text-gray-600 border-r hover-item flex-1">All</button>
+                <button className="px-3 py-1 text-xs text-gray-600 border-r hover-item flex-1">Credit</button>
+                <button className="px-3 py-1 text-xs text-gray-600 hover-item flex-1">Debit</button>
               </div>
               <div className="relative flex-grow pr-6">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -149,9 +150,9 @@ const TransactionsPage = () => {
                   className="pl-9 pr-6 py-2 border rounded-lg w-full text-sm"
                 />
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50">
+              <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover-item">
                 <Filter className="w-4 h-4" />
-                <span className="text-sm">Filters</span>
+                <span className="text-sm ">Filters</span>
               </button>
             </div>
           </div>
@@ -167,44 +168,44 @@ const TransactionsPage = () => {
                     <th className="pb-4 pr-4">
                       <input type="checkbox" onChange={() => setIsAllSelected((prev) => !prev)} className="rounded hover:cursor-pointer" />
                     </th>
-                    <th className="pb-4 text-sm font-normal text-black">
-                      <div className="flex items-center gap-2">
+                    <th className={`pb-4 text-sm font-normal ${sortBy === 'name' && 'text-black'}`}>
+                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('name')}>
                         Name/Company
                         <ArrowUpDown className="w-4 h-4" />
                       </div>
                     </th>
-                    <th className="pb-4 text-sm font-normal">
-                      <div className="flex items-center gap-2">
+                    <th className={`pb-4 text-sm font-normal ${sortBy === 'date' && 'text-black'}`}>
+                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('date')}>
                         Date
                         <ArrowUpDown className="w-4 h-4" />
                       </div>
                     </th>
-                    <th className="pb-4 text-sm font-normal">
-                      <div className="flex items-center gap-2">
+                    <th className={`pb-4 text-sm font-normal ${sortBy === 'type' && 'text-black'}`}>
+                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('type')}>
                         Type
                         <ArrowUpDown className="w-4 h-4" />
                       </div>
                     </th>
-                    <th className="pb-4 text-sm font-normal">
-                      <div className="flex items-center gap-2">
+                    <th className={`pb-4 text-sm font-normal ${sortBy === 'invoice' && 'text-black'}`}>
+                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('invoice')}>
                         Invoice ID
                         <ArrowUpDown className="w-4 h-4" />
                       </div>
                     </th>
-                    <th className="pb-4 text-sm font-normal">
-                      <div className="flex items-center gap-2">
+                    <th className={`pb-4 text-sm font-normal ${sortBy === 'fees' && 'text-black'}`}>
+                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('fees')}>
                         Fees
                         <ArrowUpDown className="w-4 h-4" />
                       </div>
                     </th>
-                    <th className="pb-4 text-sm font-normal">
-                      <div className="flex items-center gap-2">
+                    <th className={`pb-4 text-sm font-normal ${sortBy === 'amount' && 'text-black'}`}>
+                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('amount')}>
                         Amount
                         <ArrowUpDown className="w-4 h-4" />
                       </div>
                     </th>
-                    <th className="pb-4 text-sm font-normal">
-                      <div className="flex items-center gap-2">
+                    <th className={`pb-4 text-sm font-normal ${sortBy === 'status' && 'text-black'}`}>
+                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('status')}>
                         Status
                         <ArrowUpDown className="w-4 h-4" />
                       </div>
