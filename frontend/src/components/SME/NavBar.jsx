@@ -90,12 +90,12 @@ export const NavBar = () => {
             <img
               src={test}
               alt="user profile picture"
-              className="w-[40px] h-[40px] rounded-full"
+              className="w-[50px] h-[50px] rounded-full"
             />
           </div>
           <div className="ml-[8px]">
-            <p className="text-[12px] font-bold">Neo Masilo</p>
-            <p className="text-[8px] font-medium">Neolawrencemasilo@gmail.com</p>
+            <p className="text-[14px] font-bold">Neo Masilo</p>
+            <p className="text-[10px] font-medium">Neolawrencemasilo@gmail.com</p>
           </div>
         </div>
       </div>
