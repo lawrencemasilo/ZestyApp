@@ -8,6 +8,7 @@ import { RiCustomerService2Line } from "react-icons/ri";
 import { TbCreditCardPay } from "react-icons/tb";
 import { MdOutlineDashboard } from "react-icons/md";
 import { IoStorefrontOutline } from "react-icons/io5";
+import { Bell } from 'lucide-react';
 import test from "../../assets/images/test.jpg";
 
 export const NavBar = () => {
@@ -57,8 +58,8 @@ export const NavBar = () => {
           <div className="space-y-2">
             {/* Notifications */}
             <Link to="/notifications" className="flex items-center gap-2 p-2 rounded-md hover-item">
-              <div className="w-[7px] h-[7px] absolute bg-[#E74C3C] rounded mt-[-10px] ml-[13px]"></div>
-              <IoMdNotificationsOutline size={22} />
+              <div className="w-[7px] h-[7px] absolute bg-[#E74C3C] rounded mt-[-14px] ml-[12px]"></div>
+              <Bell size={20} />
               <span className="text-sm font-medium">Notifications</span>
             </Link>
 
