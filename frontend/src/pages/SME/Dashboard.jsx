@@ -11,6 +11,7 @@ import { MdOutlineRestore } from "react-icons/md";
 import { FaLongArrowAltUp } from "react-icons/fa";
 import { IoIosArrowRoundUp } from "react-icons/io";
 import { IoIosArrowRoundDown } from "react-icons/io";
+import { Bell, Download } from 'lucide-react';
 import ReactApexChart from 'react-apexcharts';
 import ApexCharts from 'apexcharts';
 
@@ -120,30 +121,29 @@ export const Dashboard = () => {
   return (
     <div className="bg-[#f7f7f7] min-h-[100%] h-full text-[#333333]">
     {/* Header */}
-    <div className="flex justify-between bg-white items-center mb-[15px] rounded-[10px] p-[10px] px-[15px]">
+    <div className="flex justify-between h-[80px] bg-white items-center mb-[15px] rounded-[10px] p-[10px] px-5">
       <div>
-        <h1 className="text-xl font-semibold text-[14px]">Dashboard</h1>
+        <h1 className="text-xl font-semibold">Dashboard</h1>
         <p className="text-gray-500 text-[12px]">
           Welcome back, <span className="text-[#1E88E5] font-medium">Neo Masilo!</span>
         </p>
       </div>
       <div className="flex items-center gap-4">
         <button className="flex justify-center w-[100px] h-[35px] items-center gap-2 bg-transparent p-2 rounded-[10px] hover-item border-[1px] border-[#e3e4e7]">
-          <FiDownload size={14} />
+          <Download className="w-3 h-3" />
           <span className="text-xs">Download</span>
         </button>
-        <div className="flex justify-center items-center w-[30px] h-[30px] hover:bg-gray-100 rounded-full hover:cursor-pointer">
-        <div className="w-[7px] h-[7px] absolute bg-[#E74C3C] rounded mt-[-10px] ml-[12px]"></div>
-          <IoMdNotificationsOutline  size={22} className="" />
+        <div className="flex justify-center items-center p-2 hover:bg-gray-100 rounded-full hover:cursor-pointer">
+          <div className="w-[7px] h-[7px] absolute bg-[#E74C3C] rounded mt-[-16px] ml-[10px]"></div>
+          <Bell  size={20} className="" />
         </div>
-        
       </div>
     </div>
 
     {/* Grid Layout */}
     <div className="grid grid-cols-1 scrollbar-container w-full h-full md:grid-cols-2 lg:grid-cols-3 gap-[15px] overflow-y-auto" style={{ height: '87%' }}>
       {/* Credit Overview */}
-      <div className="flex flex-col bg-white p-4 rounded-lg shadow-sm h-full">
+      <div className="flex flex-col bg-white p-5 rounded-lg shadow-sm h-full">
         {/* Header Section */}
         <div className="flex flex-row justify-between items-center mb-2">
           <div className="flex items-center">
@@ -162,7 +162,7 @@ export const Dashboard = () => {
         <p className="text-[25px] text-[#00BFFF] font-medium my-2">R16 480.50</p>
 
         {/* Card Section */}
-        <div className="flex flex-col flex-grow w-full justify-between bg-gradient-to-b from-[#00BFFF] via-[#00BFFF] to-[#1E88E5] text-white p-4 rounded-lg">
+        <div className="flex flex-col flex-grow w-full justify-between bg-gradient-to-b from-[#00BFFF] via-[#00BFFF] to-[#1E88E5] text-white p-5 rounded-lg">
           <div className="flex justify-between">
             <p>Sabela Pay</p>
             <div className="flex justify-center items-center w-[30px] h-[30px] bg-white rounded-full">
@@ -192,7 +192,7 @@ export const Dashboard = () => {
       </div>
 
       {/* Score */}
-      <div className="bg-white p-4 rounded-lg shadow-sm">
+      <div className="bg-white p-5 rounded-lg shadow-sm">
         {/* Header Section */}
         <div className="flex flex-row justify-between items-center mb-2">
           <div className="flex items-center">
@@ -315,7 +315,7 @@ export const Dashboard = () => {
       </div>
 
       {/* Payments */}
-      <div className="flex flex-col justify-between bg-white p-4 rounded-lg shadow-sm">
+      <div className="flex flex-col justify-between bg-white p-5 rounded-lg shadow-sm">
         {/* Header Section */}
         <div>
           <div className="flex flex-row justify-between items-center mb-2">
@@ -366,7 +366,7 @@ export const Dashboard = () => {
       </div>
 
       {/* Recent Transactions */}
-      <div className="flex flex-col justify-between col-span-2 md:col-span-1 bg-white p-4 rounded-lg shadow-sm">
+      <div className="flex flex-col justify-between col-span-2 md:col-span-1 bg-white p-5 rounded-lg shadow-sm">
         {/* Header Section */}
         <div className="flex flex-row justify-between items-center mb-2">
           <div className="flex items-center">
@@ -428,7 +428,7 @@ export const Dashboard = () => {
       </div>
 
       {/* Financial Insight */}
-      <div className="relative col-span-2 h-full bg-white p-4 rounded-lg shadow-sm">
+      <div className="relative col-span-2 h-full bg-white p-5 rounded-lg shadow-sm">
         {/* Financial Insight Content */}
         <h2 className="text-gray-500 font-medium mb-2">Financial Insight</h2>
         {/*<p className="text-3xl font-bold mb-2">R105 385.40</p>
