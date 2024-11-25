@@ -3,7 +3,7 @@ import {Login} from '../src/pages/Auth/Login';
 import {ForgotPassword} from '../src/pages/Auth/ForgotPassword';
 import {Register} from '../src/pages/Auth/Register';
 import {Dashboard} from '../src/pages/SME/Dashboard';
-import {Credit} from '../src/pages/SME/Credit';
+import Credit from '../src/pages/SME/Credit';
 import {Settings} from '../src/pages/SME/Settings';
 import {Suppliers} from '../src/pages/SME/Suppliers';
 import Transactions from '../src/pages/SME/Transactions';
@@ -52,10 +52,7 @@ function App() {
         <Route path="*" element={<div>Page not found</div>} />
       </Route>
     </Routes>
-    </>
 
-function App() {
-  return (
     <div className="flex flex-row h-screen w-[100%] bg-[#f7f7f7]" style={{ fontFamily: '"Inter", serif' }}>
       <div className="w-[310px] bg-[#F0F5F7] opacity-[100%] h-full">
         <NavBar />
@@ -65,7 +62,10 @@ function App() {
         <Dashboard />
       </div>
   </div>
-  );
+    <Credit />
+  
+    </>
+  )
 }
 
 export default App;
