@@ -4,13 +4,12 @@ const repaymentSchema = new mongoose.Schema(
   {
     repayment_id: {
       type: String,
-      required: true,
       unique: true,
       trim: true,
     },
-    transaction: {
+    transaction_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Transaction", // Reference the Transaction model
+      ref: "Transaction",
       required: true,
     },
     due_date: {
@@ -23,15 +22,22 @@ const repaymentSchema = new mongoose.Schema(
     },
     amount_paid: {
       type: Number,
-      default: 0, // Default to 0 if no payment has been made yet
+      default: 0,
     },
     status: {
       type: String,
-      enum: ["paid", "pending", "overdue"], // Valid statuses
+      enum: ["paid", "pending", "overdue"],
       required: true,
     },
   },
   { timestamps: true }
 );
+
+repaymentSchema.pre("save", async function (next) {
+  if (!this.repayment_id) {
+    this.repayment_id = `REPAY-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
+  }
+  next();
+});
 
 module.exports = mongoose.model("Repayment", repaymentSchema);
