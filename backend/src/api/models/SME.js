@@ -1,17 +1,11 @@
 const mongoose = require("mongoose");
 
-const SMESchema = new mongoose.Schema(
+const smeSchema = new mongoose.Schema(
   {
     sme_id: {
       type: String,
-      required: true,
       unique: true,
       trim: true,
-    },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference the User model
-      required: true,
     },
     business_name: {
       type: String,
@@ -40,53 +34,28 @@ const SMESchema = new mongoose.Schema(
       required: true,
     },
     address: {
-      physical: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      operational: {
-        type: String,
-        required: true,
-        trim: true,
-      },
+      physical: { type: String, required: true },
+      operational: { type: String, required: true },
     },
     contact_person: {
-      name: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      email: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      phone: {
-        type: String,
-        required: true,
-        trim: true,
-      },
+      name: { type: String, required: true },
+      email: { type: String, required: true },
+      phone: { type: String, required: true },
     },
     bank_details: {
-      account_number: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      bank_name: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      proof_of_banking: {
-        type: String,
-        required: true, // Assumes path to the uploaded file
-        trim: true,
-      },
+      account_number: { type: String, required: true },
+      bank_name: { type: String, required: true },
+      proof_of_banking: { type: String, required: true },
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("SME", SMESchema);
+smeSchema.pre("save", async function (next) {
+  if (!this.sme_id) {
+    this.sme_id = `SME-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
+  }
+  next();
+});
+
+module.exports = mongoose.model("SME", smeSchema);
