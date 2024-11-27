@@ -4,18 +4,17 @@ const transactionSchema = new mongoose.Schema(
   {
     transaction_id: {
       type: String,
-      required: true,
       unique: true,
       trim: true,
     },
-    sme: {
+    sme_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "SME", // Reference the SME model
+      ref: "SME",
       required: true,
     },
-    supplier: {
+    supplier_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Supplier", // Reference the Supplier model (to be defined separately)
+      ref: "Supplier",
       required: true,
     },
     amount: {
@@ -24,16 +23,23 @@ const transactionSchema = new mongoose.Schema(
     },
     transaction_type: {
       type: String,
-      enum: ["purchase", "repayment"], // Valid transaction types
+      enum: ["purchase", "repayment"],
       required: true,
     },
     status: {
       type: String,
-      enum: ["completed", "pending", "failed"], // Valid statuses
+      enum: ["completed", "pending", "failed"],
       required: true,
     },
   },
   { timestamps: true }
 );
+
+transactionSchema.pre("save", async function (next) {
+  if (!this.transaction_id) {
+    this.transaction_id = `TXN-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
+  }
+  next();
+});
 
 module.exports = mongoose.model("Transaction", transactionSchema);
