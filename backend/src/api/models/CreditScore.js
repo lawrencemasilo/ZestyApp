@@ -4,13 +4,12 @@ const creditScoreSchema = new mongoose.Schema(
   {
     credit_score_id: {
       type: String,
-      required: true,
       unique: true,
       trim: true,
     },
-    sme: {
+    sme_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "SME", // Reference the SME model
+      ref: "SME",
       required: true,
     },
     credit_score: {
@@ -23,11 +22,18 @@ const creditScoreSchema = new mongoose.Schema(
     },
     risk_category: {
       type: String,
-      enum: ["Low", "Medium", "High"], // Define valid categories
+      enum: ["Low", "Medium", "High"],
       required: true,
     },
   },
   { timestamps: true }
 );
+
+creditScoreSchema.pre("save", async function (next) {
+  if (!this.credit_score_id) {
+    this.credit_score_id = `CS-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
+  }
+  next();
+});
 
 module.exports = mongoose.model("CreditScore", creditScoreSchema);
