@@ -1,5 +1,10 @@
+require("dotenv").config();
+const PORT = process.env.PORT || 3000;
+const MONGODB_URI = process.env.MONGODB_URI;
+const SECRET = process.env.SECRET;
+
 module.exports = {
-  HOST: "0.0.0.0",
-  PORT: 3000,
-  MONGO_URI: "bezkoder_db"
+  PORT,
+  MONGODB_URI,
+  SECRET,
 };
