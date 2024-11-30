@@ -119,13 +119,13 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="bg-[#f7f7f7] min-h-[100%] h-full text-[#333333]">
+    <div className="bg-[#f7f7f7] min-h-[100%] h-full text-[#333333]" style={{ fontFamily: '"Inter", serif' }}>
     {/* Header */}
     <div className="flex justify-between h-[80px] bg-white items-center mb-[15px] rounded-[10px] p-[10px] px-5">
       <div>
         <h1 className="text-xl font-semibold">Dashboard</h1>
         <p className="text-gray-500 text-[12px]">
-          Welcome back, <span className="text-[#1E88E5] font-medium">Neo Masilo!</span>
+          Welcome back, <span className="text-[#005EFF] font-medium">Neo Masilo!</span>
         </p>
       </div>
       <div className="flex items-center gap-4">
@@ -162,7 +162,7 @@ export const Dashboard = () => {
         <p className="text-[25px] text-[#00BFFF] font-medium my-2">R16 480.50</p>
 
         {/* Card Section */}
-        <div className="flex flex-col flex-grow w-full justify-between bg-gradient-to-b from-[#00BFFF] via-[#00BFFF] to-[#1E88E5] text-white p-5 rounded-lg">
+        <div className="flex flex-col flex-grow w-full justify-between bg-gradient-to-b from-[#00BFFF] via-[#00BFFF] to-[#005EFF] text-white p-5 rounded-lg">
           <div className="flex justify-between">
             <p>Sabela Pay</p>
             <div className="flex justify-center items-center w-[30px] h-[30px] bg-white rounded-full">
@@ -254,7 +254,7 @@ export const Dashboard = () => {
 
               {/* Slider Progress */}
               <div
-                className="absolute top-0 h-3 rounded-full  z-0 bg-gradient-to-l from-[#00BFFF] via-[#00BFFF] to-[#1E88E5]"
+                className="absolute top-0 h-3 rounded-full  z-0 bg-gradient-to-l from-[#00BFFF] via-[#00BFFF] to-[#005EFF]"
                 style={{
                   width: `${value}%`,
                 }}
@@ -360,7 +360,7 @@ export const Dashboard = () => {
           
           ))}
         </ul>
-        <button className="mt-4 bg-[#1E88E5] text-white w-full py-2 rounded-lg hover:bg-[#157dd8]">
+        <button className="mt-4 bg-[#005EFF] text-white w-full py-2 rounded-lg hover:bg-[#005EFF]">
           Show all Payments
         </button>
       </div>
@@ -422,7 +422,7 @@ export const Dashboard = () => {
             ))}
           </tbody>
         </table>
-        <button className="mt-4 bg-[#1E88E5] text-white w-full py-2 rounded-lg hover:bg-[#157dd8]">
+        <button className="mt-4 bg-[#005EFF] text-white w-full py-2 rounded-lg hover:bg-[#157dd8]">
           Show all transactions
         </button>
       </div>
