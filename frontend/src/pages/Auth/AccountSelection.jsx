@@ -6,7 +6,7 @@ const AccountSelection = () => {
   return (
     <div className="flex flex-col md:flex-row h-screen w-full" style={{ fontFamily: '"Inter", serif' }}>
       {/* Left Section */}
-      <div className="bg-[#005EFF] text-white flex flex-col p-10 md:w-[35%]">
+      <div className="bg-[#005EFF] text-white flex flex-col p-10 md:w-[40%]">
         <div>
           <h1 className="text-[30px]">Zesty</h1>
         </div>
@@ -22,7 +22,7 @@ const AccountSelection = () => {
         </div>
       </div>
       {/* Right Section */}
-      <div className="flex flex-col justify-center bg-[#FAFBFC] p-14 md:w-[65%]">
+      <div className="flex flex-col justify-center bg-[#FAFBFC] p-14 md:w-[60%]">
         <h2 className="text-[26px] font-semibold mb-6 text-[#252F3F]">Choose Your Account Type</h2>
         <p className="text-[14px] text-gray-500  mb-8">
           Select the option that best describes your use case.
