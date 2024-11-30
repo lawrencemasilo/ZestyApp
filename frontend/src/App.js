@@ -1,5 +1,4 @@
-// File: src/App.js
-import { BrowserRouter as Router, Routes, Route, Link, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import { Login } from "./pages/Auth/Login";
 import { ForgotPassword } from "./pages/Auth/ForgotPassword";
 import { Register } from "./pages/Auth/Register";
@@ -14,6 +13,7 @@ import { NavBar } from "./components/SME/NavBar";
 import useIsDesktop from "./hooks/useIsDesktop";
 import { MobileHeader } from "./components/SME/MobileHeader";
 import { MobileNavBar } from "./components/SME/MobileNavBar";
+import AccountSelection from "./pages/Auth/AccountSelection";
 
 function Layout() {
   const isDesktop = useIsDesktop();
@@ -48,9 +48,19 @@ function Layout() {
   );
 }
 
+// Layout for authentication pages
+function AuthLayout() {
+  return (
+    <div className="flex justify-center items-center w-full h-screen bg-gray-100">
+      <Outlet />
+    </div>
+  );
+}
+
 function App() {
   return (
     <Routes>
+      {/* Main Layout */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
@@ -58,15 +68,22 @@ function App() {
         <Route path="credit" element={<Credit />} />
         <Route path="settings" element={<Settings />} />
         <Route path="suppliers" element={<Suppliers />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="supplier">
           <Route path="dashboard" element={<SupDashboard />} />
           <Route path="transactions" element={<SupTransaction />} />
         </Route>
-        <Route path="*" element={<div>Page not found</div>} />
       </Route>
+
+      {/* Auth Layout */}
+      <Route element={<AuthLayout />}>
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="account-type" element={<AccountSelection />} />
+      </Route>
+
+      {/* Fallback */}
+      <Route path="*" element={<div>Page not found</div>} />
     </Routes>
   );
 }
