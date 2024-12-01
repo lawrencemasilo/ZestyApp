@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Download, MoreVertical, File, Bell, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Download, File, Bell, ChevronLeft, ChevronRight, PiggyBank, CircleUser, Wallet,MoreVertical } from 'lucide-react';
 import { RiSpeedUpLine } from "react-icons/ri";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { NavBar } from '../../components/SME/NavBar';
 
-// Reusable Components
 const Card = ({ children, className = '' }) => (
   <div className={`bg-white rounded-xl shadow-sm p-6 ${className}`}>
     {children}
@@ -12,38 +11,46 @@ const Card = ({ children, className = '' }) => (
 );
 
 const SectionHeader = ({ title, subtitle }) => (
-  <div className="flex justify-between items-center mb-6">
+  <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+  <div className="flex justify-between items-center">
     <div>
-      <h1 className="text-lg font-semibold">{title}</h1>
-      <p className="text-sm text-gray-500">{subtitle}</p>
+      <h1 className="text-2xl font-semibold text-black">{title}</h1>
+      <p className="text-gray-500 text-sm">{subtitle}</p>
     </div>
-    <div className="flex items-center gap-3">
-      <button className="p-2" aria-label="Files">
-        <File className="w-5 h-5" />
+    <div className="flex items-center gap-4">
+      <button className="p-2 hover:bg-gray-100 rounded-full flex items-center">
+        <File className="w-5 h-5 text-black mr-1" />
+        <span>Documents</span>
       </button>
-      <button className="p-2" aria-label="More Options">
-        <MoreVertical className="w-5 h-5" />
+      <button className="p-2 hover:bg-gray-100 rounded-full">
+        <MoreVertical className="w-5 h-5 text-black" />
       </button>
-      <button className="p-2" aria-label="Notifications">
-        <Bell className="w-5 h-5" />
+      <button className="p-2 hover:bg-gray-100 rounded-full">
+        <Wallet className="w-5 h-5 text-black"/>
+      </button>
+      <button className="p-2 hover:bg-gray-100 rounded-full">
+        <Bell className="w-5 h-5 text-black" />
       </button>
     </div>
   </div>
+</div>
 );
+
 
 const CreditUtilizationCard = () => (
   <Card>
-    <div className="flex items-center gap-2 mb-4">
+    <div className="flex items-center gap-2 mb-4 text-black ">
       <Download className="w-5 h-5" />
       <h2 className="text-sm font-medium">Credit Utilization</h2>
     </div>
+    <div className = 'border-t pt-4'></div>
     
-    <div className="text-[#2196F3] text-2xl font-bold mb-6">R16 480.50</div>
+    <div className="text-[#005EFF] text-2xl font-bold mb-6">R16 480.50</div>
     
     <div className="flex text-sm text-gray-500 mb-4 justify-between">
       <div>
         <div className="flex items-center gap-1">
-          <span className="inline-block w-2 h-2 bg-[#2196F3] rounded-full"></span>
+          <span className="inline-block w-2 h-2 bg-[#005EFF] rounded-full"></span>
           <span>Consumed</span>
         </div>
         <div>R8 171.13</div>
@@ -57,7 +64,7 @@ const CreditUtilizationCard = () => (
       </div>
     </div>
 
-    <div className="relative w-40 h-40 mx-auto mb-6">
+    <div className="relative w-40 h-40 mx-auto mb-4">
       <svg className="w-full h-full transform -rotate-90">
         <circle
           cx="80"
@@ -84,8 +91,8 @@ const CreditUtilizationCard = () => (
       </div>
     </div>
 
-    <button className="w-full py-3 bg-white border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-2">
-      <Download className="w-4 h-4" />
+    <button className="w-full py-3 bg-[#005EFF] border border-gray-200 rounded-lg text-white hover:bg-gray-50 flex items-center justify-center gap-2">
+      <Download className="w-4 h-4 text-white" />
       Download Credit Report
     </button>
   </Card>
@@ -108,12 +115,12 @@ const ScoreCard = () => {
     
     const days = [];
     
-    // Add empty slots for days before the first day of the month
+    //  empty slots for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
       days.push(null);
     }
     
-    // Add days of the month
+    //  days of the month
     for (let i = 1; i <= daysInMonth; i++) {
       days.push(new Date(year, month, i));
     }
@@ -129,20 +136,23 @@ const ScoreCard = () => {
 
   const renderTodayView = () => (
     <>
-      <div className="flex items-center gap-2 mb-4">
-        <div className="border border-gray-200 rounded-lg px-3 py-2 flex items-baseline gap-1">
-          <div className="text-2xl font-bold">75</div>
-          <div className="text-gray-500">/100</div>
+      <div className="flex flex-row mb-4 mt-4">
+        <div className="flex items-center justify-center w-[90px] h-[38px] border-[1px] border-[#e3e4e7] text-[16px] rounded-lg mr-[8px]">
+          <span className="font-semibold mr-[5px] mt-[1px] text-[16px]">75 </span>
+          <span className="text-gray-400 mt-[1px] text-[16px]">/ 100</span>
         </div>
-        <div className="text-sm text-green-500">Good!</div>
-      </div>
-      
-      <div className="text-sm text-gray-600 mb-4">
-        <h4 className="font-semibold mb-2">Tips to Increase Your Credit Score:</h4>
+        <div className="flex flex-col justify-center">
+          <span className="text-[13px] text-[#00BFFF]">
+            Good! 
+          </span>
+          <span className="text-[10px] text-gray-500">
+            Tips on how to increase your <span className="text-[#1E88E5] hover:cursor-pointer">credit score</span>
+          </span>
+        </div>
       </div>
 
-      {/* Updated Risk Level Section */}
-     <div className="w-full max-w-lg mx-auto">
+      {/* Risk Level Section */}
+     <div className="w-full max-w-lg mx-auto mb-8 mt-8">
      {/* Label */}
      <div className="my-3 text-[12px] font-semibold">Risk Level</div>
 
@@ -186,48 +196,52 @@ const ScoreCard = () => {
      </div>
      </div>
 
-<div className="space-y-6">
-<div className="grid grid-cols-2 gap-4">
-  <div>
-    <div className="flex justify-between text-sm mb-2">
-      <span>Payment History</span>
-      <span className="text-[#2196F3]">90%*</span>
+     <div className="space-y-6">
+  <div className="grid grid-cols-2 gap-4">
+    <div className="flex items-center justify-between">
+      <div className="flex flex-col items-start">
+        <span className="text-sm mb-2">Payment History</span>
+        <span className="text-[#2196F3] font-bold">90%*</span>
+        <span className="text-xs text-gray-500 mt-1">Percentage of payments you have made overtime</span>
+      </div>
+      <div className="w-2/3 h-4 bg-gray-100 rounded-full">
+        <div className="h-full w-[90%] bg-[#2196F3] rounded-full"></div>
+      </div>
     </div>
-    <div className="h-2 bg-gray-100 rounded-full">
-      <div className="h-full w-[90%] bg-[#2196F3] rounded-full"></div>
+    <div className="flex items-center justify-between">
+      <div className="flex flex-col items-start">
+        <span className="text-sm mb-2">External Credit Data</span>
+        <span className="text-red-500 font-bold">13%*</span>
+        <span className="text-xs text-gray-500 mt-1">Percentage of payments you have made overtime</span>
+      </div>
+      <div className="w-2/3 h-4 bg-gray-100 rounded-full">
+        <div className="h-full w-[13%] bg-red-500 rounded-full"></div>
+      </div>
     </div>
   </div>
-  <div>
-    <div className="flex justify-between text-sm mb-2">
-      <span>External Credit Data</span>
-      <span className="text-red-500">13%*</span>
-    </div>
-    <div className="h-2 bg-gray-100 rounded-full">
-      <div className="h-full w-[13%] bg-red-500 rounded-full"></div>
-    </div>
-  </div>
-</div>
 
-<div className="grid grid-cols-2 gap-4">
-  <div>
-    <div className="flex justify-between text-sm mb-2">
-      <span>Credit utilization</span>
-      <span className="text-[#2196F3]">35%*</span>
+  <div className="grid grid-cols-2 gap-4">
+    <div className="flex items-center justify-between">
+      <div className="flex flex-col items-start">
+        <span className="text-sm mb-2">Credit utilization</span>
+        <span className="text-[#2196F3] font-bold">35%*</span>
+        <span className="text-xs text-gray-500 mt-1">Percentage of payments you have made overtime</span>
+      </div>
+      <div className="w-2/3 h-4 bg-gray-100 rounded-full">
+        <div className="h-full w-[35%] bg-[#2196F3] rounded-full"></div>
+      </div>
     </div>
-    <div className="h-2 bg-gray-100 rounded-full">
-      <div className="h-full w-[35%] bg-[#2196F3] rounded-full"></div>
+    <div className="flex items-center justify-between">
+      <div className="flex flex-col items-start">
+        <span className="text-sm mb-2">Cash Flow</span>
+        <span className="text-purple-500 font-bold">7%*</span>
+        <span className="text-xs text-gray-500 mt-1">Percentage of payments you have made overtime</span>
+      </div>
+      <div className="w-2/3 h-4 bg-gray-100 rounded-full">
+        <div className="h-full w-[7%] bg-purple-500 rounded-full"></div>
+      </div>
     </div>
   </div>
-  <div>
-    <div className="flex justify-between text-sm mb-2">
-      <span>Cash Flow</span>
-      <span className="text-purple-500">7%*</span>
-    </div>
-    <div className="h-2 bg-gray-100 rounded-full">
-      <div className="h-full w-[7%] bg-purple-500 rounded-full"></div>
-    </div>
-  </div>
-</div>
 </div>
     </>
   );
@@ -289,11 +303,12 @@ const ScoreCard = () => {
       <div className="flex items-center justify-between mb-4">
         <div className="flex flex-col">
         <div className="flex items-center">
-            <RiSpeedUpLine className="text-gray-600 mr-[6px]" size={22} />
-            <h2 className="text-gray-600 text-[14px] font-medium">Score</h2>
+            <RiSpeedUpLine className="text-black mr-[6px] mb-4" size={22} />
+            <h2 className="text-sm font-medium mb-4"> Score</h2>
           </div>
+          <div className = 'border-t pt-4'></div>
           
-          {/* Centered Buttons moved here */}
+          {/* Centered Buttons m*/}
           <div className="flex justify-start">
             <div className="flex items-center gap-2 bg-gray-100 rounded-full p-1">
               <button 
@@ -328,34 +343,50 @@ const CombinedLoansCard = () => {
   const [selectedTerm, setSelectedTerm] = useState(null);
 
   const loans = [
-    { id: 'xln797', amount: 2000 },
-    { id: 'vcdb03', amount: 8000 },
-    { id: 'avk538', amount: 4000 },
-    { id: 'ayv952', amount: 1500 },
-    { id: 'avc654', amount: 2300 }
+    { id: '...xln797', amount: 2000 , time : '1 month'},
+    { id: '...vcdb03', amount: 8000 , time : '2 month' },
+    { id: '...avk538', amount: 4000 , time : '4 month'},
+    { id: '...ayv952', amount: 1500 , time : '3 month'},
+    { id: '...avc654', amount: 2300 , time : '1 month'}
   ];
-
+  const ProgressBar = ({ 
+    progress : 50, 
+    height : 'h-2', 
+    color : 'from-[#1E90FF] to-[#10A7FF] ',
+    bgColor : 'bg-white',
+    rounded : 'rounded-full'
+  })
   return (
     <Card>
       <div className="space-y-4">
         {/* Loan Application Section */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="text-sm">Loan</div>
-            <div className="px-2 py-1 bg-blue-100 text-blue-600 rounded text-xs">Get outstanding results</div>
+
+          <div className="flex items-center gap-2 mb-4 text-black">
+            <PiggyBank className="text-black"/>
+            <div className="text-sm font-medium">Loan</div>
           </div>
+           <div className = 'border-t pt-4'></div>
+          <div className="bg-gradient-to-r from-[#00BFFF] to-[#1E88E5] p-4 rounded-lg">
+          <div className="px-2 py-1 text-white rounded text-xs">Get restocking credits</div>
+          <div className="text-white text-2xl font-bold mb-6">R 2000.00</div>
 
-          <div className="text-[#2196F3] text-2xl font-bold mb-6">R 2000.00</div>
+           {/* Progress Bar */}
+          <div className={`w-full ${ProgressBar.bgColor} ${ProgressBar.rounded} overflow-hidden`}>
+      <div 
+        className={`${ProgressBar.color} ${ProgressBar.height} ${ProgressBar.rounded} transition-all duration-500 ease-in-out`} 
+        style={{ width: `${Math.min(Math.max(ProgressBar.progress, 0), 100)}%` }}
+      />
+    </div>
 
-          <div className="text-sm text-gray-500 mb-4">For how long?</div>
+          <div className="text-sm text-white mb-4">For how long?</div>
 
-          <div className="grid grid-cols-3 gap-2 mb-4">
+          <div className="grid grid-cols-3 gap-2 mb-2 text-white text-xs">
             {['3 months', '6 months', '12 months'].map((term, index) => (
               <button 
                 key={index}
-                className={`py-2 px-4 border rounded-lg text-sm 
+                className={`py-1 px-2 border rounded-lg text-xs 
                   ${selectedTerm === term 
-                    ? 'bg-[#2196F3] text-white' 
+                    ? 'bg-[#005EFF] text-white' 
                     : 'border-gray-200 hover:bg-gray-50'}`}
                 onClick={() => setSelectedTerm(term)}
               >
@@ -365,7 +396,7 @@ const CombinedLoansCard = () => {
           </div>
 
           <button 
-            className="w-full py-2 bg-[#2196F3] text-white rounded-lg hover:bg-blue-600"
+            className="w-full py-2 border text-white rounded-lg"
             disabled={!selectedTerm}
           >
             Apply
@@ -376,13 +407,37 @@ const CombinedLoansCard = () => {
         <div className="border-t pt-4">
           <h3 className="font-medium mb-4">Active loans</h3>
           <div className="space-y-3">
-            {loans.map(loan => (
+            {loans.slice(0, 1).map(loan => (
               <div key={loan.id} className="flex items-center justify-between py-2 border-b last:border-b-0">
-                <div className="text-gray-500">_{loan.id}</div>
+                <div className="flex flex-col">
+                  <div className="text-gray-500">{loan.id}</div>
+                  <div className="text-xs text-gray-400">{loan.time}</div>
+                </div>
                 <div className="flex items-center gap-4">
-                  <div>R {loan.amount.toFixed(2)}</div>
-                  <button className="px-4 py-1 text-[#2196F3] bg-blue-50 rounded-md text-sm hover:bg-blue-100">
-                    {loan.id === 'xln797' ? 'Request Extension' : 'Details'}
+                  <div className="text-green-600">R {loan.amount.toFixed(2)}</div>
+                  <button className="px-4 py-1 text-white bg-[#005EFF] rounded-md text-xs hover:bg-blue-100 ">
+                    Request Extension
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Previous Loans Section */}
+        <div className="border-t pt-4">
+          <h3 className="font-medium mb-4">Previous loans</h3>
+          <div className="space-y-3">
+            {loans.slice(1).map(loan => (
+              <div key={loan.id} className="flex items-center justify-between py-2 border-b last:border-b-0">
+                <div className="flex flex-col">
+                  <div className="text-gray-500">{loan.id}</div>
+                  <div className="text-xs text-gray-400">{loan.time}</div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="text-green-600">R {loan.amount.toFixed(2)}</div>
+                  <button className="px-4 py-1 text-white bg-[#005EFF] rounded-md text-sm hover:bg-blue-100">
+                    Details
                   </button>
                 </div>
               </div>
@@ -396,17 +451,15 @@ const CombinedLoansCard = () => {
 
 const AccountVerificationCard = () => (
   <Card>
-    <div className="flex items-center gap-3">
-      <div className="w-8 h-8 bg-[#2196F3] rounded-full flex items-center justify-center text-white">
-        !
+    <div className="flex flex-col items-center text-center bg-[#2196F3] p-6 rounded-xl">
+      <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-white mb-4">
+        <CircleUser size={28} />
       </div>
-      <div className="text-sm">
-        <div className="font-medium">Account Verification</div>
-        <div className="text-gray-500">Complete account verification to get an accurate credit</div>
+      <div className="text-sm mb-4">
+        <div className="font-medium text-white">Account Verification</div>
+        <div className="text-white opacity-80">Complete account verification to get an accurate credit</div>
       </div>
-    </div>
-    <div className="mt-4 flex justify-end">
-      <button className="px-6 py-2 text-[#2196F3] bg-blue-50 rounded-md text-sm hover:bg-blue-100">
+      <button className="px-20 py-2 text-[#005EFF] bg-white border-2 border-white rounded-md text-sm hover:bg-blue-50">
         Complete
       </button>
     </div>
@@ -438,14 +491,14 @@ const PaymentsSection = () => {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="font-medium">R {payment.amount.toFixed(2)}</div>
+              <div className="font-medium text-red-600">R {payment.amount.toFixed(2)}</div>
               <div className="flex items-center gap-1 text-xs text-green-600 border border-green-600 rounded-full px-2 py-1">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
                 Approved
               </div>
-              <button className="px-4 py-1 text-[#2196F3] bg-blue-50 rounded-md text-sm hover:bg-blue-100">
+              <button className="px-4 py-1 text-white bg-[#005EFF] rounded-md text-sm hover:bg-blue-100">
                 Download
               </button>
             </div>
@@ -473,19 +526,25 @@ function Credit() {
           />
 
           {/* Top Row: Credit Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+          <div>
             <CreditUtilizationCard />
+            </div>
+            <div>
             <ScoreCard />
-            <CombinedLoansCard />
+            </div>
+            
+          
+           <div><CombinedLoansCard /></div>
           </div>
 
           {/* Second Row: Payments and Additional Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 mt-[-220px]">
               <PaymentsSection />
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-4 bg-[#00BFFF]bg-[#00BFFF]">
               <AccountVerificationCard />
             </div>
           </div>
