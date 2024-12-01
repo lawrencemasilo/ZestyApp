@@ -16,12 +16,13 @@ import { MobileNavBar } from "./components/SME/MobileNavBar";
 import AccountSelection from "./pages/Auth/AccountSelection";
 import { SignupSme } from "./pages/Auth/SignupSme";
 import { SignupSupplier } from "./pages/Auth/SignupSupplier";
+import { Profile } from "./pages/SME/Profile";
 
 function Layout() {
   const isDesktop = useIsDesktop();
 
   return (
-    <div className="bg-[#f7f7f7]" style={{ fontFamily: '"Inter", serif' }}>
+    <div className="bg-[#FAFBFC]" style={{ fontFamily: '"Inter", serif' }}>
       {isDesktop ? (
         <div className="flex flex-row h-screen w-full">
           <div className="w-[310px] bg-[#F0F5F7] opacity-[100%] h-full">
@@ -70,6 +71,7 @@ function App() {
         <Route path="credit" element={<Credit />} />
         <Route path="settings" element={<Settings />} />
         <Route path="suppliers" element={<Suppliers />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="supplier">
           <Route path="dashboard" element={<SupDashboard />} />
           <Route path="transactions" element={<SupTransaction />} />

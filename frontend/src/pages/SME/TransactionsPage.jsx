@@ -99,7 +99,7 @@ const TransactionsPage = () => {
   ];
 
   return (
-    <div className="flex w-full h-full bg-[#f7f7f7] min-h-[100%]  text-[#333333]" style={{ fontFamily: '"Inter", serif' }}>
+    <div className="flex w-full h-full bg-[#FAFBFC] min-h-[100%]  text-[#333333]" style={{ fontFamily: '"Inter", serif' }}>
       {/* Main Content */}
       <div className="flex-1 space-y-[15px]">
         {/* Header Card */}
