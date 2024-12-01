@@ -14,6 +14,8 @@ import useIsDesktop from "./hooks/useIsDesktop";
 import { MobileHeader } from "./components/SME/MobileHeader";
 import { MobileNavBar } from "./components/SME/MobileNavBar";
 import AccountSelection from "./pages/Auth/AccountSelection";
+import { SignupSme } from "./pages/Auth/SignupSme";
+import { SignupSupplier } from "./pages/Auth/SignupSupplier";
 
 function Layout() {
   const isDesktop = useIsDesktop();
@@ -80,6 +82,8 @@ function App() {
         <Route path="register" element={<Register />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="account-type" element={<AccountSelection />} />
+        <Route path="signup-sme" element={<SignupSme />} />
+        <Route path="signup-supplier" element={<SignupSupplier />} />
       </Route>
 
       {/* Fallback */}
