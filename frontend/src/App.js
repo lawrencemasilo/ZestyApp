@@ -1,5 +1,4 @@
-// File: src/App.js
-import { BrowserRouter as Router, Routes, Route, Link, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import { Login } from "./pages/Auth/Login";
 import { ForgotPassword } from "./pages/Auth/ForgotPassword";
 import { Register } from "./pages/Auth/Register";
@@ -14,12 +13,16 @@ import { NavBar } from "./components/SME/NavBar";
 import useIsDesktop from "./hooks/useIsDesktop";
 import { MobileHeader } from "./components/SME/MobileHeader";
 import { MobileNavBar } from "./components/SME/MobileNavBar";
+import AccountSelection from "./pages/Auth/AccountSelection";
+import { SignupSme } from "./pages/Auth/SignupSme";
+import { SignupSupplier } from "./pages/Auth/SignupSupplier";
+import { Profile } from "./pages/SME/Profile";
 
 function Layout() {
   const isDesktop = useIsDesktop();
 
   return (
-    <div className="bg-[#f7f7f7]" style={{ fontFamily: '"Inter", serif' }}>
+    <div className="bg-[#FAFBFC]" style={{ fontFamily: '"Inter", serif' }}>
       {isDesktop ? (
         <div className="flex flex-row h-screen w-full">
           <div className="w-[310px] bg-[#F0F5F7] opacity-[100%] h-full">
@@ -48,9 +51,19 @@ function Layout() {
   );
 }
 
+// Layout for authentication pages
+function AuthLayout() {
+  return (
+    <div className="flex justify-center items-center w-full h-screen bg-gray-100">
+      <Outlet />
+    </div>
+  );
+}
+
 function App() {
   return (
     <Routes>
+      {/* Main Layout */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
@@ -58,15 +71,25 @@ function App() {
         <Route path="credit" element={<Credit />} />
         <Route path="settings" element={<Settings />} />
         <Route path="suppliers" element={<Suppliers />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="supplier">
           <Route path="dashboard" element={<SupDashboard />} />
           <Route path="transactions" element={<SupTransaction />} />
         </Route>
-        <Route path="*" element={<div>Page not found</div>} />
       </Route>
+
+      {/* Auth Layout */}
+      <Route element={<AuthLayout />}>
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="account-type" element={<AccountSelection />} />
+        <Route path="signup-sme" element={<SignupSme />} />
+        <Route path="signup-supplier" element={<SignupSupplier />} />
+      </Route>
+
+      {/* Fallback */}
+      <Route path="*" element={<div>Page not found</div>} />
     </Routes>
   );
 }

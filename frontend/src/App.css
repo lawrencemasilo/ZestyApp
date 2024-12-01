@@ -11,7 +11,7 @@
 }
 
 .hover-item:hover {
-    background-color: #1E88E5;
+    background-color: #005EFF;
     color: #FFFFFF !important;
     cursor: pointer;
 }
@@ -20,4 +20,14 @@
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #d3d3d3 transparent;
+}
+
+.hover-account-select:hover {
+    border: 3px solid #005EFF;
+    background-color: #005eff1e;
+}
+
+.hover-account-selected {
+    border: 3px solid #005EFF;
+    background-color: #005eff1e;
 }
