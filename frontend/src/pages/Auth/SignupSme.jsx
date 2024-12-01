@@ -81,16 +81,22 @@ export const SignupSme = () => {
                 <option>Namibia</option>
                 <option>Botswana</option>
                 <option>Lesotho</option>
-                <option>Eswatwini</option>
-                <option>Canada</option>
+                <option>Eswatini</option>
               </select>
             </div>
             <div>
             <label htmlFor="Province" className="block text-sm font-medium text-gray-700">Province</label>
             <select className="border-[2px] focus:outline-[#005EFF] active:outline-[#005EFF] border-gray-300 pl-2 w-full h-[40px] rounded-lg">
               <option>Province</option>
-              <option>Delaware</option>
-              <option>California</option>
+              <option>Gauteng</option>
+              <option>KwaZulu-Natal</option>
+              <option>North West</option>
+              <option>Eastern Cape</option>
+              <option>Mpumalanga</option>
+              <option>Limpopo</option>
+              <option>Western Cape</option>
+              <option>Free State</option>
+              <option>Northern Cape</option>
             </select>
             </div>
           </div>
