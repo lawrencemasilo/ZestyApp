@@ -17,7 +17,9 @@ import AccountSelection from "./pages/Auth/AccountSelection";
 import { SignupSme } from "./pages/Auth/SignupSme";
 import { SignupSupplier } from "./pages/Auth/SignupSupplier";
 import { Profile } from "./pages/SME/Profile";
+import LandingPage from "./pages/Landing/LandingPage";
 
+// Layout for non-authenticated and authenticated pages (with navbar)
 function Layout() {
   const isDesktop = useIsDesktop();
 
@@ -51,6 +53,15 @@ function Layout() {
   );
 }
 
+// Layout for the landing page (without navbar)
+function LandingPageLayout() {
+  return (
+    <div className="flex justify-center items-center w-full h-screen bg-gray-100">
+      <Outlet />
+    </div>
+  );
+}
+
 // Layout for authentication pages
 function AuthLayout() {
   return (
@@ -63,9 +74,8 @@ function AuthLayout() {
 function App() {
   return (
     <Routes>
-      {/* Main Layout */}
+      {/* Main Layout with Navbar */}
       <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="transactions" element={<TransactionsPage />} />
         <Route path="credit" element={<Credit />} />
@@ -76,6 +86,11 @@ function App() {
           <Route path="dashboard" element={<SupDashboard />} />
           <Route path="transactions" element={<SupTransaction />} />
         </Route>
+      </Route>
+
+      {/* Landing Page Layout (without navbar) */}
+      <Route path="/" element={<LandingPageLayout />}>
+        <Route index element={<LandingPage />} />
       </Route>
 
       {/* Auth Layout */}
