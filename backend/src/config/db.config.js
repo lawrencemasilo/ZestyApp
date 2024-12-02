@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const connectDB = async () => {
-  const uri = process.env.MONGO_URI || 'mongodb+srv://neolawrencemasilo:7YRs4NYHOvo7GhMF@cluster0.l9diw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+  const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/Sabela';
 
   if (!uri) {
     console.error("MongoDB connection string is missing in environment variables");
@@ -10,9 +10,7 @@ const connectDB = async () => {
   }
 
   try {
-    await mongoose.connect(uri, {
-      useNewUrlParser: true, // Keep this to handle parsing
-    });
+    await mongoose.connect(uri);
     console.log("MongoDB connected successfully");
   } catch (error) {
     console.error(`Error connecting to MongoDB: ${error.message}`);
