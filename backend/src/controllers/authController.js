@@ -28,6 +28,7 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
+    console.error("Error registering user: ", err); // Log error to the console
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -49,6 +50,12 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
+    // CHeck if SECRET is defined in .env
+    if (!process.env.SECRET) {
+      console.errror("Secret is not  defined in environment variables");
+      return res.status(500).json({ error: "Server error: Missing JWT secret" });
+    }
+
     // Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.SECRET, {
       expiresIn: "1h",
@@ -56,6 +63,7 @@ const loginUser = async (req, res) => {
 
     res.status(200).json({ token });
   } catch (err) {
+    console.error("Login error: ", err); // Log error to the console
     res.status(500).json({ error: "Server error" });
   }
 };
