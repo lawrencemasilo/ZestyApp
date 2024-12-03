@@ -1,104 +1,56 @@
 import React, { useState } from "react";
-import "../../App.css";
 import { Link } from "react-router-dom";
-import { BsGear } from "react-icons/bs";
-import { GrTransaction } from "react-icons/gr";
-import { IoMdNotificationsOutline } from "react-icons/io";
-import { RiCustomerService2Line } from "react-icons/ri";
-import { TbCreditCardPay } from "react-icons/tb";
-import { MdOutlineDashboard } from "react-icons/md";
-import { IoStorefrontOutline } from "react-icons/io5";
-import { Bell } from 'lucide-react';
-import test from "../../assets/images/test.jpg";
+import "../../App.css";
+import { LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, LogOut, } from 'lucide-react';
+
+// NavItem Component
+const NavItem = ({ icon, text, active }) => (
+  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+    {icon}
+    <span className="text-sm font-medium">{text}</span>
+  </div>
+);
 
 export const NavBar = () => {
   const [selectedItem, setSelectedItem] = useState('');
 
   return (
-    <div className="flex flex-col h-full pl-[15px]">
-      {/* Header */}
-      <div className="flex items-center h-[10%]">
-        <h1
-          className="text-[#005EFF] text-[39px] font-bold mt-[20px]"
-          style={{ fontFamily: '"Montserrat", sans-serif' }}
-        >
-          Zesty
-        </h1>
+    <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
+      {/* Logo */}
+      <div className="p-6">
+        <h1 className="text-2xl font-bold text-blue-600">Zesty</h1>
       </div>
 
-      {/* Menu */}
-      <div className="h-[79%]">
-        <div className="w-3/10 h-[100%] flex flex-col justify-between p-4 pl-0">
-          {/* Top Section */}
-          <div className="space-y-2">
-            {/* Dashboard */}
-            <Link to="/dashboard" className={`flex items-center gap-2 p-2 ${selectedItem === 'Dashboard' && 'bg-[#005EFF] text-white'} rounded-md hover-item`} onClick={() => setSelectedItem('Dashboard')}>
-              <MdOutlineDashboard size={20} className={`${selectedItem === 'Dashboard' && 'text-white'}`}/>
-              <span className={`text-sm font-medium ${selectedItem === 'Dashboard' && 'text-white'}`}>Dashboard</span>
-            </Link>
+      {/* Navigation Links */}
+      <nav className="flex-1 px-4 space-y-2">
+        <Link to="/dashboard" onClick={() => setSelectedItem("dashboard")}>
+          <NavItem icon={<LayoutDashboard size={20} />}  text="Dashboard" active={selectedItem === 'dashboard' && true} />
+        </Link>
+        <Link to="/transactions"onClick={() => setSelectedItem('transactions')}>
+          <NavItem icon={<ArrowRightLeft size={20} />}  text="Transactions" active={selectedItem === 'transactions' && true} />
+        </Link>
+        <Link to="/credit" onClick={() => setSelectedItem('credit')}>
+          <NavItem icon={<CreditCardIcon size={20} />}  text="Credit" active={selectedItem === 'credit' && true} />
+        </Link>
+        <Link to="/suppliers" onClick={() => setSelectedItem('suppliers')}>
+          <NavItem icon={<Building2 size={20} />}  text="Suppliers" active={selectedItem === 'suppliers' && true} />
+        </Link>
+      </nav>
 
-            {/* Transactions */}
-            <Link to="/transactions" className={`flex items-center gap-2 p-2 ${selectedItem === 'Transactions' && 'bg-[#005EFF] text-white'} rounded-md hover-item`} onClick={() => setSelectedItem('Transactions')}>
-              <GrTransaction size={19} className={`${selectedItem === 'Transactions' && 'text-white'}`} />
-              <span className={`text-sm font-medium ${selectedItem === 'Transactions' && 'text-white'}`}>Transactions</span>
-            </Link>
-
-            {/* Credit */}
-            <Link to="/credit" className={`flex items-center gap-2 p-2 ${selectedItem === 'Credit' && 'bg-[#005EFF] text-white'} rounded-md hover-item`} onClick={() => setSelectedItem('Credit')}>
-              <TbCreditCardPay size={20} className={`${selectedItem === 'Credit' && 'text-white'}`} />
-              <span className={`text-sm font-medium ${selectedItem === 'Credit' && 'text-white'}`}>Credit</span>
-            </Link>
-
-            {/* Suppliers */}
-            <Link to="/suppliers" className={`flex items-center gap-2 p-2 ${selectedItem === 'Suppliers' && 'bg-[#005EFF] text-white'} rounded-md hover-item`} onClick={() => setSelectedItem('Suppliers')}>
-              <IoStorefrontOutline size={20} className={`${selectedItem === 'Suppliers' && 'text-white'}`} />
-              <span className={`text-sm font-medium ${selectedItem === 'Suppliers' && 'text-white'}`}>Suppliers</span>
-            </Link>
+      {/* User Profile */}
+      <div className="p-4 border-t border-gray-200">
+        <Link to="/profile" className="flex items-center space-x-3 hover:cursor-pointer" onClick={() => setSelectedItem('profile')}>
+          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-600 font-medium">NM</span>
           </div>
-
-          {/* Bottom Section */}
-          <div className="space-y-2">
-            {/* Notifications */}
-            {/*<Link to="/notifications" className={`flex items-center gap-2 p-2 ${selectedItem === 'Notifications' && 'bg-[#005EFF] text-white'} rounded-md hover-item`} onClick={() => setSelectedItem('Notifications')}>
-              <div className="w-[7px] h-[7px] absolute bg-[#E74C3C] rounded mt-[-14px] ml-[12px]"></div>
-              <Bell size={20} className={`${selectedItem === 'Notifications' && 'text-white'}`} />
-              <span className={`text-sm font-medium ${selectedItem === 'Notifications' && 'text-white'}`}>Notifications</span>
-            </Link>*/}
-
-            {/* Help Centre */}
-            {/*<Link to="/help-center" className={`flex items-center gap-2 p-2 ${selectedItem === 'Help Centre' && 'bg-[#005EFF] text-white'} rounded-md hover-item`} onClick={() => setSelectedItem('Help Centre')}>
-              <RiCustomerService2Line size={20} className={`${selectedItem === 'Help Centre' && 'text-white'}`} />
-              <span className={`text-sm font-medium ${selectedItem === 'Help Centre' && 'text-white'}`}>Help Centre</span>
-            </Link>*/}
-
-            {/* Settings */}
-            {/*<Link to="/settings" className={`flex items-center gap-2 p-2 ${selectedItem === 'Settings' && 'bg-[#005EFF] text-white'} rounded-md hover-item`} onClick={() => setSelectedItem('Settings')}>
-              <BsGear size={19} className={`${selectedItem === 'Settings' && 'text-white'}`} />
-              <span className={`text-sm font-medium ${selectedItem === 'Settings' && 'text-white'}`}>Settings</span>
-            </Link>*/}
+          <div className="flex-1">
+            <p className="text-sm font-medium">Neo Masilo</p>
+            <p className="text-xs text-gray-500">neolawrencemasilo@gmail.com</p>
           </div>
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div className="flex w-[100%] h-[1px]">
-        <div className="w-[100%] h-[100%] mr-[15px] bg-[#e3e4e7] rounded"></div>
-      </div>
-
-      {/* Profile Section */}
-      <div className="w-full h-[8%] pt-[10px]">
-        <Link to="profile" className="flex flex-row items-center w-[100%] h-[100%] hover:cursor-pointer" onClick={() => setSelectedItem('Profile')}>
-          <div>
-            <div className="flex items-center justify-center bg-[#252F3F] text-white w-[40px] h-[40px] rounded-full">
-              NM
-            </div>
-          </div>
-          <div className="ml-[8px]">
-            <p className="text-[14px] font-medium">Neo Masilo</p>
-            <p className="text-[10px] font-medium">Neolawrencemasilo@gmail.com</p>
-          </div>
+          <LogOut size={18} className="text-gray-400 cursor-pointer" />
         </Link>
       </div>
     </div>
   );
 };
+
