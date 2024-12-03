@@ -22,6 +22,7 @@ import { MobileDashboard } from "./pages/SME/Mobile/MobileDashboard";
 import MobileCreditPage from "./pages/SME/Mobile/CreditMobile";
 import MobileSupplierPage from "./pages/SME/Mobile/SuppliersMobile";
 import MobileTransactionsPage from "./pages/SME/Mobile/TransactionsMobile";
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Layout for non-authenticated and authenticated pages (with navbar)
 function Layout() {
@@ -61,21 +62,21 @@ function App() {
     <Routes>
       {/* Main Layout with Navbar */}
       <Route path="/" element={<Layout />}>
-        {isDesktop ? <Route path="dashboard" element={<Dashboard />} />:
-          <Route path="dashboard" element={<MobileDashboard />} />
+        {isDesktop ? <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />:
+          <Route path="dashboard" element={<ProtectedRoute><MobileDashboard /></ProtectedRoute>} />
         }
-        {isDesktop ? <Route path="transactions" element={<TransactionsPage />} />:
-          <Route path="transactions" element={<MobileTransactionsPage />} />
+        {isDesktop ? <Route path="transactions" element={<ProtectedRoute><TransactionsPage /></ProtectedRoute>} />:
+          <Route path="transactions" element={<ProtectedRoute><MobileTransactionsPage /></ProtectedRoute>} />
         }
-        {isDesktop? <Route path="credit" element={<CreditPage />} />:
-          <Route path="credit" element={<MobileCreditPage />} />
+        {isDesktop? <Route path="credit" element={<ProtectedRoute><CreditPage /></ProtectedRoute>} />:
+          <Route path="credit" element={<ProtectedRoute><MobileCreditPage /></ProtectedRoute>} />
         }
 
-        <Route path="settings" element={<Settings />} />
-        {isDesktop? <Route path="suppliers" element={<SupplierPage />} />:
-          <Route path="suppliers" element={<MobileSupplierPage />} />
+        <Route path="settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        {isDesktop? <Route path="suppliers" element={<ProtectedRoute><SupplierPage /></ProtectedRoute>} />:
+          <Route path="suppliers" element={<ProtectedRoute><MobileSupplierPage /></ProtectedRoute>} />
         }
-        <Route path="profile" element={<ProfilePage />} />
+        <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="supplier">
           <Route path="dashboard" element={<SupDashboard />} />
           <Route path="transactions" element={<SupTransaction />} />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bell, Download, CreditCard, TrendingUp, Clock, ArrowUpRight, ArrowDownRight, 
          LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, ChevronRight, LogOut,
          PlusCircle, X, DollarSign, Calendar, Search, Filter, Menu } from 'lucide-react';
@@ -10,6 +10,7 @@ import {
   DialogDescription,
 } from "../../components/ui/dialog";
 import NotificationsPopover from '../../components/SME/NotificationsPopover';
+import axios from '../../api/axios';
 
 const BottomNav = () => (
   <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden">
@@ -546,6 +547,8 @@ const CreditCardComponent = ({ onApplyClick }) => {
 export const Dashboard = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState(null);
+  const [user, setUser] = useState([]);
+;
   
   const metrics = [
     { name: 'Repayment History', trend: 'up', color: 'green' },
@@ -554,6 +557,21 @@ export const Dashboard = () => {
     { name: 'Cash Flow', trend: 'up', color: 'green' }
   ];
 
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get('auth/profile');
+        setUser(response.data); // Use `response.data` to access the actual user data
+        console.log(response.data.firstName);
+      } catch (err) {
+        console.error('Error fetching user profile:', err);
+      }
+    };
+  
+    fetchUserProfile();
+  }, []);
+  
   return (
     <div className="flex w-full bg-gray-50 min-h-screen">
       {/*<Sidebar />*/}
@@ -569,7 +587,7 @@ export const Dashboard = () => {
             </div>*/}
             <div>
               <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
-              <p className="text-sm text-gray-500">Welcome back, <span className="text-blue-600">Neo Masilo</span></p>
+              <p className="text-sm text-gray-500">Welcome back, <span className="text-blue-600">{user.firstName} {user.lastName}</span></p>
             </div>
           </div>
           <div className="flex items-center gap-4 w-full sm:w-auto justify-end">

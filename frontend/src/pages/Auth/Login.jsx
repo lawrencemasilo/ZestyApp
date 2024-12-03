@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { CircleArrowLeft } from 'lucide-react';
+import axios from '../../api/axios';
 
 const FormInput = ({ label, id, ...props }) => (
   <div>
@@ -39,14 +40,27 @@ const FormSelect = ({ label, id, options, ...props }) => (
 );
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError(null);
+  
     try {
-      // Handle form submission
+      const response = await axios.post('/auth/login', { email, password });
+      const token = response.data.token; 
+
+      // Save the token in localStorage
+      localStorage.setItem('jwtToken', token);
+
+      alert('Login successful! Token saved.');
       navigate("/dashboard");
     } catch (err) {
-      console.error(err.message);
+      console.error('Login error:', err.response?.data || err.message);
+      setError(err.response?.data?.message || 'An error occurred.');
     }
   };
 
@@ -87,6 +101,8 @@ const Login = () => {
             <FormInput
               label="Email address"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder="Enter your email"
               required
@@ -96,6 +112,8 @@ const Login = () => {
               label="Password"
               id="password"
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               required
             />

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Settings, User, Building, Edit, Save, ChevronRight, Shield, Moon, Sun, Bell, BellOff } from 'lucide-react';
 import { Switch } from "../../components/ui/switch";
+import { logout } from "../../services/authService";
+import { useNavigate } from 'react-router-dom';
 
 
 const ProfilePage = () => {
@@ -11,6 +13,7 @@ const ProfilePage = () => {
     notifications: true,
     twoFactor: true
   });
+  const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState({
     personal: {
@@ -39,6 +42,12 @@ const ProfilePage = () => {
     // Here you would typically make an API call to save the data
   };
 
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  }
+
   return (
     <div className="flex-1 bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
@@ -53,6 +62,7 @@ const ProfilePage = () => {
                 <h1 className="text-2xl font-semibold">{profileData.personal.fullName}</h1>
                 <p className="text-gray-500">{profileData.business.companyName}</p>
               </div>
+              <button onClick={() => handleLogout()}>Logout</button>
               {!isEditing ? (
                 <button
                   onClick={handleEdit}
