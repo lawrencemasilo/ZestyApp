@@ -3,9 +3,9 @@ import { Login } from "./pages/Auth/Login";
 import { ForgotPassword } from "./pages/Auth/ForgotPassword";
 import { Register } from "./pages/Auth/Register";
 import { Dashboard } from "./pages/SME/Dashboard";
-import { Credit } from "./pages/SME/Credit";
+import CreditPage from "./pages/SME/Credit";
 import { Settings } from "./pages/SME/Settings";
-import { Suppliers } from "./pages/SME/Suppliers";
+import SupplierPage from "./pages/SME/Suppliers";
 import TransactionsPage from "./pages/SME/TransactionsPage";
 import SupDashboard from "./pages/Supplier/Dashboard";
 import SupTransaction from "./pages/Supplier/Transactions";
@@ -25,30 +25,15 @@ function Layout() {
 
   return (
     <div className="bg-[#FAFBFC]" style={{ fontFamily: '"Inter", serif' }}>
-      {isDesktop ? (
+      
         <div className="flex flex-row h-screen w-full">
-          <div className="w-[310px] bg-[#F0F5F7] opacity-[100%] h-full">
+          {/*<div className="w-[310px] bg-[#F0F5F7] opacity-[100%] h-full">
             <NavBar />
-          </div>
+          </div>*/}
           <div className="w-full m-[15px]">
             <Outlet />
           </div>
         </div>
-      ) : (
-        <div className="bg-[#f7f7f7] flex flex-col w-full h-full sm:max-w-[640px] mx-auto">
-          <div className="bg-[#171415]">
-            <div className="w-full h-[70px]">
-              <MobileHeader />
-            </div>
-            <div className="flex flex-row justify-center items-center my-[20px] w-full h-[60px] bg-[#171415]">
-              <MobileNavBar />
-            </div>
-          </div>
-          <div>
-            <Outlet />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -78,9 +63,9 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="transactions" element={<TransactionsPage />} />
-        <Route path="credit" element={<Credit />} />
+        <Route path="credit" element={<CreditPage />} />
         <Route path="settings" element={<Settings />} />
-        <Route path="suppliers" element={<Suppliers />} />
+        <Route path="suppliers" element={<SupplierPage />} />
         <Route path="profile" element={<Profile />} />
         <Route path="supplier">
           <Route path="dashboard" element={<SupDashboard />} />
