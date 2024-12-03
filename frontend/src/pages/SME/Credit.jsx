@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
-import { 
-  TrendingUp, ArrowUpRight, Banknote, CircleGauge, Wallet, BarChart2, Building2, ArrowRightLeft, LayoutDashboard, Download, Bell, LogOut, CreditCardIcon, X, Menu
+import React, { useState } from 'react';import { 
+  TrendingUp, ArrowUpRight, Banknote, CircleGauge, Wallet, BarChart2, 
+  ArrowRightLeft, Download, Bell, CreditCardIcon, X, Info, 
+  Clock, Calendar, Receipt, TrendingDown, TrendingUp as TrendIcon
 } from 'lucide-react';
+import NotificationsPopover from '../../components/SME/NotificationsPopover';
 
 const CreditPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedDetailModal, setSelectedDetailModal] = useState(null);
+  const [selectedBNPLModal, setSelectedBNPLModal] = useState(null);
 
   const creditDetails = {
     availableCredit: 16480.50,
@@ -13,29 +17,220 @@ const CreditPage = () => {
     recentPayments: 2500.00,
     currentBalance: 33519.50,
     pastDueAmount: 0,
-    paymentDueDate: '2023-06-15',
+    paymentDueDate: '2024-06-15',
     creditScore: 780,
     creditUtilization: 0.33,
     paymentHistory: {
       onTime: 92,
       late: 2
-    }
+    },
+    creditScoreHistory: [
+      { month: 'Jan', score: 755 },
+      { month: 'Feb', score: 770 },
+      { month: 'Mar', score: 780 },
+      { month: 'Apr', score: 782 },
+      { month: 'May', score: 780 }
+    ]
   };
 
+  const recentTransactions = [
+    { id: 1, date: '2024-05-22', description: 'Online Purchase', amount: -450.75, category: 'Shopping' },
+    { id: 2, date: '2024-05-20', description: 'Grocery Store', amount: -230.50, category: 'Groceries' },
+    { id: 3, date: '2024-05-18', description: 'Fuel Station', amount: -175.25, category: 'Transportation' },
+  ];
+
+  const bnplCredits = [
+    { 
+      id: 1, 
+      vendor: 'Electronics Store', 
+      totalAmount: 5000, 
+      remainingBalance: 3750, 
+      monthsRemaining: 3, 
+      monthlyPayment: 1250,
+      interestRate: 15,
+      startDate: '2024-03-15'
+    },
+    { 
+      id: 2, 
+      vendor: 'Furniture Shop', 
+      totalAmount: 8000, 
+      remainingBalance: 6400, 
+      monthsRemaining: 4, 
+      monthlyPayment: 2000,
+      interestRate: 12,
+      startDate: '2024-02-01'
+    }
+  ];
+
+  const renderAvailableCreditModal = () => {
+    return (
+      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="bg-blue-600 text-white p-6">
+          <h2 className="text-2xl font-bold">Available Credit Details</h2>
+        </div>
+        <div className="p-6 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Total Credit Limit</p>
+              <p className="text-xl font-semibold text-blue-600">R{creditDetails.totalLimit.toFixed(2)}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Available Credit</p>
+              <p className="text-xl font-semibold text-green-600">R{creditDetails.availableCredit.toFixed(2)}</p>
+            </div>
+          </div>
+
+          <div className="bg-gray-50 p-4 rounded-xl">
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-gray-500">Credit Utilization</p>
+              <p className={`font-semibold ${creditDetails.creditUtilization > 0.3 ? 'text-red-500' : 'text-green-500'}`}>
+                {(creditDetails.creditUtilization * 100).toFixed(2)}%
+              </p>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div 
+                className={`h-2.5 rounded-full ${creditDetails.creditUtilization > 0.3 ? 'bg-red-500' : 'bg-green-500'}`}
+                style={{ width: `${creditDetails.creditUtilization * 100}%` }}
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              {creditDetails.creditUtilization > 0.3 
+                ? 'Your utilization is high. Try to reduce it below 30%.' 
+                : 'Great! Your credit utilization is within the recommended range.'}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderCreditScoreModal = () => {
+    const latestScore = creditDetails.creditScore;
+    const previousScore = creditDetails.creditScoreHistory[3].score;
+    const scoreDifference = latestScore - previousScore;
+
+    return (
+      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="bg-blue-600 text-white p-6 flex justify-between items-center">
+          <h2 className="text-2xl font-bold">Credit Score Insights</h2>
+          <div className="flex items-center">
+            {scoreDifference > 0 ? <TrendIcon className="text-green-400 mr-2" /> : <TrendingDown className="text-red-400 mr-2" />}
+            <span className={`font-semibold ${scoreDifference > 0 ? 'text-green-400' : 'text-red-400'}`}>
+              {Math.abs(scoreDifference)} this month
+            </span>
+          </div>
+        </div>
+        <div className="p-6 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Current Score</p>
+              <p className="text-2xl font-bold text-blue-600">{latestScore}</p>
+              <p className={`text-sm font-medium ${latestScore > 700 ? 'text-green-600' : 'text-yellow-600'}`}>
+                {latestScore > 750 ? 'Excellent' : 'Good'}
+              </p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Payment History</p>
+              <div className="flex items-center">
+                <p className="text-xl font-semibold text-green-600">
+                  {creditDetails.paymentHistory.onTime}%
+                </p>
+                <span className="text-xs text-gray-500 ml-2">On-Time</span>
+              </div>
+              <div className="flex items-center mt-1">
+                <p className="text-xl font-semibold text-red-600">
+                  {creditDetails.paymentHistory.late}
+                </p>
+                <span className="text-xs text-gray-500 ml-2">Late Payments</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderBNPLModal = (bnpl) => {
+    return (
+      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="bg-blue-600 text-white p-6">
+          <h2 className="text-2xl font-bold">{bnpl.vendor} BNPL Details</h2>
+        </div>
+        <div className="p-6 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Total Amount</p>
+              <p className="text-xl font-semibold text-blue-600">R{bnpl.totalAmount.toFixed(2)}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Remaining Balance</p>
+              <p className="text-xl font-semibold text-green-600">R{bnpl.remainingBalance.toFixed(2)}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Monthly Payment</p>
+              <p className="text-xl font-semibold">R{bnpl.monthlyPayment.toFixed(2)}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Interest Rate</p>
+              <p className="text-xl font-semibold text-yellow-600">{bnpl.interestRate}%</p>
+            </div>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-xl">
+            <p className="text-gray-500 mb-2">Credit Terms</p>
+            <div className="flex justify-between">
+              <div>
+                <p className="font-semibold">{bnpl.monthsRemaining} Months Remaining</p>
+                <p className="text-sm text-gray-500">Started: {bnpl.startDate}</p>
+              </div>
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                Modify Terms
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderModal = () => {
+    if (!selectedDetailModal && !selectedBNPLModal) return null;
+
+    const modalContent = 
+      selectedDetailModal === 'available-credit' ? renderAvailableCreditModal() :
+      selectedDetailModal === 'credit-score' ? renderCreditScoreModal() :
+      selectedBNPLModal ? renderBNPLModal(selectedBNPLModal) : null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="relative w-full max-w-2xl">
+          <button 
+            onClick={() => {
+              setSelectedDetailModal(null);
+              setSelectedBNPLModal(null);
+            }} 
+            className="absolute -top-10 right-0 text-white hover:bg-white/20 p-2 rounded-full transition"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          {modalContent}
+        </div>
+      </div>
+    );
+  };
+
+
   return (
-    <div className="flex bg-gray-50 min-h-screen">
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      
-      <div className="flex-1 p-8 overflow-y-auto">
+    <div className="flex justify-center w-full bg-gray-50 min-h-screen">
+      {renderModal()}
+      {selectedBNPLModal && renderBNPLModal(selectedBNPLModal)}
+
+      {/* Main Content */}
+      <div className="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <div className="flex items-center gap-4">
-            <button
-              className="md:hidden p-2 rounded-lg bg-gray-200 hover:bg-gray-300"
-              onClick={() => setIsSidebarOpen(true)}
-            >
-              <Menu className="w-6 h-6 text-gray-600" />
-            </button>
             <h1 className="text-2xl font-semibold text-gray-800">Credit Overview</h1>
           </div>
           <div className="flex items-center gap-4 mt-4 md:mt-0">
@@ -43,20 +238,22 @@ const CreditPage = () => {
               <Download className="w-4 h-4" />
               Download
             </button>
-            <div className="relative">
-              <Bell className="w-5 h-5 text-gray-600 cursor-pointer" />
-              <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></div>
-            </div>
+            <NotificationsPopover />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Credit Summary Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Available Credit */}
-          <div className="p-6 bg-white rounded-xl shadow-sm">
+          <div 
+            className="p-6 bg-white rounded-xl shadow-sm cursor-pointer hover:bg-blue-50"
+            onClick={() => setSelectedDetailModal('available-credit')}
+          >
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-gray-700 flex items-center gap-2">
                 <CreditCardIcon className="w-5 h-5" />
                 Available Credit
+                <Info className="w-4 h-4 text-blue-500" />
               </h3>
             </div>
             <div className="text-2xl font-semibold text-blue-600 mb-2">
@@ -70,40 +267,23 @@ const CreditPage = () => {
             </div>
           </div>
 
-          {/* Current Balance */}
-          <div className="p-6 bg-white rounded-xl shadow-sm">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-gray-700 flex items-center gap-2">
-                <Banknote className="w-5 h-5" />
-                Current Balance
-              </h3>
-            </div>
-            <div className="text-2xl font-semibold text-gray-800 mb-2">
-              R{creditDetails.currentBalance.toFixed(2)}
-            </div>
-            {creditDetails.pastDueAmount > 0 && (
-              <div className="text-sm text-red-500 mb-2">
-                Past Due: R{creditDetails.pastDueAmount.toFixed(2)}
-              </div>
-            )}
-            <div className="text-sm text-gray-500">
-              Payment Due: {creditDetails.paymentDueDate}
-            </div>
-          </div>
-
           {/* Credit Score */}
-          <div className="p-6 bg-white rounded-xl shadow-sm">
+          <div 
+            className="p-6 bg-white rounded-xl shadow-sm cursor-pointer hover:bg-blue-50"
+            onClick={() => setSelectedDetailModal('credit-score')}
+          >
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-gray-700 flex items-center gap-2">
                 <CircleGauge className="w-5 h-5" />
                 Credit Score
+                <Info className="w-4 h-4 text-blue-500" />
               </h3>
             </div>
             <div className="text-2xl font-semibold text-blue-600 mb-2">
               {creditDetails.creditScore}
             </div>
             <div className="text-sm text-gray-500 mb-2">
-              {creditDetails.creditScore > 700 ? 'Excellent' : creditDetails.creditScore > 600 ? 'Good' : 'Fair'}
+              {creditDetails.creditScore > 700 ? 'Excellent' : 'Good'}
             </div>
             <div className="w-full h-2 bg-gray-100 rounded-full">
               <div 
@@ -113,98 +293,79 @@ const CreditPage = () => {
             </div>
           </div>
 
-          {/* Credit Utilization */}
+          {/* Payment Due Date */}
           <div className="p-6 bg-white rounded-xl shadow-sm">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-gray-700 flex items-center gap-2">
-                <Wallet className="w-5 h-5" />
-                Credit Utilization
+                <Calendar className="w-5 h-5" />
+                Next Payment Due
               </h3>
             </div>
-            <div className="text-2xl font-semibold text-gray-800 mb-2">
-              {(creditDetails.creditUtilization * 100).toFixed(2)}%
+            <div className="text-xl font-semibold text-gray-800 mb-2">
+              {new Date(creditDetails.paymentDueDate).toLocaleDateString()}
             </div>
-            <div className="text-sm text-gray-500 mb-2">
-              Recommended utilization: 30% or less
+            <div className="text-sm text-gray-500">
+              Upcoming Payment: R{(creditDetails.currentBalance * 0.1).toFixed(2)}
             </div>
-            <div className="w-full h-2 bg-gray-100 rounded-full">
+          </div>
+        </div>
+
+        {/* BNPL Credits Section */}
+        <div className="mt-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">Buy Now, Pay Later Credits</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {bnplCredits.map(credit => (
               <div 
-                className="h-full bg-blue-600 rounded-full"
-                style={{ width: `${creditDetails.creditUtilization * 100}%` }}
-              />
-            </div>
+                key={credit.id} 
+                className="p-6 bg-white rounded-xl shadow-sm cursor-pointer hover:bg-blue-50"
+                onClick={() => setSelectedBNPLModal(credit)}
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-gray-700 flex items-center gap-2">
+                    <Receipt className="w-5 h-5" />
+                    {credit.vendor}
+                    <Info className="w-4 h-4 text-blue-500" />
+                  </h3>
+                </div>
+                <div className="text-lg font-semibold text-gray-800 mb-2">
+                  R{credit.remainingBalance.toFixed(2)} Remaining
+                </div>
+                <div className="text-sm text-gray-500">
+                  {credit.monthsRemaining} Months Left • R{credit.monthlyPayment.toFixed(2)}/month
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
 
-          {/* Payment History */}
-          <div className="p-6 bg-white rounded-xl shadow-sm">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-gray-700 flex items-center gap-2">
-                <BarChart2 className="w-5 h-5" />
-                Payment History
-              </h3>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-500 mb-1">On Time</p>
-                <p className="text-lg font-semibold">{creditDetails.paymentHistory.onTime}</p>
+        {/* Recent Transactions */}
+        <div className="mt-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">Recent Transactions</h2>
+            <button className="text-blue-600 text-sm hover:underline">View All</button>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm">
+            {recentTransactions.map(transaction => (
+              <div 
+                key={transaction.id} 
+                className="flex justify-between items-center p-4 border-b last:border-b-0 hover:bg-gray-50"
+              >
+                <div>
+                  <p className="font-medium">{transaction.description}</p>
+                  <p className="text-sm text-gray-500">{transaction.date}</p>
+                </div>
+                <span className={`font-semibold ${transaction.amount < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  R{Math.abs(transaction.amount).toFixed(2)}
+                </span>
               </div>
-              <div>
-                <p className="text-sm text-gray-500 mb-1">Late</p>
-                <p className="text-lg font-semibold">{creditDetails.paymentHistory.late}</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-const Sidebar = ({ isOpen, onClose }) => {
-  return (
-    <div
-      className={`fixed top-0 left-0 w-64 h-full bg-white border-r border-gray-200 p-6 transition-transform duration-300 z-50 ${
-        isOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}
-    >
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-blue-600">Zesty</h1>
-        {isOpen && (
-          <button className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300" onClick={onClose}>
-            <X className="w-6 h-6 text-gray-600" />
-          </button>
-        )}
-      </div>
-
-      <nav className="flex flex-col space-y-2">
-        <NavItem icon={<LayoutDashboard size={20} />} text="Dashboard" />
-        <NavItem icon={<ArrowRightLeft size={20} />} text="Transactions" />
-        <NavItem icon={<CreditCardIcon size={20} />} text="Credit" active />
-        <NavItem icon={<Building2 size={20} />} text="Suppliers" />
-      </nav>
-
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-600 font-medium">NM</span>
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-medium">Neo Masilo</p>
-            <p className="text-xs text-gray-500">neolawrencemasilo@gmail.com</p>
-          </div>
-          <LogOut size={18} className="text-gray-400 cursor-pointer" />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// NavItem Component
-const NavItem = ({ icon, text, active }) => (
-  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
-    {icon}
-    <span className="text-sm font-medium">{text}</span>
-  </div>
-);
 
 export default CreditPage;

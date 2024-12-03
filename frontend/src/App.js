@@ -16,8 +16,12 @@ import { MobileNavBar } from "./components/SME/MobileNavBar";
 import AccountSelection from "./pages/Auth/AccountSelection";
 import { SignupSme } from "./pages/Auth/SignupSme";
 import { SignupSupplier } from "./pages/Auth/SignupSupplier";
-import { Profile } from "./pages/SME/Profile";
+import ProfilePage, { Profile } from "./pages/SME/Profile";
 import LandingPage from "./pages/Landing/LandingPage";
+import { MobileDashboard } from "./pages/SME/Mobile/MobileDashboard";
+import MobileCreditPage from "./pages/SME/Mobile/CreditMobile";
+import MobileSupplierPage from "./pages/SME/Mobile/SuppliersMobile";
+import MobileTransactionsPage from "./pages/SME/Mobile/TransactionsMobile";
 
 // Layout for non-authenticated and authenticated pages (with navbar)
 function Layout() {
@@ -25,14 +29,9 @@ function Layout() {
 
   return (
     <div className="bg-[#FAFBFC]" style={{ fontFamily: '"Inter", serif' }}>
-      
         <div className="flex flex-row h-screen w-full">
-          {/*<div className="w-[310px] bg-[#F0F5F7] opacity-[100%] h-full">
-            <NavBar />
-          </div>*/}
-          <div className="w-full m-[15px]">
-            <Outlet />
-          </div>
+          {isDesktop && <NavBar />}
+          <Outlet />
         </div>
     </div>
   );
@@ -57,16 +56,27 @@ function AuthLayout() {
 }
 
 function App() {
+  const isDesktop = useIsDesktop();
   return (
     <Routes>
       {/* Main Layout with Navbar */}
       <Route path="/" element={<Layout />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="transactions" element={<TransactionsPage />} />
-        <Route path="credit" element={<CreditPage />} />
+        <Route index element={<Dashboard />} />
+        {isDesktop ? <Route path="dashboard" element={<Dashboard />} />:
+          <Route path="dashboard" element={<MobileDashboard />} />
+        }
+        {isDesktop ? <Route path="transactions" element={<TransactionsPage />} />:
+          <Route path="transactions" element={<MobileTransactionsPage />} />
+        }
+        {isDesktop? <Route path="credit" element={<CreditPage />} />:
+          <Route path="credit" element={<MobileCreditPage />} />
+        }
+
         <Route path="settings" element={<Settings />} />
-        <Route path="suppliers" element={<SupplierPage />} />
-        <Route path="profile" element={<Profile />} />
+        {isDesktop? <Route path="suppliers" element={<SupplierPage />} />:
+          <Route path="suppliers" element={<MobileSupplierPage />} />
+        }
+        <Route path="profile" element={<ProfilePage />} />
         <Route path="supplier">
           <Route path="dashboard" element={<SupDashboard />} />
           <Route path="transactions" element={<SupTransaction />} />
@@ -74,9 +84,9 @@ function App() {
       </Route>
 
       {/* Landing Page Layout (without navbar) */}
-      <Route path="/" element={<LandingPageLayout />}>
+      {/*<Route path="/" element={<LandingPageLayout />}>
         <Route index element={<LandingPage />} />
-      </Route>
+      </Route>*/}
 
       {/* Auth Layout */}
       <Route element={<AuthLayout />}>

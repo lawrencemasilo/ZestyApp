@@ -1,7 +1,75 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import { Briefcase, Tag, Download, Bell, Percent, Star, Calendar, ArrowRight, Clock, ChevronRight, X, LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, LogOut } from 'lucide-react';
-import NotificationsPopover from '../../components/SME/NotificationsPopover';
+import NotificationsPopover from '../../../components/SME/NotificationsPopover';
+import { useSelectedItem } from '../../../context/SelectedItemContext';
 
+const BottomNav = () => {  
+    const { selectedItem, setSelectedItem } = useSelectedItem();
+
+    return (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden p-0">
+        <div className="flex justify-around items-center h-16 w-full p-0">
+            <Link to="/dashboard" className="flex h-full" onClick={() => setSelectedItem("dashboard")}>
+            <NavItem icon={<LayoutDashboard size={24} />}  text="Dashboard" active={selectedItem === 'dashboard' && true} />
+            </Link>
+            <Link to="/transactions" className="flex h-full" onClick={() => setSelectedItem('transactions')}>
+            <NavItem icon={<ArrowRightLeft size={24} />}  text="Transactions" active={selectedItem === 'transactions' && true} />
+            </Link>
+            <Link to="/credit" className="flex h-full" onClick={() => setSelectedItem('credit')}>
+            <NavItem icon={<CreditCardIcon size={24} />}  text="Credit" active={selectedItem === 'credit' && true} />
+            </Link>
+            <Link to="/suppliers" className="flex h-full" onClick={() => setSelectedItem('suppliers')}>
+            <NavItem icon={<Building2 size={24} />}  text="Suppliers" active={selectedItem === 'suppliers' && true} />
+            </Link>
+        </div>  
+        </div>
+    );
+}
+
+const NavButton = ({ icon, text, active }) => (
+    <button 
+        className={`flex flex-col items-center justify-center w-full h-full space-y-1
+                    ${active ? 'text-blue-600' : 'text-gray-600'}`}
+    >
+        {icon}
+        <span className="text-xs font-medium">{text}</span>
+    </button>
+);
+
+const Header = () => (
+    <div className="sticky top-0 z-10 bg-gray-50">
+        {/* Top Bar with Logo, Notifications, and Profile */}
+        <div className="flex items-center justify-between p-4 px-0 pt-4 ">
+        <h1 className="text-3xl font-bold text-blue-600">Zesty</h1>
+        <div className="flex items-center gap-4">
+            <NotificationsPopover />
+            <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                <span className="text-gray-600 text-sm font-medium">NM</span>
+            </div>
+            </div>
+        </div>
+        </div>
+        
+        {/* Sub Header with Page Title and Actions */}
+        {/*<div className="flex justify-between items-center p-4">
+        <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
+        <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg bg-white hover:bg-gray-50">
+            <Download className="w-4 h-4" />
+            <span>Download</span>
+        </button>
+        </div>*/}
+    </div>
+);
+
+
+const NavItem = ({ icon, text, active }) => (
+    <div className={`flex flex-col items-center px-4  py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+        {icon}
+        <span className="text-sm font-medium">{text}</span>
+    </div>
+);
 
 const Sidebar = ({ isOpen, onClose }) => {
   return (
@@ -42,15 +110,8 @@ const Sidebar = ({ isOpen, onClose }) => {
   );
 };
 
-// NavItem Component
-const NavItem = ({ icon, text, active }) => (
-  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
-    {icon}
-    <span className="text-sm font-medium">{text}</span>
-  </div>
-);
 
-const SupplierPage = () => {
+const MobileSupplierPage = () => {
   const [selectedSupplier, setSelectedSupplier] = useState(null);
 
   const suppliers = [
@@ -107,26 +168,15 @@ const SupplierPage = () => {
 
   return (
     <div className="flex bg-gray-50 min-h-screen">
-      <Sidebar />
-      
-      <div className="flex-1 p-8 overflow-y-auto">
+      <div className="flex-1 p-8 px-4 pt-0 overflow-y-auto mb-12">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-800">Suppliers</h1>
-            <p className="text-sm text-gray-500">List of Suppliers for your business needs</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
-              <Download className="w-4 h-4" />
-              Download
-            </button>
-            {/*<div className="relative" >
-              <Bell className="w-5 h-5 text-gray-600 cursor-pointer" />
-              <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></div>
-            </div>*/}
-            <NotificationsPopover />
-          </div>
+        <Header />
+        <div className="flex justify-between items-center p-4 py-5 px-0">
+          <h2 className="text-xl font-semibold text-gray-800">Suppliers</h2>
+          {/*<button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg bg-white hover:bg-gray-50">
+            <Download className="w-4 h-4" />
+            <span>Download</span>
+          </button>*/}
         </div>
 
         {/* Supplier List */}
@@ -227,9 +277,10 @@ const SupplierPage = () => {
             </div>
           </div>
         )}
+        <BottomNav />
       </div>
     </div>
   );
 };
 
-export default SupplierPage;
+export default MobileSupplierPage;

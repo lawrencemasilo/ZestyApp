@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Bell, X, Settings, AlertCircle, CheckCircle2 } from 'lucide-react';
+import Popover from '../ui/Popover';
 
 const NotificationItem = ({ notification, onDismiss }) => {
   const getIcon = (type) => {
@@ -33,8 +34,7 @@ const NotificationItem = ({ notification, onDismiss }) => {
   );
 };
 
-const NotificationsDropdown = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const NotificationsPopover = () => {
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -59,65 +59,46 @@ const NotificationsDropdown = () => {
     }
   ]);
 
-  const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   const dismissNotification = (id) => {
     setNotifications(notifications.filter(notif => notif.id !== id));
   };
 
+  const notificationContent = (
+    <div className="w-80">
+      <div className="p-4 border-b">
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold">Notifications</h3>
+          <span className="text-xs text-gray-500">{notifications.length} new</span>
+        </div>
+      </div>
+      <div className="max-h-96 overflow-y-auto">
+        {notifications.length > 0 ? (
+          notifications.map(notification => (
+            <NotificationItem
+              key={notification.id}
+              notification={notification}
+              onDismiss={dismissNotification}
+            />
+          ))
+        ) : (
+          <div className="p-4 text-center text-gray-500 text-sm">
+            No new notifications
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
   return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative focus:outline-none"
-      >
-        <Bell className="w-5 h-5 text-gray-600" />
+    <Popover content={notificationContent}>
+      <div className="relative">
+        <Bell className="w-5 h-5 text-gray-600 cursor-pointer" />
         {notifications.length > 0 && (
           <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
         )}
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-          <div className="p-4 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold">Notifications</h3>
-              <span className="text-xs text-gray-500">{notifications.length} new</span>
-            </div>
-          </div>
-          
-          <div className="max-h-96 overflow-y-auto">
-            {notifications.length > 0 ? (
-              notifications.map(notification => (
-                <NotificationItem
-                  key={notification.id}
-                  notification={notification}
-                  onDismiss={dismissNotification}
-                />
-              ))
-            ) : (
-              <div className="p-4 text-center text-gray-500 text-sm">
-                No new notifications
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+      </div>
+    </Popover>
   );
 };
 
-export default NotificationsDropdown;
+export default NotificationsPopover;

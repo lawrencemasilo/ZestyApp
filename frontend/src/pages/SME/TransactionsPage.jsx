@@ -4,6 +4,7 @@ import {
   LayoutDashboard, ArrowRightLeft, CreditCardIcon, 
   Building2, LogOut 
 } from 'lucide-react';
+import NotificationsPopover from '../../components/SME/NotificationsPopover';
 
 const Sidebar = () => (
   <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
@@ -63,8 +64,8 @@ const TransactionsPage = () => {
   ];
 
   return (
-    <div className="flex bg-gray-50 min-h-screen">
-      <Sidebar />
+    <div className="flex justify-center w-full bg-gray-50 min-h-screen">
+      {/*<Sidebar />*/}
       
       <div className="flex-1 p-8 overflow-y-auto">
         {/* Header */}
@@ -78,10 +79,11 @@ const TransactionsPage = () => {
               <Download className="w-4 h-4" />
               Download
             </button>
-            <div className="relative">
+            {/*<div className="relative">
               <Bell className="w-5 h-5 text-gray-600 cursor-pointer" />
               <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></div>
-            </div>
+            </div>*/}
+            <NotificationsPopover />
           </div>
         </div>
 
