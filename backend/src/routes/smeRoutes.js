@@ -1,11 +1,10 @@
 const express = require('express');
-const router = express.Router();
 const smeController = require('../controllers/smeController');
-const verifyToken = require('../middleware/verifyToken');
+const authMiddleware = require('../middleware/authMiddleware');
 const smeValidation = require('../middleware/smeValidation');
 const { validationResult } = require('express-validator');
 
 // Route to create an SME
-router.post('/create', verifyToken, smeValidation, smeController.createSME);
+router.post('/sme', authMiddleware, smeValidation, smeController.createSME);
 
 module.exports = smeRouter;
