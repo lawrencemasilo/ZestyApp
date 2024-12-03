@@ -1,5 +1,5 @@
 import { Routes, Route, Outlet } from "react-router-dom";
-import { Login } from "./pages/Auth/Login";
+import Login from "./pages/Auth/Login";
 import { ForgotPassword } from "./pages/Auth/ForgotPassword";
 import { Register } from "./pages/Auth/Register";
 import { Dashboard } from "./pages/SME/Dashboard";
@@ -15,7 +15,7 @@ import { MobileHeader } from "./components/SME/MobileHeader";
 import { MobileNavBar } from "./components/SME/MobileNavBar";
 import AccountSelection from "./pages/Auth/AccountSelection";
 import { SignupSme } from "./pages/Auth/SignupSme";
-import { SignupSupplier } from "./pages/Auth/SignupSupplier";
+import SignupSupplier from "./pages/Auth/SignupSupplier";
 import ProfilePage, { Profile } from "./pages/SME/Profile";
 import LandingPage from "./pages/Landing/LandingPage";
 import { MobileDashboard } from "./pages/SME/Mobile/MobileDashboard";
@@ -40,7 +40,7 @@ function Layout() {
 // Layout for the landing page (without navbar)
 function LandingPageLayout() {
   return (
-    <div className="flex justify-center items-center w-full h-screen bg-gray-100">
+    <div className="">
       <Outlet />
     </div>
   );
@@ -49,7 +49,7 @@ function LandingPageLayout() {
 // Layout for authentication pages
 function AuthLayout() {
   return (
-    <div className="flex justify-center items-center w-full h-screen bg-gray-100">
+    <div className="">
       <Outlet />
     </div>
   );
@@ -61,7 +61,6 @@ function App() {
     <Routes>
       {/* Main Layout with Navbar */}
       <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
         {isDesktop ? <Route path="dashboard" element={<Dashboard />} />:
           <Route path="dashboard" element={<MobileDashboard />} />
         }
@@ -84,9 +83,9 @@ function App() {
       </Route>
 
       {/* Landing Page Layout (without navbar) */}
-      {/*<Route path="/" element={<LandingPageLayout />}>
+      <Route path="/" element={<LandingPageLayout />}>
         <Route index element={<LandingPage />} />
-      </Route>*/}
+      </Route>
 
       {/* Auth Layout */}
       <Route element={<AuthLayout />}>
