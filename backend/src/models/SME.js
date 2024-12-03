@@ -41,21 +41,53 @@ const smeSchema = new mongoose.Schema(
       name: { type: String, required: true },
       email: { type: String, required: true },
       phone: { type: String, required: true },
+      id_number: { type: String, required: true },
     },
+    management_team: [
+      {
+        name: { type: String, required: true },
+        role: { type: String, required: true },
+        id_number: { type: String, required: true },
+      },
+    ],
     bank_details: {
       account_number: { type: String, required: true },
       bank_name: { type: String, required: true },
       proof_of_banking: { type: String, required: true },
     },
+    support_documents: {
+      type: [
+        {
+          type: String,
+          enum: [
+            "Tax Certificate",
+            "Company Registration",
+            "Proof of Residence",
+            "Bank Statement",
+            "Contact Person ID",
+            "Management Team IDs",
+          ],
+          required: true,
+        },
+      ],
+      validate: {
+        validator: function (docs) {
+          const requiredDocs = [
+            "Tax Certificate",
+            "Company Registration",
+            "Proof of Residence",
+            "Bank Statement",
+            "Contact Person ID",
+            "Management Team IDs",
+          ];
+          return requiredDocs.every((doc) => docs.includes(doc));
+        },
+        message: "All required documents (Tax Certificate, Company Registration, Proof of Residence, Bank Statement, Contact Person ID, Management Team IDs) must be provided.",
+      },
+    },
   },
   { timestamps: true }
 );
 
-smeSchema.pre("save", async function (next) {
-  if (!this.sme_id) {
-    this.sme_id = `SME-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
-  }
-  next();
-});
 
 module.exports = mongoose.model("SME", smeSchema);
