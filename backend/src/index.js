@@ -2,7 +2,8 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./src/config/db.config");
-const authRoutes = require("./src/routes/authRoutes");
+const authRoutes = require("./src/routes/authRoute");
+const smeRoutes = require("./src/routes/smeRoute");
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ connectDB();
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/sme", smeRoutes);
+
 
 // Default route
 app.get("/", (req, res) => {
