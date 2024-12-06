@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db.config");
 const authRoutes = require("./routes/authRoutes");
+const emailRoutes = require('./routes/emailRoutes');
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ connectDB();
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use('/api/email', emailRoutes)
 
 // Default route
 app.get("/", (req, res) => {

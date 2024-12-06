@@ -563,7 +563,7 @@ export const Dashboard = () => {
       try {
         const response = await axios.get('auth/profile');
         setUser(response.data); // Use `response.data` to access the actual user data
-        console.log(response.data.firstName);
+        console.log(response.data);
       } catch (err) {
         console.error('Error fetching user profile:', err);
       }
