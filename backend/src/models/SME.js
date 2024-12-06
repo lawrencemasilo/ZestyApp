@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const smeSchema = new mongoose.Schema(
   {
-    sme_id: {
-      type: String,
-      unique: true,
-      trim: true,
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     business_name: {
       type: String,
@@ -50,12 +50,5 @@ const smeSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-smeSchema.pre("save", async function (next) {
-  if (!this.sme_id) {
-    this.sme_id = `SME-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
-  }
-  next();
-});
 
 module.exports = mongoose.model("SME", smeSchema);

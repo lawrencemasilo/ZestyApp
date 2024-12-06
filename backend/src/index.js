@@ -4,6 +4,13 @@ const cors = require("cors");
 const connectDB = require("./config/db.config");
 const authRoutes = require("./routes/authRoutes");
 const emailRoutes = require('./routes/emailRoutes');
+const smeRoutes = require("./routes/smeRoutes");
+const creditRoutes = require("./routes/creditRoutes");
+const bnplRoutes = require("./routes/bnplRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
+const verificationRoutes = require("./routes/verificationRoutes");
+const supplierRoutes = require("./routes/supplierRoutes");
+
 
 dotenv.config();
 
@@ -18,7 +25,13 @@ connectDB();
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use('/api/email', emailRoutes)
+app.use('/api/email', emailRoutes);
+app.use("/api/sme", smeRoutes);
+app.use("/api/credit", creditRoutes);
+app.use("/api/bnpl", bnplRoutes);
+app.use("/api/transaction", transactionRoutes);
+app.use("/api/verify", verificationRoutes);
+app.use("/api/supplier", supplierRoutes)
 
 // Default route
 app.get("/", (req, res) => {
