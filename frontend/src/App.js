@@ -19,17 +19,24 @@ import SignupSupplier from "./pages/Auth/SignupSupplier";
 import ProfilePage, { Profile } from "./pages/SME/Profile";
 import LandingPage from "./pages/Landing/LandingPage";
 import { MobileDashboard } from "./pages/SME/Mobile/MobileDashboard";
+import GettingStarted from "./pages/SME/GettingStarted";
 import MobileCreditPage from "./pages/SME/Mobile/CreditMobile";
 import MobileSupplierPage from "./pages/SME/Mobile/SuppliersMobile";
 import MobileTransactionsPage from "./pages/SME/Mobile/TransactionsMobile";
+import MobileGettingStarted from "./pages/SME/Mobile/GettingStartedMobile";
 import ProtectedRoute from './components/ProtectedRoute';
+import WelcomePopup from "./components/SME/WelcomePopup";
+import { useState } from "react";
 
 // Layout for non-authenticated and authenticated pages (with navbar)
 function Layout() {
   const isDesktop = useIsDesktop();
+  const [onClose, setOnClose] = useState(true);
 
   return (
     <div className="bg-[#FAFBFC]" style={{ fontFamily: '"Inter", serif' }}>
+      
+        {onClose && <WelcomePopup setOnClose={setOnClose} />}
         <div className="flex flex-row h-screen w-full">
           {isDesktop && <NavBar />}
           <Outlet />
@@ -64,6 +71,9 @@ function App() {
       <Route path="/" element={<Layout />}>
         {isDesktop ? <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />:
           <Route path="dashboard" element={<ProtectedRoute><MobileDashboard /></ProtectedRoute>} />
+        }
+        {isDesktop ? <Route path="getting-started" element={<ProtectedRoute><GettingStarted /></ProtectedRoute>} />:
+          <Route path="getting-started" element={<ProtectedRoute><MobileGettingStarted /></ProtectedRoute>} />
         }
         {isDesktop ? <Route path="transactions" element={<ProtectedRoute><TransactionsPage /></ProtectedRoute>} />:
           <Route path="transactions" element={<ProtectedRoute><MobileTransactionsPage /></ProtectedRoute>} />

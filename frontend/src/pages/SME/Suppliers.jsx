@@ -11,7 +11,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       }`}
     >
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-blue-600">Zesty</h1>
+        <h1 className="text-2xl font-bold text-[#005EFF]">Zesty</h1>
         {isOpen && (
           <button className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300" onClick={onClose}>
             <X className="w-6 h-6 text-gray-600" />
@@ -44,7 +44,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
 // NavItem Component
 const NavItem = ({ icon, text, active }) => (
-  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-[#005EFF]' : 'text-gray-600 hover:bg-gray-50'}`}>
     {icon}
     <span className="text-sm font-medium">{text}</span>
   </div>
@@ -109,7 +109,7 @@ const SupplierPage = () => {
     <div className="flex bg-gray-50 min-h-screen">
       <Sidebar />
       
-      <div className="flex-1 p-8 overflow-y-auto">
+      <div className="flex-1 p-8 pt-5 overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -146,8 +146,8 @@ const SupplierPage = () => {
               </div>
               <p className="text-sm text-gray-500 mb-2">{supplier.category}</p>
               <div className="flex items-center gap-2 mb-2">
-                <Tag className="w-4 h-4 text-blue-600" />
-                <p className="text-sm font-medium text-blue-600">{supplier.offer}</p>
+                <Tag className="w-4 h-4 text-[#005EFF]" />
+                <p className="text-sm font-medium text-[#005EFF]">{supplier.offer}</p>
               </div>
               <div className="flex items-center gap-2 mb-2">
                 <Percent className="w-4 h-4 text-gray-500" />
@@ -191,8 +191,8 @@ const SupplierPage = () => {
                 {selectedSupplier.category}
               </p>
               <div className="flex items-center gap-2 mb-4">
-                <Tag className="w-4 h-4 text-blue-600" />
-                <p className="text-sm font-medium text-blue-600">
+                <Tag className="w-4 h-4 text-[#005EFF]" />
+                <p className="text-sm font-medium text-[#005EFF]">
                   {selectedSupplier.offer}
                 </p>
               </div>
@@ -220,7 +220,7 @@ const SupplierPage = () => {
                   {selectedSupplier.supportHours}
                 </p>
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              <button className="flex items-center gap-2 px-4 py-2 bg-[#005EFF] text-white rounded-lg hover:bg-blue-700">
                 <ArrowRight className="w-4 h-4" />
                 View Supplier
               </button>
