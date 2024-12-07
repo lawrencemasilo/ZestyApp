@@ -41,4 +41,22 @@ const saveBusinessInfo = async (req, res) => {
   }
 };
 
-module.exports = { saveBusinessInfo };
+const getBusinessInfo = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+
+    // Find the SME record associated with the user_id
+    const sme = await SME.findOne({ user_id });
+
+    if (!sme) {
+      return res.status(404).json({ message: "Business information not found for this user." });
+    }
+
+    res.status(200).json({ message: "Business information retrieved successfully.", sme });
+  } catch (err) {
+    console.error("Error retrieving business information:", err);
+    res.status(500).json({ message: "Error retrieving business information." });
+  }
+};
+
+module.exports = { saveBusinessInfo, getBusinessInfo };

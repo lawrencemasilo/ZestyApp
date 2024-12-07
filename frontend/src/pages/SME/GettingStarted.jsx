@@ -1,3 +1,4 @@
+import axios from '../../api/axios';
 import React, { useState } from 'react';
 import { ChevronRight, Building2, FileCheck, AlertCircle, ArrowLeft } from 'lucide-react';
 
@@ -80,20 +81,87 @@ const BusinessOnboarding = () => {
 
     const handleSubmit = async () => {
         setLoading(true);
+        setErrors({});
+    
         try {
-            const payload = {
-                ...formData,
-                monthly_revenue: parseInt(formData.monthly_revenue)
-            };
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            console.log('Submission payload:', payload);
+            if (step === 3) {
+                // Destructure and prepare the individual fields
+                const {
+                    business_name,
+                    industry,
+                    registration_number,
+                    tax_id,
+                    monthly_revenue,
+                    address,
+                    contact_person,
+                    bank_details,
+                } = formData;
+    
+                const payload = {
+                    business_name,
+                    industry,
+                    registration_number,
+                    tax_id,
+                    monthly_revenue: parseInt(monthly_revenue, 10), // Ensure number format
+                    address,
+                    contact_person,
+                    bank_details: {
+                        account_number: bank_details.account_number,
+                        bank_name: bank_details.bank_name,
+                    },
+                };
+    
+                // Replace this with the actual user ID
+                const userId = "6752c7eae8126058e8a837f1";
+    
+                
+                    // Send as JSON payload when no file exists
+                    const response = await axios.post(
+                        `http://localhost:5000/api/sme/${userId}`,
+                        {
+                            business_name,
+                            industry,
+                            registration_number,
+                            tax_id,
+                            monthly_revenue: parseInt(monthly_revenue, 10),
+                            address: {
+                                physical: address.physical,
+                                operational: address.operational,
+                            },
+                            contact_person: {
+                                name: contact_person.name,
+                                email: contact_person.email,
+                                phone: contact_person.phone,
+                            },
+                            bank_details: {
+                                account_number: bank_details.account_number,
+                                bank_name: bank_details.bank_name,
+                            },
+                        }
+                    );
+                    console.log("Response from backend (JSON):", response.data);
+                
+            }
+    
+            // Proceed to the next step on success
             setStep(step + 1);
         } catch (error) {
-            setErrors({ submit: 'Failed to submit business information' });
+            console.error("Error submitting business information:", error);
+    
+            // Handle backend errors
+            if (error.response && error.response.data) {
+                setErrors({
+                    submit: error.response.data.message || "Failed to submit business information",
+                });
+            } else {
+                setErrors({ submit: "An unexpected error occurred" });
+            }
         } finally {
             setLoading(false);
         }
     };
+    
+    
 
     const handleBack = () => {
         if (step > 1) {
@@ -127,7 +195,7 @@ const BusinessOnboarding = () => {
         switch(step) {
             case 1:
                 return (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                         <h2 className="text-xl font-bold text-gray-800">Business Details</h2>
                         <p className="text-gray-500 -mt-4">Tell us about your business</p>
                         
@@ -282,8 +350,8 @@ const BusinessOnboarding = () => {
 
     return (
         <div className="flex w-full h-screen justify-center min-h-screen overflow-y-auto bg-gray-50">
-            <div className="w-full h-screen bg-gray-50 rounded-2xl ">
-                <div className="w-full bg-[#005EFF] text-white p-5 px-10 flex items-center justify-between">
+            <div className="h-screen bg-white rounded-2xl py-5">
+                <div className=" bg-gradient-to-r from-[#005EFF] to-blue-600 rounded-t-2xl text-white p-5 px-10 flex items-center justify-between ">
                     <div>
                         <h1 className="text-xl font-bold">Business Verification</h1>
                         <p className="text-white text-l">Step {step} of 4</p>
@@ -314,7 +382,7 @@ const BusinessOnboarding = () => {
                     {renderStep()}
 
                     {step < 4 && (
-                        <div className="mt-8 flex justify-between">
+                        <div className="mt-3 flex justify-between">
                             {step > 1 && (
                                 <button
                                     onClick={handleBack}
