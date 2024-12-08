@@ -18,7 +18,7 @@ const supplierSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function (v) {
-          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); // Basic email validation
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); 
         },
         message: (props) => `${props.value} is not a valid email!`,
       },
@@ -29,7 +29,7 @@ const supplierSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function (v) {
-          return /^\+?[1-9]\d{1,14}$/.test(v); // Validates international phone number format
+          return /^\+?[1-9]\d{1,14}$/.test(v); 
         },
         message: (props) => `${props.value} is not a valid phone number!`,
       },
@@ -42,8 +42,13 @@ const supplierSchema = new mongoose.Schema(
     api_key: {
       type: String,
       required: true,
-      unique: true, // Ensures API key is unique
+      unique: true, 
       trim: true,
+    },
+    bank_details: {
+      account_number: { type: String, required: true },
+      bank_name: { type: String, required: true },
+      proof_of_banking: { type: String, required: true },
     },
   },
   { timestamps: true }

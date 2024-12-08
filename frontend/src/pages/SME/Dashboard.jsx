@@ -26,7 +26,7 @@ const BottomNav = () => (
 const NavButton = ({ icon, text, active }) => (
   <button 
     className={`flex flex-col items-center justify-center w-full h-full space-y-1
-               ${active ? 'text-blue-600' : 'text-gray-600'}`}
+               ${active ? 'text-[#005EFF]' : 'text-gray-600'}`}
   >
     {icon}
     <span className="text-xs font-medium">{text}</span>
@@ -37,7 +37,7 @@ const Header = () => (
   <div className="sticky top-0 z-10 bg-gray-50">
     {/* Top Bar with Logo, Notifications, and Profile */}
     <div className="flex items-center justify-between p-4 border-b border-gray-200">
-      <h1 className="text-2xl font-bold text-blue-600">Zesty</h1>
+      <h1 className="text-2xl font-bold text-[#005EFF]">Zesty</h1>
       <div className="flex items-center gap-4">
         <NotificationsPopover />
         <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ const Sidebar = () => {
     <div className="h-full bg-white flex flex-col">
       {/* Logo */}
       <div className="p-6">
-        <h1 className="text-2xl font-bold text-blue-600">Zesty</h1>
+        <h1 className="text-2xl font-bold text-[#005EFF]">Zesty</h1>
       </div>
 
       {/* Navigation Links */}
@@ -154,7 +154,7 @@ const Sidebar = () => {
 
 // NavItem Component remains the same
 const NavItem = ({ icon, text, active }) => (
-  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-[#005EFF]' : 'text-gray-600 hover:bg-gray-50'}`}>
     {icon}
     <span className="text-sm font-medium">{text}</span>
   </div>
@@ -188,7 +188,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <PlusCircle className="w-5 h-5 text-blue-600" />
+            <PlusCircle className="w-5 h-5 text-[#005EFF]" />
             Apply for Credit
           </DialogTitle>
           <DialogDescription>
@@ -204,7 +204,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
             </div>
             <div className="w-full h-2 bg-gray-100 rounded-full">
               <div 
-                className="h-full bg-blue-600 rounded-full"
+                className="h-full bg-[#005EFF] rounded-full"
                 style={{ width: `${(1 - availableCredit/maxCredit) * 100}%` }}
               />
             </div>
@@ -219,7 +219,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 max={availableCredit}
-                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:outline-none focus:ring-[#005EFF] focus:border-[#005EFF]"
                 placeholder="Enter amount"
               />
             </div>
@@ -234,7 +234,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
                   onClick={() => setTerm(days)}
                   className={`py-2 px-4 rounded-lg border ${
                     term === days 
-                      ? 'bg-blue-50 border-blue-600 text-blue-600' 
+                      ? 'bg-blue-50 border-blue-600 text-[#005EFF]' 
                       : 'hover:bg-gray-50'
                   }`}
                 >
@@ -256,7 +256,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
           </div>
 
           <button
-            className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+            className="w-full py-2 px-4 bg-[#005EFF] text-white rounded-lg hover:bg-blue-700 
                        transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={!amount || amount > availableCredit}
           >
@@ -280,7 +280,7 @@ const EnhancedCreditScore = () => {
           Credit Score
         </h3>
         <div className="text-right">
-          <div className="text-3xl font-bold text-blue-600">{score}</div>
+          <div className="text-3xl font-bold text-[#005EFF]">{score}</div>
           <div className="text-sm text-gray-500">out of 100</div>
         </div>
       </div>
@@ -289,7 +289,7 @@ const EnhancedCreditScore = () => {
         <div className="relative pt-4">
           <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full 
+              className="h-full bg-gradient-to-r from-[#005EFF] to-blue-400 rounded-full 
                          transition-all duration-500"
               style={{ width: `${score}%` }}
             />
@@ -361,7 +361,7 @@ const MetricCard = ({ metric, onSelect, selected }) => {
     <div 
       onClick={() => onSelect(metric.name)}
       className={`p-4 bg-white rounded-xl shadow-sm cursor-pointer transition-all
-                 ${selected ? 'ring-2 ring-blue-600' : 'hover:shadow-md'}`}
+                 ${selected ? 'ring-2 ring-[#005EFF]' : 'hover:shadow-md'}`}
     >
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium">{metric.name}</span>
@@ -446,7 +446,7 @@ const TransactionsList = () => {
               <input 
                 type="text"
                 placeholder="Search transactions"
-                className="pl-10 pr-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="pl-10 pr-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#005EFF] focus:border-[#005EFF]"
               />
             </div>
             <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50">
@@ -496,7 +496,7 @@ const CreditCardComponent = ({ onApplyClick }) => {
   };
 
   return (
-    <div className="p-6 bg-gradient-to-r from-blue-600 to-blue-400 rounded-xl text-white">
+    <div className="p-6 bg-gradient-to-r from-[#005EFF] to-blue-400 rounded-xl text-white">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-lg">Zesty Pay</h3>
         <button 
@@ -576,7 +576,7 @@ export const Dashboard = () => {
     <div className="flex w-full bg-gray-50 min-h-screen">
       {/*<Sidebar />*/}
       
-      <div className="flex-1 p-4 pt-0 lg:p-8 overflow-y-auto">
+      <div className="flex-1 p-8 lg:pt-5 overflow-y-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div className="flex items-center gap-4 w-full sm:w-auto">
@@ -587,7 +587,7 @@ export const Dashboard = () => {
             </div>*/}
             <div>
               <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
-              <p className="text-sm text-gray-500">Welcome back, <span className="text-blue-600">{user.firstName} {user.lastName}</span></p>
+              <p className="text-sm text-gray-500">Welcome back, <span className="text-[#005EFF]">{user.firstName} {user.lastName}</span></p>
             </div>
           </div>
           <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
@@ -623,7 +623,7 @@ export const Dashboard = () => {
                   <p className="text-gray-500">Payment Streak</p>
                   <p className="text-lg font-semibold text-gray-800">6 months</p>
                 </div>
-                <TrendingUp className="w-5 h-5 text-blue-500" />
+                <TrendingUp className="w-5 h-5 text-[#005EFF]" />
               </div>
             </div>
           </div>

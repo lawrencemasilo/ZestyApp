@@ -65,14 +65,14 @@ const CreditPage = () => {
   const renderAvailableCreditModal = () => {
     return (
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-        <div className="bg-blue-600 text-white p-6">
+        <div className="bg-[#005EFF] text-white p-6">
           <h2 className="text-2xl font-bold">Available Credit Details</h2>
         </div>
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gray-50 p-4 rounded-xl">
               <p className="text-gray-500 mb-2">Total Credit Limit</p>
-              <p className="text-xl font-semibold text-blue-600">R{creditDetails.totalLimit.toFixed(2)}</p>
+              <p className="text-xl font-semibold text-[#005EFF]">R{creditDetails.totalLimit.toFixed(2)}</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-xl">
               <p className="text-gray-500 mb-2">Available Credit</p>
@@ -111,7 +111,7 @@ const CreditPage = () => {
 
     return (
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-        <div className="bg-blue-600 text-white p-6 flex justify-between items-center">
+        <div className="bg-[#005EFF] text-white p-6 flex justify-between items-center">
           <h2 className="text-2xl font-bold">Credit Score Insights</h2>
           <div className="flex items-center">
             {scoreDifference > 0 ? <TrendIcon className="text-green-400 mr-2" /> : <TrendingDown className="text-red-400 mr-2" />}
@@ -124,7 +124,7 @@ const CreditPage = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gray-50 p-4 rounded-xl">
               <p className="text-gray-500 mb-2">Current Score</p>
-              <p className="text-2xl font-bold text-blue-600">{latestScore}</p>
+              <p className="text-2xl font-bold text-[#005EFF]">{latestScore}</p>
               <p className={`text-sm font-medium ${latestScore > 700 ? 'text-green-600' : 'text-yellow-600'}`}>
                 {latestScore > 750 ? 'Excellent' : 'Good'}
               </p>
@@ -153,14 +153,14 @@ const CreditPage = () => {
   const renderBNPLModal = (bnpl) => {
     return (
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-        <div className="bg-blue-600 text-white p-6">
+        <div className="bg-[#005EFF] text-white p-6">
           <h2 className="text-2xl font-bold">{bnpl.vendor} BNPL Details</h2>
         </div>
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gray-50 p-4 rounded-xl">
               <p className="text-gray-500 mb-2">Total Amount</p>
-              <p className="text-xl font-semibold text-blue-600">R{bnpl.totalAmount.toFixed(2)}</p>
+              <p className="text-xl font-semibold text-[#005EFF]">R{bnpl.totalAmount.toFixed(2)}</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-xl">
               <p className="text-gray-500 mb-2">Remaining Balance</p>
@@ -184,7 +184,7 @@ const CreditPage = () => {
                 <p className="font-semibold">{bnpl.monthsRemaining} Months Remaining</p>
                 <p className="text-sm text-gray-500">Started: {bnpl.startDate}</p>
               </div>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+              <button className="bg-[#005EFF] text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
                 Modify Terms
               </button>
             </div>
@@ -227,7 +227,7 @@ const CreditPage = () => {
       {selectedBNPLModal && renderBNPLModal(selectedBNPLModal)}
 
       {/* Main Content */}
-      <div className="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl">
+      <div className="flex-1 p-8 pt-5 overflow-y-auto max-w-7xl">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <div className="flex items-center gap-4">
@@ -253,15 +253,15 @@ const CreditPage = () => {
               <h3 className="text-gray-700 flex items-center gap-2">
                 <CreditCardIcon className="w-5 h-5" />
                 Available Credit
-                <Info className="w-4 h-4 text-blue-500" />
+                <Info className="w-4 h-4 text-[#005EFF]" />
               </h3>
             </div>
-            <div className="text-2xl font-semibold text-blue-600 mb-2">
+            <div className="text-2xl font-semibold text-[#005EFF] mb-2">
               R{creditDetails.availableCredit.toFixed(2)}
             </div>
             <div className="w-full h-2 bg-gray-100 rounded-full">
               <div 
-                className="h-full bg-blue-600 rounded-full"
+                className="h-full bg-[#005EFF] rounded-full"
                 style={{ width: `${(creditDetails.availableCredit / creditDetails.totalLimit) * 100}%` }}
               />
             </div>
@@ -276,10 +276,10 @@ const CreditPage = () => {
               <h3 className="text-gray-700 flex items-center gap-2">
                 <CircleGauge className="w-5 h-5" />
                 Credit Score
-                <Info className="w-4 h-4 text-blue-500" />
+                <Info className="w-4 h-4 text-[#005EFF]" />
               </h3>
             </div>
-            <div className="text-2xl font-semibold text-blue-600 mb-2">
+            <div className="text-2xl font-semibold text-[#005EFF] mb-2">
               {creditDetails.creditScore}
             </div>
             <div className="text-sm text-gray-500 mb-2">
@@ -287,7 +287,7 @@ const CreditPage = () => {
             </div>
             <div className="w-full h-2 bg-gray-100 rounded-full">
               <div 
-                className="h-full bg-blue-600 rounded-full"
+                className="h-full bg-[#005EFF] rounded-full"
                 style={{ width: `${(creditDetails.creditScore / 850) * 100}%` }}
               />
             </div>
@@ -326,7 +326,7 @@ const CreditPage = () => {
                   <h3 className="text-gray-700 flex items-center gap-2">
                     <Receipt className="w-5 h-5" />
                     {credit.vendor}
-                    <Info className="w-4 h-4 text-blue-500" />
+                    <Info className="w-4 h-4 text-[#005EFF]" />
                   </h3>
                 </div>
                 <div className="text-lg font-semibold text-gray-800 mb-2">
@@ -344,7 +344,7 @@ const CreditPage = () => {
         <div className="mt-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-gray-800">Recent Transactions</h2>
-            <button className="text-blue-600 text-sm hover:underline">View All</button>
+            <button className="text-[#005EFF] text-sm hover:underline">View All</button>
           </div>
           <div className="bg-white rounded-xl shadow-sm">
             {recentTransactions.map(transaction => (
