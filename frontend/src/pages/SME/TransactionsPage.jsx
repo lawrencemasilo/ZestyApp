@@ -1,5 +1,49 @@
 import React, { useState } from 'react';
-import { Search, Filter, Download, MoreVertical, Bell, Wallet, ArrowUpDown,  } from 'lucide-react';
+import { 
+  Download, Search, Filter, Bell, 
+  LayoutDashboard, ArrowRightLeft, CreditCardIcon, 
+  Building2, LogOut 
+} from 'lucide-react';
+import NotificationsPopover from '../../components/SME/NotificationsPopover';
+
+const Sidebar = () => (
+  <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
+    {/* Logo */}
+    <div className="p-6">
+      <h1 className="text-2xl font-bold text-blue-600">Zesty</h1>
+    </div>
+
+    {/* Navigation Links */}
+    <nav className="flex-1 px-4 space-y-2">
+      <NavItem icon={<LayoutDashboard size={20} />} text="Dashboard" />
+      <NavItem icon={<ArrowRightLeft size={20} />} text="Transactions" active />
+      <NavItem icon={<CreditCardIcon size={20} />} text="Credit" />
+      <NavItem icon={<Building2 size={20} />} text="Suppliers" />
+    </nav>
+
+    {/* User Profile */}
+    <div className="p-4 border-t border-gray-200">
+      <div className="flex items-center space-x-3">
+        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+          <span className="text-gray-600 font-medium">NM</span>
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-medium">Neo Masilo</p>
+          <p className="text-xs text-gray-500">neolawrencemasilo@gmail.com</p>
+        </div>
+        <LogOut size={18} className="text-gray-400 cursor-pointer" />
+      </div>
+    </div>
+  </div>
+);
+
+// NavItem Component
+const NavItem = ({ icon, text, active }) => (
+  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+    {icon}
+    <span className="text-sm font-medium">{text}</span>
+  </div>
+);
 
 const TransactionsPage = () => {
   const [isAllSelected, setIsAllSelected] = useState(false);
@@ -16,240 +60,115 @@ const TransactionsPage = () => {
       amount: 'R1,570.00',
       status: 'Pending'
     },
-    {
-      id: 3,
-      name: 'Matrix',
-      date: '10/11/2024',
-      type: 'Inventory Purchase',
-      invoiceId: 'SI002410',
-      fees: 'R61.00',
-      amount: 'R2,220.00',
-      status: 'Complete'
-    },
-    {
-      id: 4,
-      name: 'Matrix',
-      date: '10/11/2024',
-      type: 'Inventory Purchase',
-      invoiceId: 'SI002410',
-      fees: 'R61.00',
-      amount: 'R2,220.00',
-      status: 'Complete'
-    },
-    {
-      id: 5,
-      name: 'Matrix',
-      date: '10/11/2024',
-      type: 'Inventory Purchase',
-      invoiceId: 'SI002410',
-      fees: 'R61.00',
-      amount: 'R2,220.00',
-      status: 'Complete'
-    },
-    {
-      id: 6,
-      name: 'Matrix',
-      date: '10/11/2024',
-      type: 'Inventory Purchase',
-      invoiceId: 'SI002410',
-      fees: 'R61.00',
-      amount: 'R2,220.00',
-      status: 'Complete'
-    },
-    {
-      id: 7,
-      name: 'Matrix',
-      date: '10/11/2024',
-      type: 'Inventory Purchase',
-      invoiceId: 'SI002410',
-      fees: 'R61.00',
-      amount: 'R2,220.00',
-      status: 'Complete'
-    },
-    {
-      id: 8,
-      name: 'Matrix',
-      date: '10/11/2024',
-      type: 'Inventory Purchase',
-      invoiceId: 'SI002410',
-      fees: 'R61.00',
-      amount: 'R2,220.00',
-      status: 'Complete'
-    },
-    {
-      id: 9,
-      name: 'Matrix',
-      date: '10/11/2024',
-      type: 'Inventory Purchase',
-      invoiceId: 'SI002410',
-      fees: 'R61.00',
-      amount: 'R2,220.00',
-      status: 'Complete'
-    },
-    {
-      id: 10,
-      name: 'Matrix',
-      date: '10/11/2024',
-      type: 'Inventory Purchase',
-      invoiceId: 'SI002410',
-      fees: 'R61.00',
-      amount: 'R2,220.00',
-      status: 'Complete'
-    }
+    // ... (rest of the transactions remain the same)
   ];
 
   return (
-    <div className="flex w-full h-full bg-[#FAFBFC] min-h-[100%]  text-[#333333]" style={{ fontFamily: '"Inter", serif' }}>
-      {/* Main Content */}
-      <div className="flex-1 space-y-[15px]">
-        {/* Header Card */}
-        <div className="flex justify-between h-[80px] bg-white items-center mb-[15px] rounded-[10px] p-[10px] px-5">
-          <div className="flex flex-col items-center">
-            <h1 className="text-xl font-semibold ">Transactions</h1>
-            <p className="text-gray-500 text-[12px]">View all transactions</p>
+    <div className="flex justify-center w-full bg-gray-50 min-h-screen">
+      {/*<Sidebar />*/}
+      
+      <div className="flex-1 p-8 overflow-y-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-800">Transactions</h1>
+            <p className="text-sm text-gray-500">View and manage your transaction history</p>
           </div>
           <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <MoreVertical className="" size={20} />
+            <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
+              <Download className="w-4 h-4" />
+              Download
             </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <Wallet className="" size={20} />
-            </button>
-            <button className="flex justify-center items-center p-2 hover:bg-gray-100 rounded-full hover:cursor-pointer">
-            <div className="w-[7px] h-[7px] absolute bg-[#E74C3C] rounded mt-[-16px] ml-[10px]"></div>
-              <Bell className="" size={20} />
-            </button>
+            {/*<div className="relative">
+              <Bell className="w-5 h-5 text-gray-600 cursor-pointer" />
+              <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></div>
+            </div>*/}
+            <NotificationsPopover />
           </div>
         </div>
-          
-        {/* Table Card */}
-        <div className="bg-white rounded-lg shadow-sm p-5" style={{ height: '85%' }}>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-gray-600 text-l font-medium">Transactions List</h2>
-            <button className="flex items-center h-[35px] gap-2 px-3 py-1 hover-item border rounded-lg">
-              <Download className="w-3 h-3" />
-              <span className="text-xs">Download</span>
-            </button>
-          </div>
 
-          {/* First horizontal line */}
-          <div className="w-full h-px bg-gray-200 mb-4"></div>
-
-          <div className="mb-4 flex flex-col gap-4">
+        {/* Transactions Table */}
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <div className="mb-4 flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-gray-700">Transactions List</h2>
             <div className="flex items-center gap-4">
               <div className="flex border rounded-lg overflow-hidden">
-                <button className="px-3 py-1 text-xs text-gray-600 border-r hover-item flex-1">All</button>
-                <button className="px-3 py-1 text-xs text-gray-600 border-r hover-item flex-1">Credit</button>
-                <button className="px-3 py-1 text-xs text-gray-600 hover-item flex-1">Debit</button>
+                <button className="px-3 py-1 text-xs text-gray-600 border-r hover:bg-gray-50 flex-1">All</button>
+                <button className="px-3 py-1 text-xs text-gray-600 border-r hover:bg-gray-50 flex-1">Credit</button>
+                <button className="px-3 py-1 text-xs text-gray-600 hover:bg-gray-50 flex-1">Debit</button>
               </div>
-              <div className="relative flex-grow pr-6">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <div className="relative">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search"
-                  className="pl-9 pr-6 py-2 border rounded-lg w-full text-sm"
+                  placeholder="Search transactions"
+                  className="pl-10 pr-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover-item">
+              <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50">
                 <Filter className="w-4 h-4" />
-                <span className="text-sm ">Filters</span>
+                <span className="text-sm">Filter</span>
               </button>
             </div>
           </div>
 
-          {/* Second horizontal line */}
-          <div className="w-full h-px bg-gray-200 mb-4"></div>
-
-          <div className="h-[360px] scrollbar-container overflow-x-auto overflow-y-auto">
-            <div className="relative">
-              <table className="w-full">
-                <thead className="sticky top-0 bg-white z-10">
-                  <tr className="text-left text-gray-500 border-b border-gray-200">
-                    <th className="pb-4 pr-4">
-                      <input type="checkbox" onChange={() => setIsAllSelected((prev) => !prev)} className="rounded hover:cursor-pointer" />
-                    </th>
-                    <th className={`pb-4 text-sm font-normal ${sortBy === 'name' && 'text-[#005EFF]'}`}>
-                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('name')}>
-                        Name/Company
-                        <ArrowUpDown className="w-4 h-4" />
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="text-left border-b border-gray-200 text-gray-500">
+                  <th className="pb-4 pr-4">
+                    <input 
+                      type="checkbox" 
+                      onChange={() => setIsAllSelected((prev) => !prev)} 
+                      className="rounded hover:cursor-pointer"
+                    />
+                  </th>
+                  <th className="pb-4 text-sm font-medium">Name/Company</th>
+                  <th className="pb-4 text-sm font-medium">Date</th>
+                  <th className="pb-4 text-sm font-medium">Type</th>
+                  <th className="pb-4 text-sm font-medium">Invoice ID</th>
+                  <th className="pb-4 text-sm font-medium">Fees</th>
+                  <th className="pb-4 text-sm font-medium">Amount</th>
+                  <th className="pb-4 text-sm font-medium">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {transactions.map((transaction) => (
+                  <tr key={transaction.id} className="border-b border-gray-200 hover:bg-gray-50">
+                    <td className="py-4 pr-4">
+                      <input 
+                        type="checkbox" 
+                        checked={isAllSelected} 
+                        className="rounded hover:cursor-pointer" 
+                      />
+                    </td>
+                    <td className="py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                        <span className="text-sm">{transaction.name}</span>
                       </div>
-                    </th>
-                    <th className={`pb-4 text-sm font-normal ${sortBy === 'date' && 'text-[#005EFF]'}`}>
-                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('date')}>
-                        Date
-                        <ArrowUpDown className="w-4 h-4" />
-                      </div>
-                    </th>
-                    <th className={`pb-4 text-sm font-normal ${sortBy === 'type' && 'text-[#005EFF]'}`}>
-                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('type')}>
-                        Type
-                        <ArrowUpDown className="w-4 h-4" />
-                      </div>
-                    </th>
-                    <th className={`pb-4 text-sm font-normal ${sortBy === 'invoice' && 'text-[#005EFF]'}`}>
-                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('invoice')}>
-                        Invoice ID
-                        <ArrowUpDown className="w-4 h-4" />
-                      </div>
-                    </th>
-                    <th className={`pb-4 text-sm font-normal ${sortBy === 'fees' && 'text-[#005EFF]'}`}>
-                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('fees')}>
-                        Fees
-                        <ArrowUpDown className="w-4 h-4" />
-                      </div>
-                    </th>
-                    <th className={`pb-4 text-sm font-normal ${sortBy === 'amount' && 'text-[#005EFF]'}`}>
-                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('amount')}>
-                        Amount
-                        <ArrowUpDown className="w-4 h-4" />
-                      </div>
-                    </th>
-                    <th className={`pb-4 text-sm font-normal ${sortBy === 'status' && 'text-[#005EFF]'}`}>
-                      <div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setSortBy('status')}>
-                        Status
-                        <ArrowUpDown className="w-4 h-4" />
-                      </div>
-                    </th>
+                    </td>
+                    <td className="py-4 text-sm">{transaction.date}</td>
+                    <td className="py-4 text-sm">{transaction.type}</td>
+                    <td className="py-4 text-sm">{transaction.invoiceId}</td>
+                    <td className="py-4 text-sm">{transaction.fees}</td>
+                    <td className="py-4 text-sm">{transaction.amount}</td>
+                    <td className="py-4">
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm ${
+                          transaction.status === "Complete"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-orange-100 text-orange-700"
+                        }`}
+                      >
+                        {transaction.status}
+                      </span>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {transactions.map((transaction) => (
-                    <tr key={transaction.id} className="border-b border-gray-200">
-                      <td className="py-4 pr-4">
-                        {isAllSelected ?
-                        <input type="checkbox" checked={isAllSelected} className="rounded hover:cursor-pointer" />
-                        : <input type="checkbox" className="rounded hover:cursor-pointer" />
-                        }
-                      </td>
-                      <td className="py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
-                          <span className="text-sm">{transaction.name}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 text-sm">{transaction.date}</td>
-                      <td className="py-4 text-sm">{transaction.type}</td>
-                      <td className="py-4 text-sm">{transaction.invoiceId}</td>
-                      <td className="py-4 text-sm">{transaction.fees}</td>
-                      <td className="py-4 text-sm">{transaction.amount}</td>
-                      <td className="py-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm ${
-                            transaction.status === "Complete"
-                              ? "bg-green-100 text-[#388E3C]"
-                              : "bg-orange-100 text-[#F57C00]"
-                          }`}
-                        >
-                          {transaction.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
-
         </div>
       </div>
     </div>

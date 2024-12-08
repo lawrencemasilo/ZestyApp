@@ -29,6 +29,12 @@ const registerUser = async (req, res) => {
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
     console.error("Error registering user: ", err); // Log error to the console
+    if (err.code === 11000) {
+      return res.status(400).json({
+        error: "Duplicate field value detected",
+        details: err.keyValue,
+      });
+    }
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -79,3 +85,4 @@ const getUserProfile = async (req, res) => {
 };
 
 module.exports = { registerUser, loginUser, getUserProfile };
+
