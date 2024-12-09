@@ -67,7 +67,7 @@ const TransactionsPage = () => {
     <div className="flex justify-center w-full bg-gray-50 min-h-screen">
       {/*<Sidebar />*/}
       
-      <div className="flex-1 p-8 overflow-y-auto">
+      <div className="flex-1 p-8 pt-5 overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>

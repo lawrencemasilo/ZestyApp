@@ -119,56 +119,10 @@ const MobileNav = ({ children }) => {
   );
 };
 
-const Sidebar = () => {
-  const SidebarContent = () => (
-    <div className="h-full bg-white flex flex-col">
-      {/* Logo */}
-      <div className="p-6">
-        <h1 className="text-2xl font-bold text-blue-600">Zesty</h1>
-      </div>
-
-      {/* Navigation Links */}
-      <nav className="flex-1 px-4 space-y-2">
-        <NavItem icon={<LayoutDashboard size={20} />} text="Dashboard" active />
-        <NavItem icon={<ArrowRightLeft size={20} />} text="Transactions" />
-        <NavItem icon={<CreditCardIcon size={20} />} text="Credit" />
-        <NavItem icon={<Building2 size={20} />} text="Suppliers" />
-      </nav>
-
-      {/* User Profile */}
-      <div className="p-4 border-t border-gray-200">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-600 font-medium">NM</span>
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-medium">Neo Masilo</p>
-            <p className="text-xs text-gray-500">neolawrencemasilo@gmail.com</p>
-          </div>
-          <LogOut size={18} className="text-gray-400 cursor-pointer" />
-        </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <>
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block w-64 h-screen bg-white border-r border-gray-200">
-        <SidebarContent />
-      </div>
-
-      {/* Mobile Sidebar */}
-      <MobileNav>
-        <SidebarContent />
-      </MobileNav>
-    </>
-  );
-};
 
 // NavItem Component remains the same
 const NavItem = ({ icon, text, active }) => (
-  <div className={`flex flex-col items-center px-4  py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+  <div className={`flex flex-col items-center px-4  py-3 rounded-lg cursor-pointer ${active ? 'text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
     {icon}
     <span className="text-sm font-medium">{text}</span>
   </div>

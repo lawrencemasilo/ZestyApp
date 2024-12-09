@@ -68,7 +68,7 @@ const Header = () => (
 
 
 const NavItem = ({ icon, text, active }) => (
-  <div className={`flex flex-col items-center px-4  py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+  <div className={`flex flex-col items-center px-4  py-3 rounded-lg cursor-pointer ${active ? ' text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
     {icon}
     <span className="text-sm font-medium">{text}</span>
   </div>

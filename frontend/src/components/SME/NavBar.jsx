@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../App.css";
-import { LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, LogOut, } from 'lucide-react';
+import { LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, LogOut, ShieldCheck } from 'lucide-react';
 
 // NavItem Component
 const NavItem = ({ icon, text, active }) => (
-  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-[#005EFF]' : 'text-gray-600 hover:bg-gray-50'}`}>
     {icon}
     <span className="text-sm font-medium">{text}</span>
   </div>
@@ -18,11 +18,18 @@ export const NavBar = () => {
     <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
       {/* Logo */}
       <div className="p-6">
-        <h1 className="text-2xl font-bold text-blue-600">Zesty</h1>
+        <h1 className="text-2xl font-bold text-[#005EFF]">Zesty</h1>
       </div>
 
       {/* Navigation Links */}
       <nav className="flex-1 px-4 space-y-2">
+        <Link to="/getting-started" onClick={() => setSelectedItem("getting-started")}>
+          {/*<NavItem icon={<LayoutDashboard size={20} />}  text="Getting-started" active={selectedItem === 'getting-started' && true} />*/}
+          <div className={"flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer border-2 border-dashed  p-6 text-center bg-blue-50 text-[#005EFF] border-[#005EFF]"}>
+          <ShieldCheck size={20} />
+            <span className="text-sm font-medium">Getting started</span>
+          </div>
+        </Link>
         <Link to="/dashboard" onClick={() => setSelectedItem("dashboard")}>
           <NavItem icon={<LayoutDashboard size={20} />}  text="Dashboard" active={selectedItem === 'dashboard' && true} />
         </Link>
