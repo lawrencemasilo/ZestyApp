@@ -41,6 +41,10 @@ const bnplCreditSchema = new mongoose.Schema(
       enum: ["active", "paid", "defaulted"],
       default: "active",
     },
+    default_reason: {
+      type: String,
+      trim: true
+    },
   },
   { timestamps: true }
 );
