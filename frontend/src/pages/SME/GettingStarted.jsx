@@ -1,6 +1,7 @@
 import axios from '../../api/axios';
 import React, { useState } from 'react';
 import { ChevronRight, Building2, FileCheck, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const BusinessOnboarding = () => {
     const [step, setStep] = useState(1);
@@ -335,14 +336,16 @@ const BusinessOnboarding = () => {
                             Your business has been verified. You can now access all features 
                             and start your journey with us.
                         </p>
-                        <button 
-                            className="px-10 py-4 bg-[#005EFF] text-white rounded-xl 
-                            hover:bg-blue-700 transition-colors inline-flex items-center gap-3 
-                            shadow-lg hover:shadow-xl mx-auto"
-                        >
-                            Continue to Dashboard
-                            <ChevronRight className="w-5 h-5" />
-                        </button>
+                        <Link to="/dashboard">
+                            <button 
+                                className="px-10 py-4 bg-[#005EFF] text-white rounded-xl 
+                                hover:bg-blue-700 transition-colors inline-flex items-center gap-3 
+                                shadow-lg hover:shadow-xl mx-auto"
+                            >
+                                Continue to Dashboard
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </Link>
                     </div>
                 );
         }
