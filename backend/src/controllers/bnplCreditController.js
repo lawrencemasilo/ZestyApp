@@ -1,5 +1,6 @@
 const BnplCredit = require("../models/BnplCredit");
 const CreditScore = require("../models/CreditScore");
+const Repayments = require("../models/Repayments");
 const Joi = require("joi");
 
 // Validation schema for creating BNPL Credit
@@ -41,6 +42,19 @@ const createBnplCredit = async (req, res) => {
   
       creditScore.credit_limit -= total_amount; //deduct total_amount from credit limit
       await newBnplCredit.save();
+
+      // generate repayment records
+      const repayments = [];
+      for (let i = 1; i <= months_remaining; i++) {
+        repayments.push({
+          transaction_id: newBnplCredit._id,
+          due_date: new Date(new Date().setMonth(new Date().getMonth() + i)), // due date incremented by i months
+          amount_due: monthlyPayment,
+          status: "pending",
+        });
+      }
+
+      await Repayments.insertMany(repayments);
   
       res.status(201).json({ message: "BNPL credit application successful.", credit: newBnplCredit });
     } catch (err) {
