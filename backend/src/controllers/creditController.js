@@ -12,15 +12,15 @@ const assessCredit = async (req, res) => {
 
     // We assess initial credit limit based on the documents provided
     let initialScore = 300;
-    if (documents.revenueProof) initialScore += 100;
-    if (documents.taxReturns) initialScore += 100;
-    if (documents.bankStatements) initialScore += 100;
+    if (documents.revenueProof) initialScore += 50;
+    if (documents.taxReturns) initialScore += 50;
+    if (documents.bankStatements) initialScore += 50;
 
     // Here we determine initial risk category and credit limit
     const riskCategory = 
-      initialScore > 700 ? "Low" : initialScore > 500 ? "Medium" : "High";
+      initialScore > 600 ? "Low" : initialScore > 400 ? "Medium" : "High";
     const creditLimit =
-      riskCategory === "Low" ? 50000 : riskCategory === "Medium" ? 30000 : 10000;
+      riskCategory === "Low" ? 20000 : riskCategory === "Medium" ? 10000 : 4000;
 
     // Save initial credit assessment to the database
     const newCreditScore = new CreditScore({
@@ -65,17 +65,17 @@ const updateCreditScore = async (req, res) => {
     }
 
     // Ensure credit score stays within valid bounds
-    updatedScore = Math.min(Math.max(updatedScore, 300), 850);
+    updatedScore = Math.min(Math.max(updatedScore, 300), 600);
 
     //Update risk category and credit limit dynamically
     const riskCategory =
-      updatedScore > 700 ? "Low" : updatedScore > 500 ? "Medium" : "High";
+      updatedScore > 600 ? "Low" : updatedScore > 400 ? "Medium" : "High";
     const creditLimit =
       riskCategory === "Low"
-        ? 50000
+        ? 20000
         : riskCategory === "Medium"
-        ? 30000
-        : 10000;
+        ? 10000
+        : 4000;
     
     creditProfile.credit_score = updatedScore;
     creditProfile.credit_limit = creditLimit;
