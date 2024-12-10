@@ -34,7 +34,7 @@ export const NavBar = () => {
     <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
       {/* Logo */}
       <div className="p-6">
-        <Link to="/dashboard">
+        <Link to="/dashboard" onClick={() => setSelectedItem("dashboard")}>
           <h1 className="text-2xl font-bold text-[#005EFF]">Zesty</h1>
         </Link>
       </div>
