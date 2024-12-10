@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 import { useUser } from '../../context/userContext';
 
 const BusinessOnboarding = () => {
-    const { user } = useUser();
+    //const { user } = useUser();
+    const [user, setUser] = useState(null);
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
         business_name: '',
@@ -48,6 +49,20 @@ const BusinessOnboarding = () => {
             return { ...prev, [field]: value };
         });
     };
+    
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+          try {
+            const response = await axios.get("/auth/profile");
+            const userData = response.data;
+            setUser(userData);
+          } catch (err) {
+            console.error("Error fetching user profile:", err);
+          }
+        };
+    
+        fetchUserProfile();
+      }, []);
 
     const validateStep1 = () => {
         const newErrors = {};
