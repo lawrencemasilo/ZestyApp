@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../App.css";
 import { LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, LogOut, ShieldCheck } from 'lucide-react';
+import { useUser } from "../../context/userContext";
+import axios from "../../api/axios";
 
 // NavItem Component
 const NavItem = ({ icon, text, active }) => (
@@ -12,7 +14,22 @@ const NavItem = ({ icon, text, active }) => (
 );
 
 export const NavBar = () => {
+  //const { user } = useUser();
+  const [user, setUser] = useState(null);
   const [selectedItem, setSelectedItem] = useState('');
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get("/auth/profile");
+        setUser(response.data);
+      } catch (err) {
+        console.error("Error fetching user profile:", err);
+      }
+    };
+    if (user && !user.verified) 
+      fetchUserProfile();
+  }, [selectedItem]);
 
   return (
     <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
@@ -23,13 +40,13 @@ export const NavBar = () => {
 
       {/* Navigation Links */}
       <nav className="flex-1 px-4 space-y-2">
-        <Link to="/getting-started" onClick={() => setSelectedItem("getting-started")}>
+        {user && !user.verified && <Link to="/getting-started" onClick={() => setSelectedItem("getting-started")}>
           {/*<NavItem icon={<LayoutDashboard size={20} />}  text="Getting-started" active={selectedItem === 'getting-started' && true} />*/}
           <div className={"flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer border-2 border-dashed  p-6 text-center bg-blue-50 text-[#005EFF] border-[#005EFF]"}>
           <ShieldCheck size={20} />
             <span className="text-sm font-medium">Getting started</span>
           </div>
-        </Link>
+        </Link>}
         <Link to="/dashboard" onClick={() => setSelectedItem("dashboard")}>
           <NavItem icon={<LayoutDashboard size={20} />}  text="Dashboard" active={selectedItem === 'dashboard' && true} />
         </Link>
