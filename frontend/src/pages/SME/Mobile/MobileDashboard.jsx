@@ -47,18 +47,23 @@ const NavButton = ({ icon, text, active }) => (
   </button>
 );
 
-const Header = () => (
+const Header = () => {
+  const { selectedItem, setSelectedItem } = useSelectedItem();
+
+  return (
   <div className="sticky top-0 z-10 bg-gray-50">
     {/* Top Bar with Logo, Notifications, and Profile */}
     <div className="flex items-center justify-between p-4 px-0 ">
       <h1 className="text-3xl font-bold text-blue-600">Zesty</h1>
       <div className="flex items-center gap-4">
         <NotificationsPopover />
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-600 text-sm font-medium">NM</span>
+          <div className="flex items-center gap-2" onClick={() => setSelectedItem('profile')}>
+          <Link to="/profile" >
+            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+              <span className="text-gray-600 text-sm font-medium">NM</span>
+            </div>
+          </Link>
           </div>
-        </div>
       </div>
     </div>
     
@@ -71,7 +76,8 @@ const Header = () => (
       </button>
     </div>*/}
   </div>
-);
+  )
+};
 
 const Sheet = ({ children, open, onOpenChange }) => {
   if (!open) return null;

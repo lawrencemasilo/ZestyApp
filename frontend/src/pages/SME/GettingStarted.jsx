@@ -1,8 +1,12 @@
 import axios from '../../api/axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronRight, Building2, FileCheck, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useUser } from '../../context/userContext';
 
 const BusinessOnboarding = () => {
+    //const { user } = useUser();
+    const [user, setUser] = useState(null);
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
         business_name: '',
@@ -25,7 +29,6 @@ const BusinessOnboarding = () => {
             proof_of_banking: null
         }
     });
-
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
@@ -46,6 +49,20 @@ const BusinessOnboarding = () => {
             return { ...prev, [field]: value };
         });
     };
+    
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+          try {
+            const response = await axios.get("/auth/profile");
+            const userData = response.data;
+            setUser(userData);
+          } catch (err) {
+            console.error("Error fetching user profile:", err);
+          }
+        };
+    
+        fetchUserProfile();
+      }, []);
 
     const validateStep1 = () => {
         const newErrors = {};
@@ -110,36 +127,33 @@ const BusinessOnboarding = () => {
                         bank_name: bank_details.bank_name,
                     },
                 };
+
     
-                // Replace this with the actual user ID
-                const userId = "6752c7eae8126058e8a837f1";
-    
-                
-                    // Send as JSON payload when no file exists
-                    const response = await axios.post(
-                        `http://localhost:5000/api/sme/${userId}`,
-                        {
-                            business_name,
-                            industry,
-                            registration_number,
-                            tax_id,
-                            monthly_revenue: parseInt(monthly_revenue, 10),
-                            address: {
-                                physical: address.physical,
-                                operational: address.operational,
-                            },
-                            contact_person: {
-                                name: contact_person.name,
-                                email: contact_person.email,
-                                phone: contact_person.phone,
-                            },
-                            bank_details: {
-                                account_number: bank_details.account_number,
-                                bank_name: bank_details.bank_name,
-                            },
-                        }
-                    );
-                    console.log("Response from backend (JSON):", response.data);
+            
+                const response = await axios.post(
+                    `http://localhost:5000/api/sme/${user._id}`,
+                    {
+                        business_name,
+                        industry,
+                        registration_number,
+                        tax_id,
+                        monthly_revenue: parseInt(monthly_revenue, 10),
+                        address: {
+                            physical: address.physical,
+                            operational: address.operational,
+                        },
+                        contact_person: {
+                            name: contact_person.name,
+                            email: contact_person.email,
+                            phone: contact_person.phone,
+                        },
+                        bank_details: {
+                            account_number: bank_details.account_number,
+                            bank_name: bank_details.bank_name,
+                        },
+                    }
+                );
+                console.log("Response from backend (JSON):", response.data);
                 
             }
     
@@ -191,7 +205,27 @@ const BusinessOnboarding = () => {
         </div>
     );
 
+    
+    useEffect(() => {
+        const handleVerified = async () => {
+            try {              
+                const response = await axios.patch(`http://localhost:5000/api/users/${user && user._id}`, {
+                    verified: true,
+                });
+                console.log("Verification Response:", response.data);
+            } catch (err) {
+                console.error("Error during verification:", err.message);
+            }
+        };
+    
+        if (step === 4) {
+            handleVerified();
+        }
+    }, [step]);
+    
+
     const renderStep = () => {
+
         switch(step) {
             case 1:
                 return (
@@ -324,7 +358,7 @@ const BusinessOnboarding = () => {
                     </div>
                 );
 
-            case 4:
+            case 4:             
                 return (
                     <div className="text-center py-8 space-y-6">
                         <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -335,14 +369,16 @@ const BusinessOnboarding = () => {
                             Your business has been verified. You can now access all features 
                             and start your journey with us.
                         </p>
-                        <button 
-                            className="px-10 py-4 bg-[#005EFF] text-white rounded-xl 
-                            hover:bg-blue-700 transition-colors inline-flex items-center gap-3 
-                            shadow-lg hover:shadow-xl mx-auto"
-                        >
-                            Continue to Dashboard
-                            <ChevronRight className="w-5 h-5" />
-                        </button>
+                        <Link to="/dashboard">
+                            <button 
+                                className="px-10 py-4 bg-[#005EFF] text-white rounded-xl 
+                                hover:bg-blue-700 transition-colors inline-flex items-center gap-3 
+                                shadow-lg hover:shadow-xl mx-auto"
+                            >
+                                Continue to Dashboard
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </Link>
                     </div>
                 );
         }

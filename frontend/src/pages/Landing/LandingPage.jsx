@@ -53,7 +53,7 @@ const LandingPage = () => {
   const howItWorksSME = [
     {
       title: "Quick Application",
-      description: "Complete our simple online application and connect your business accounts",
+      description: "Complete our simple online/USSD application and connect your business accounts",
       icon: Store
     },
     {
