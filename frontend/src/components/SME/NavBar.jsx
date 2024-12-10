@@ -27,9 +27,8 @@ export const NavBar = () => {
         console.error("Error fetching user profile:", err);
       }
     };
-    if (user && !user.verified) 
-      fetchUserProfile();
-  }, [selectedItem]);
+    fetchUserProfile();
+  }, []);
 
   return (
     <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">

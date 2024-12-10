@@ -37,19 +37,19 @@ import LoadingScreen from './pages/SME/Loading';
 function Layout() {
   const isDesktop = useIsDesktop();
   const [onClose, setOnClose] = useState(true);
-  //const [user, setUser] = useState([]);
+  const [user, setUser] = useState([]);
   const [userId, setUserId] = useState('');
   const [verified, setVerified] = useState(false);
-  const { user } = useUser();
+  //const { user } = useUser();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get('auth/profile');
-        //setUser(response); // Use `response.data` to access the actual user data
+        setUser(response.data);
         /*const verificationResponse = await axios.post('verify/business', response.data._id, 123456789);
         setVerification(verificationResponse );*/
-        //setUserId(response.data._id);
+        setUserId(response.data._id);
         //setVerified(response.data.verified)
       } catch (err) {
         console.error('Error fetching user profile:', err);
