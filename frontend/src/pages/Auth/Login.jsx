@@ -55,9 +55,7 @@ const Login = () => {
 
       // Save the token in localStorage
       localStorage.setItem('jwtToken', token);
-
-      alert('Login successful! Token saved.');
-      navigate("/getting-started");
+      navigate("/loading");
     } catch (err) {
       console.error('Login error:', err.response?.data || err.message);
       setError(err.response?.data?.message || 'An error occurred.');

@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { SelectedItemProvider } from './context/SelectedItemContext';
+import { UserProvider } from './context/userContext';
 
 // Create root
 const root = createRoot(document.getElementById('root'));
@@ -13,9 +14,11 @@ const root = createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <SelectedItemProvider>
-        <App />
-      </SelectedItemProvider>
+      <UserProvider>
+        <SelectedItemProvider>
+          <App />
+        </SelectedItemProvider>
+      </UserProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
