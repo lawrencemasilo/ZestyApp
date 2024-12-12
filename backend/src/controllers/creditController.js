@@ -18,7 +18,7 @@ const assessCredit = async (req, res) => {
 
     // Here we determine initial risk category and credit limit
     const riskCategory = 
-      initialScore > 600 ? "Low" : initialScore > 400 ? "Medium" : "High";
+      initialScore > 600 ? "Low" : initialScore >= 400 ? "Medium" : "High";
     const creditLimit =
       riskCategory === "Low" ? 20000 : riskCategory === "Medium" ? 10000 : 4000;
 
@@ -94,4 +94,30 @@ const updateCreditScore = async (req, res) => {
 };
 
 
-module.exports = { assessCredit, updateCreditScore };
+const getCreditScore = async (req, res) => {
+  try {
+    const { sme_id } = req.params;
+
+    // Validate that sme_id is provided
+    if (!sme_id) {
+      return res.status(400).json({ message: "Missing SME ID." });
+    }
+
+    // Retrieve the credit profile from the database
+    const creditProfile = await CreditScore.findOne({ sme_id });
+    if (!creditProfile) {
+      return res.status(404).json({ message: "Credit profile not found." });
+    }
+
+    res.status(200).json({
+      message: "Credit profile retrieved successfully.",
+      creditScore: creditProfile,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error retrieving credit profile." });
+  }
+};
+
+
+module.exports = { assessCredit, updateCreditScore, getCreditScore };

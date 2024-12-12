@@ -13,29 +13,82 @@ import axios from '../../api/axios';
 
 
 
-
 const CreditApplicationModal = ({ isOpen, onClose }) => {
   const [term, setTerm] = useState(30);
   const [amount, setAmount] = useState('');
-  const maxCredit = 50000;
-  const availableCredit = maxCredit - 16480.50;
+  const [maxCredit, setMaxCredit] = useState(0);
+  const availableCredit = maxCredit;
+  const [user, setUser] = useState([]);
+  const [userCreditInfo, setUserCreditInfo] = useState([]);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get('auth/profile');
+        setUser(response.data);
+        //console.log(response.data);
+      } catch (err) {
+        console.error('Error fetching user profile:', err);
+      }
+    };
   
+    fetchUserProfile();
+  }, []);
+
+  useEffect(() => {
+    const fetchUserCrefitInfo = async () => {
+      try {
+        const response = await axios.get(`credit/${user._id}`);
+        setUserCreditInfo(response.data.creditScore);
+        setMaxCredit(response.data.creditScore.credit_limit)
+        //console.log(response.data);
+      } catch (err) {
+        console.error('Error fetching user credit info:', err);
+      }
+    };
+  
+    fetchUserCrefitInfo();
+    //console.log(userCreditInfo);
+    //console.log(user)
+  }, [user]);
+
+  // Correct interest rate mapping
   const getInterestRate = (term) => {
     const rates = {
-      30: 12.5,
-      60: 14.5,
-      90: 16.5
+      30: 3,
+      60: 6,
+      90: 9
     };
     return rates[term];
   };
 
+  // Correct monthly payment logic
   const calculateMonthlyPayment = () => {
     const principal = parseFloat(amount);
-    const rate = getInterestRate(term) / 100 / 12;
-    const months = term / 30;
-    if (!principal) return 0;
-    return (principal * rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+    const rate = getInterestRate(term) / 100; // Rate is in percentage
+    const months = term / 30; // Convert term to months
+
+    if (!principal || !rate || !months) return 0;
+
+    // Simple interest calculation
+    const totalWithInterest = principal * (1 + rate); // Interest applies once for the term
+    const monthlyPayment = totalWithInterest / months; // Divide over term's months
+
+    return monthlyPayment;
   };
+  //sme_id, total_amount, months_remaining, email
+  const submitApplication = async () => {
+    try {
+      const response = await axios.post(`/bnpl`, {
+        "sme_id": userCreditInfo.sme_id,
+        "total_amount": amount,
+        "months_remaining": term
+      });
+      console.log(response.data);
+    } catch (err) {
+      console.error('Error fetching user credit info:', err);
+    }
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -67,7 +120,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Amount</label>
             <div className="relative">
-              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 mt-[-5px] ml-1 text-gray-500">R</div>
               <input
                 type="number"
                 value={amount}
@@ -113,6 +166,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
             className="w-full py-2 px-4 bg-[#005EFF] text-white rounded-lg hover:bg-blue-700 
                        transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={!amount || amount > availableCredit}
+            onClick={() => submitApplication()}
           >
             Submit Application
           </button>
@@ -122,10 +176,20 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
   );
 };
 
-const EnhancedCreditScore = () => {
-  const score = 75;
-  const history = [65, 68, 72, 75];
+
+
+const EnhancedCreditScore = ({ score }) => {
+  // Simulated realistic credit history
+  const [history, setHistory] = useState([400, 420, 440, 450]); // Example history
   
+  useEffect(() => {
+    // Add the current score to the history when the component mounts
+    setHistory((prevHistory) => [...prevHistory, score]);
+
+    //console.log(`Current Score: ${score}`);
+    //console.log(`History: ${[...history, score]}`);
+  }, [score]); // Re-run if the score changes
+
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm">
       <div className="flex justify-between items-start mb-6">
@@ -135,33 +199,38 @@ const EnhancedCreditScore = () => {
         </h3>
         <div className="text-right">
           <div className="text-3xl font-bold text-[#005EFF]">{score}</div>
-          <div className="text-sm text-gray-500">out of 100</div>
+          <div className="text-sm text-gray-500">out of 700</div>
         </div>
       </div>
 
       <div className="space-y-4">
+        {/* Progress Bar */}
         <div className="relative pt-4">
           <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-[#005EFF] to-blue-400 rounded-full 
                          transition-all duration-500"
-              style={{ width: `${score}%` }}
+              style={{ width: `${(score / 700) * 100}%` }}
             />
           </div>
           <div className="absolute top-0 left-0 w-full flex justify-between text-xs text-gray-400">
             <span>0</span>
-            <span>25</span>
-            <span>50</span>
-            <span>75</span>
-            <span>100</span>
+            <span>175</span>
+            <span>350</span>
+            <span>525</span>
+            <span>700</span>
           </div>
         </div>
 
+        {/* Trend Indicator */}
         <div className="flex items-center gap-2">
           <ArrowUpRight className="w-4 h-4 text-green-500" />
-          <span className="text-sm text-green-500">+{score - history[history.length-2]} points this month</span>
+          <span className="text-sm text-green-500">
+            +{score - history[history.length - 2] || 0} points this month
+          </span>
         </div>
 
+        {/* Additional Information */}
         <div className="grid grid-cols-2 gap-4 mt-4">
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="text-sm text-gray-500">Payment History</div>
@@ -176,6 +245,9 @@ const EnhancedCreditScore = () => {
     </div>
   );
 };
+
+export default EnhancedCreditScore;
+
 
 const MetricCard = ({ metric, onSelect, selected }) => {
   const data = {
@@ -337,12 +409,45 @@ const TransactionsList = () => {
 };
 
 const CreditCardComponent = ({ onApplyClick }) => {
+  const [user, setUser] = useState([]);
+  const [userCreditInfo, setUserCreditInfo] = useState([]);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get('auth/profile');
+        setUser(response.data);
+        //console.log(response.data);
+      } catch (err) {
+        console.error('Error fetching user profile:', err);
+      }
+    };
+  
+    fetchUserProfile();
+  }, []);
+
+  useEffect(() => {
+    const fetchUserCrefitInfo = async () => {
+      try {
+        const response = await axios.get(`credit/${user._id}`);
+        setUserCreditInfo(response.data.creditScore);
+        //console.log(response.data);
+      } catch (err) {
+        console.error('Error fetching user credit info:', err);
+      }
+    };
+  
+    fetchUserCrefitInfo();
+    //console.log(userCreditInfo.creditScore);
+    //console.log(user)
+  }, [user]);
+
   const cardDetails = {
     cardNumber: "**** **** **** 0321",
-    cardHolder: "Neo Masilo",
+    cardHolder: '',
     expiryDate: "09/26",
-    availableCredit: 16480.50,
-    totalLimit: 50000,
+    availableCredit: userCreditInfo ? userCreditInfo.credit_limit: '',
+    totalLimit: userCreditInfo ? userCreditInfo.credit_limit: '',
     recentActivity: {
       spent: 3580.20,
       payments: 2500.00
@@ -364,7 +469,7 @@ const CreditCardComponent = ({ onApplyClick }) => {
 
       <div className="mb-6">
         <p className="text-sm opacity-75 mb-1">Available Credit</p>
-        <p className="text-2xl font-semibold">R{cardDetails.availableCredit.toFixed(2)}</p>
+        <p className="text-2xl font-semibold">R{cardDetails.availableCredit}</p>
         <div className="w-full h-1 bg-white/20 rounded-full mt-2">
           <div 
             className="h-full bg-white/50 rounded-full"
@@ -376,11 +481,11 @@ const CreditCardComponent = ({ onApplyClick }) => {
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
           <p className="text-sm opacity-75 mb-1">Recent Spend</p>
-          <p className="font-semibold">R{cardDetails.recentActivity.spent.toFixed(2)}</p>
+          <p className="font-semibold">R{cardDetails.recentActivity.spent}</p>
         </div>
         <div>
           <p className="text-sm opacity-75 mb-1">Recent Payments</p>
-          <p className="font-semibold">R{cardDetails.recentActivity.payments.toFixed(2)}</p>
+          <p className="font-semibold">R{cardDetails.recentActivity.payments}</p>
         </div>
       </div>
 
@@ -402,6 +507,7 @@ export const Dashboard = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState(null);
   const [user, setUser] = useState([]);
+  const [userCreditInfo, setUserCreditInfo] = useState([]);
 ;
   
   const metrics = [
@@ -417,7 +523,7 @@ export const Dashboard = () => {
       try {
         const response = await axios.get('auth/profile');
         setUser(response.data);
-        console.log(response.data);
+        //console.log(response.data);
       } catch (err) {
         console.error('Error fetching user profile:', err);
       }
@@ -425,6 +531,20 @@ export const Dashboard = () => {
   
     fetchUserProfile();
   }, []);
+
+  useEffect(() => {
+    const fetchUserCrefitInfo = async () => {
+      try {
+        const response = await axios.get(`credit/${user._id}`);
+        setUserCreditInfo(response.data.creditScore);
+        //console.log(response.data);
+      } catch (err) {
+        console.error('Error fetching user credit info:', err);
+      }
+    };
+  
+    fetchUserCrefitInfo();
+  }, [user]);
   
   return (
     <div className="flex w-full bg-gray-50 min-h-screen">
@@ -445,10 +565,10 @@ export const Dashboard = () => {
             </div>
           </div>
           <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
-            <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
+            {/*<button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
               <Download className="w-4 h-4" />
               <span className="hidden sm:inline">Download</span>
-            </button>
+            </button>*/}
             <NotificationsPopover />
           </div>
         </div>
@@ -456,7 +576,7 @@ export const Dashboard = () => {
         {/* Main Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           <CreditCardComponent onApplyClick={() => setIsApplyModalOpen(true)} />
-          <EnhancedCreditScore />
+          <EnhancedCreditScore score={ userCreditInfo.credit_score } />
           <div className="p-6 bg-white rounded-xl shadow-sm">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-gray-700 flex items-center gap-2">
