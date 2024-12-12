@@ -1,12 +1,10 @@
 import React, { useState } from 'react';import { 
-  TrendingUp, ArrowUpRight, Banknote, CircleGauge, Wallet, BarChart2, 
-  ArrowRightLeft, Download, Bell, CreditCardIcon, X, Info, 
-  Clock, Calendar, Receipt, TrendingDown, TrendingUp as TrendIcon
+  CircleGauge,  Download, CreditCardIcon, X, Info, 
+  Calendar, Receipt, TrendingDown, TrendingUp as TrendIcon
 } from 'lucide-react';
 import NotificationsPopover from '../../components/SME/NotificationsPopover';
 
 const CreditPage = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedDetailModal, setSelectedDetailModal] = useState(null);
   const [selectedBNPLModal, setSelectedBNPLModal] = useState(null);
 

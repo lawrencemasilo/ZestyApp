@@ -2,10 +2,8 @@ import axios from '../../api/axios';
 import React, { useEffect, useState } from 'react';
 import { ChevronRight, Building2, FileCheck, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useUser } from '../../context/userContext';
 
 const BusinessOnboarding = () => {
-    //const { user } = useUser();
     const [user, setUser] = useState(null);
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
@@ -113,25 +111,12 @@ const BusinessOnboarding = () => {
                     contact_person,
                     bank_details,
                 } = formData;
-    
-                const payload = {
-                    business_name,
-                    industry,
-                    registration_number,
-                    tax_id,
-                    monthly_revenue: parseInt(monthly_revenue, 10), // Ensure number format
-                    address,
-                    contact_person,
-                    bank_details: {
-                        account_number: bank_details.account_number,
-                        bank_name: bank_details.bank_name,
-                    },
-                };
+
 
     
             
                 const response = await axios.post(
-                    `http://localhost:5000/api/sme/${user._id}`,
+                    `/sme/${user._id}`,
                     {
                         business_name,
                         industry,
@@ -209,7 +194,7 @@ const BusinessOnboarding = () => {
     useEffect(() => {
         const handleVerified = async () => {
             try {              
-                const response = await axios.patch(`http://localhost:5000/api/users/${user && user._id}`, {
+                const response = await axios.patch(`/users/${user && user._id}`, {
                     verified: true,
                 });
                 console.log("Verification Response:", response.data);

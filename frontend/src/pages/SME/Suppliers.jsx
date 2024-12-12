@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Briefcase, Tag, Download, Bell, Percent, Star, Calendar, ArrowRight, Clock, ChevronRight, X, LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, LogOut } from 'lucide-react';
+import { Briefcase, Tag, Download, Percent, Star, Calendar, ArrowRight, Clock, ChevronRight, X, LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, LogOut } from 'lucide-react';
 import NotificationsPopover from '../../components/SME/NotificationsPopover';
 
 

@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import axios from '../../../api/axios';
 import { ChevronRight, Building2, FileCheck, AlertCircle, ArrowLeft, Upload, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const BusinessOnboarding = () => {
+    const [user, setUser] = useState(null);
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
         business_name: '',
@@ -29,6 +31,21 @@ const BusinessOnboarding = () => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef(null);
+
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+          try {
+            const response = await axios.get("/auth/profile");
+            const userData = response.data;
+            setUser(userData);
+          } catch (err) {
+            console.error("Error fetching user profile:", err);
+          }
+        };
+    
+        fetchUserProfile();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -82,20 +99,70 @@ const BusinessOnboarding = () => {
 
     const handleSubmit = async () => {
         setLoading(true);
+        setErrors({});
+    
         try {
-            const payload = {
-                ...formData,
-                monthly_revenue: parseInt(formData.monthly_revenue)
-            };
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            console.log('Submission payload:', payload);
+            if (step === 3) {
+                // Destructure and prepare the individual fields
+                const {
+                    business_name,
+                    industry,
+                    registration_number,
+                    tax_id,
+                    monthly_revenue,
+                    address,
+                    contact_person,
+                    bank_details,
+                } = formData;
+
+
+    
+            
+                const response = await axios.post(
+                    `/sme/${user._id}`,
+                    {
+                        business_name,
+                        industry,
+                        registration_number,
+                        tax_id,
+                        monthly_revenue: parseInt(monthly_revenue, 10),
+                        address: {
+                            physical: address.physical,
+                            operational: address.operational,
+                        },
+                        contact_person: {
+                            name: contact_person.name,
+                            email: contact_person.email,
+                            phone: contact_person.phone,
+                        },
+                        bank_details: {
+                            account_number: bank_details.account_number,
+                            bank_name: bank_details.bank_name,
+                        },
+                    }
+                );
+                console.log("Response from backend (JSON):", response.data);
+                
+            }
+    
+            // Proceed to the next step on success
             setStep(step + 1);
         } catch (error) {
-            setErrors({ submit: 'Failed to submit business information' });
+            console.error("Error submitting business information:", error);
+    
+            // Handle backend errors
+            if (error.response && error.response.data) {
+                setErrors({
+                    submit: error.response.data.message || "Failed to submit business information",
+                });
+            } else {
+                setErrors({ submit: "An unexpected error occurred" });
+            }
         } finally {
             setLoading(false);
         }
     };
+    
 
     const handleBack = () => {
         if (step > 1) {
@@ -230,6 +297,23 @@ const BusinessOnboarding = () => {
             </div>
         );
     };
+    
+    useEffect(() => {
+        const handleVerified = async () => {
+            try {              
+                const response = await axios.patch(`/users/${user && user._id}`, {
+                    verified: true,
+                });
+                console.log("Verification Response:", response.data);
+            } catch (err) {
+                console.error("Error during verification:", err.message);
+            }
+        };
+    
+        if (step === 4) {
+            handleVerified();
+        }
+    }, [step]);
 
     const renderStep = () => {
         switch(step) {

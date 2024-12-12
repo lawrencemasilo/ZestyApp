@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { 
-  Download, Search, Filter, Bell, 
+  Search, Filter,  
   LayoutDashboard, ArrowRightLeft, CreditCardIcon, 
-  Building2, LogOut, Menu, X 
+  Building2 
 } from 'lucide-react';
 import NotificationsPopover from '../../../components/SME/NotificationsPopover';
 import { useSelectedItem } from '../../../context/SelectedItemContext';
+import axios from '../../../api/axios';
 
 const BottomNav = () => {  
     const { selectedItem, setSelectedItem } = useSelectedItem();
@@ -31,41 +32,45 @@ const BottomNav = () => {
     );
 }
 
-const NavButton = ({ icon, text, active }) => (
-    <button 
-        className={`flex flex-col items-center justify-center w-full h-full space-y-1
-                    ${active ? 'text-blue-600' : 'text-gray-600'}`}
-    >
-        {icon}
-        <span className="text-xs font-medium">{text}</span>
-    </button>
-);
 
-const Header = () => (
+const Header = () => {
+  const { setSelectedItem } = useSelectedItem();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get("/auth/profile");
+        setUser(response.data);
+      } catch (err) {
+        console.error("Error fetching user profile:", err);
+      }
+    };
+    fetchUserProfile();
+  }, []);
+  return (
     <div className="sticky top-0 z-10 bg-gray-50">
-        {/* Top Bar with Logo, Notifications, and Profile */}
-        <div className="flex items-center justify-between p-4 px-4 pt-4 ">
+      {/* Top Bar with Logo, Notifications, and Profile */}
+      <div className="flex items-center justify-between p-4 px-0 pt-2 ">
         <h1 className="text-3xl font-bold text-blue-600">Zesty</h1>
         <div className="flex items-center gap-4">
-            <NotificationsPopover />
-            <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-600 text-sm font-medium">NM</span>
-            </div>
-            </div>
+          <NotificationsPopover />
+          <div className="flex items-center gap-2" onClick={() => setSelectedItem('profile')}>
+            <Link to="/profile" >
+              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                <span className="text-gray-600 text-sm font-medium">
+                {user && user.firstName && user.lastName
+                    ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
+                    : ""}
+                </span>
+              </div>
+            </Link>
+          </div>
+          </div>
         </div>
-        </div>
-        
-        {/* Sub Header with Page Title and Actions */}
-        {/*<div className="flex justify-between items-center p-4">
-        <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
-        <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg bg-white hover:bg-gray-50">
-            <Download className="w-4 h-4" />
-            <span>Download</span>
-        </button>
-        </div>*/}
     </div>
-);
+  )
+};
 
 
 const NavItem = ({ icon, text, active }) => (
@@ -75,60 +80,11 @@ const NavItem = ({ icon, text, active }) => (
     </div>
 );
 
-// Sidebar Component with Mobile Responsiveness
-const Sidebar = ({ isOpen, onClose }) => (
-  <div className={`
-    fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 
-    transform transition-transform duration-300 ease-in-out 
-    ${isOpen ? 'translate-x-0' : '-translate-x-full'} 
-    md:translate-x-0 md:static md:block
-  `}>
-    <div className="flex items-center justify-between p-6 md:block">
-      <h1 className="text-2xl font-bold text-blue-600">Zesty</h1>
-      <button className="md:hidden" onClick={onClose}>
-        <X size={24} />
-      </button>
-    </div>
-
-    {/* Navigation Links */}
-    <nav className="px-4 space-y-2">
-      <NavItem icon={<LayoutDashboard size={20} />} text="Dashboard" />
-      <NavItem icon={<ArrowRightLeft size={20} />} text="Transactions" active />
-      <NavItem icon={<CreditCardIcon size={20} />} text="Credit" />
-      <NavItem icon={<Building2 size={20} />} text="Suppliers" />
-    </nav>
-
-    {/* User Profile */}
-    <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-      <div className="flex items-center space-x-3">
-        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-          <span className="text-gray-600 font-medium">NM</span>
-        </div>
-        <div className="flex-1">
-          <p className="text-sm font-medium">Neo Masilo</p>
-          <p className="text-xs text-gray-500">neolawrencemasilo@gmail.com</p>
-        </div>
-        <LogOut size={18} className="text-gray-400 cursor-pointer" />
-      </div>
-    </div>
-  </div>
-);
 
 
 const MobileTransactionsPage = () => {
   const [isAllSelected, setIsAllSelected] = useState(false);
-  const [sortBy, setSortBy] = useState('');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  
 
   const transactions = [
     {

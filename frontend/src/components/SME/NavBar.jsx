@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../App.css";
 import { LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, LogOut, ShieldCheck } from 'lucide-react';
-import { useUser } from "../../context/userContext";
 import axios from "../../api/axios";
 
-// NavItem Component
 const NavItem = ({ icon, text, active }) => (
   <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-[#005EFF]' : 'text-gray-600 hover:bg-gray-50'}`}>
     {icon}
@@ -14,7 +12,6 @@ const NavItem = ({ icon, text, active }) => (
 );
 
 export const NavBar = () => {
-  //const { user } = useUser();
   const [user, setUser] = useState(null);
   const [selectedItem, setSelectedItem] = useState('');
 

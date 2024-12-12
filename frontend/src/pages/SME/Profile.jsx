@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Settings, User, Building, Edit, Save, ChevronRight, Shield, Moon, Sun, Bell } from 'lucide-react';
+import { Edit, Save, Shield, Moon, Bell } from 'lucide-react';
 import { Switch } from "../../components/ui/switch";
 import { logout } from "../../services/authService";
 import { useNavigate } from 'react-router-dom';
@@ -64,7 +64,7 @@ const ProfilePage = () => {
 
     const fetchSmeProfile = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/sme/${user._id}`);
+        const response = await axios.get(`/sme/${user._id}`);
         const smeData = response.data.sme;
         setProfileData((prev) => ({
           ...prev,
@@ -114,7 +114,7 @@ const ProfilePage = () => {
             <div className="flex items-center gap-4">
               <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center">
                 <span className="text-2xl font-bold text-[#005EFF]">
-                  {user ? user.firstName[0] + user.lastName[0] : 'NM'}
+                  {user ? user.firstName[0] + user.lastName[0] : ''}
                 </span>
               </div>
               <div className="flex-1">

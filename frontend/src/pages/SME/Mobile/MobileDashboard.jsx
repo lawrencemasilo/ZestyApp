@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-import { Bell, Download, CreditCard, TrendingUp, Clock, ArrowUpRight, ArrowDownRight, 
-         LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, ChevronRight, LogOut,
-         PlusCircle, X, DollarSign, Calendar, Search, Filter, Menu } from 'lucide-react';
+import { TrendingUp, Clock, ArrowUpRight, ArrowDownRight, 
+         LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2,
+         PlusCircle, DollarSign } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,7 @@ import {
 } from "../../../components/ui/dialog";
 import NotificationsPopover from '../../../components/SME/NotificationsPopover';
 import { useSelectedItem } from '../../../context/SelectedItemContext';
+import axios from '../../../api/axios';
 
 
 const BottomNav = () => {  
@@ -37,93 +38,49 @@ const BottomNav = () => {
   );
 }
 
-const NavButton = ({ icon, text, active }) => (
-  <button 
-    className={`flex flex-col items-center justify-center w-full h-full space-y-1
-               ${active ? 'text-blue-600' : 'text-gray-600'}`}
-  >
-    {icon}
-    <span className="text-xs font-medium">{text}</span>
-  </button>
-);
+
 
 const Header = () => {
-  const { selectedItem, setSelectedItem } = useSelectedItem();
+  const { setSelectedItem } = useSelectedItem();
+  const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get("/auth/profile");
+        setUser(response.data);
+      } catch (err) {
+        console.error("Error fetching user profile:", err);
+      }
+    };
+    fetchUserProfile();
+  }, []);
   return (
-  <div className="sticky top-0 z-10 bg-gray-50">
-    {/* Top Bar with Logo, Notifications, and Profile */}
-    <div className="flex items-center justify-between p-4 px-0 ">
-      <h1 className="text-3xl font-bold text-blue-600">Zesty</h1>
-      <div className="flex items-center gap-4">
-        <NotificationsPopover />
+    <div className="sticky top-0 z-10 bg-gray-50">
+      {/* Top Bar with Logo, Notifications, and Profile */}
+      <div className="flex items-center justify-between p-4 px-0 pt-2 ">
+        <h1 className="text-3xl font-bold text-blue-600">Zesty</h1>
+        <div className="flex items-center gap-4">
+          <NotificationsPopover />
           <div className="flex items-center gap-2" onClick={() => setSelectedItem('profile')}>
-          <Link to="/profile" >
-            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-              <span className="text-gray-600 text-sm font-medium">NM</span>
-            </div>
-          </Link>
+            <Link to="/profile" >
+              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                <span className="text-gray-600 text-sm font-medium">
+                {user && user.firstName && user.lastName
+                    ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
+                    : ""}
+                </span>
+              </div>
+            </Link>
           </div>
-      </div>
+          </div>
+        </div>
     </div>
-    
-    {/* Sub Header with Page Title and Actions */}
-    {/*<div className="flex justify-between items-center p-4">
-      <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
-      <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg bg-white hover:bg-gray-50">
-        <Download className="w-4 h-4" />
-        <span>Download</span>
-      </button>
-    </div>*/}
-  </div>
   )
 };
 
-const Sheet = ({ children, open, onOpenChange }) => {
-  if (!open) return null;
-  
-  return (
-    <>
-      <div 
-        className="fixed inset-0 bg-black/20 z-40"
-        onClick={() => onOpenChange(false)}
-      />
-      {children}
-    </>
-  );
-};
 
-const SheetContent = ({ children, onClose }) => (
-  <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50 animate-in slide-in-from-left">
-    <button 
-      onClick={onClose}
-      className="absolute right-4 top-4 p-1 hover:bg-gray-100 rounded-lg"
-    >
-      <X className="w-5 h-5" />
-    </button>
-    {children}
-  </div>
-);
 
-const MobileNav = ({ children }) => {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <>
-      <button 
-        onClick={() => setOpen(true)} 
-        className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
-      >
-        <Menu className="w-6 h-6" />
-      </button>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent onClose={() => setOpen(false)}>
-          {children}
-        </SheetContent>
-      </Sheet>
-    </>
-  );
-};
 
 
 // NavItem Component remains the same
@@ -360,101 +317,6 @@ const MetricCard = ({ metric, onSelect, selected }) => {
 };
 
 
-const TransactionsList = () => {
-  const transactions = [
-    {
-      id: 1,
-      merchant: "Pick n Pay",
-      date: "7 Nov 2024",
-      amount: -1220.40,
-      category: "Groceries",
-      status: "completed",
-      logo: "PnP"
-    },
-    {
-      id: 2,
-      merchant: "Takealot",
-      date: "6 Nov 2024",
-      amount: -2150.00,
-      category: "Shopping",
-      status: "completed",
-      logo: "TL"
-    },
-    {
-      id: 3,
-      merchant: "Salary Credit",
-      date: "1 Nov 2024",
-      amount: 25000.00,
-      category: "Income",
-      status: "completed",
-      logo: "SC"
-    },
-    {
-      id: 4,
-      merchant: "Netflix",
-      date: "1 Nov 2024",
-      amount: -199.00,
-      category: "Entertainment",
-      status: "pending",
-      logo: "NF"
-    },
-    {
-      id: 5,
-      merchant: "Woolworths",
-      date: "31 Oct 2024",
-      amount: -850.30,
-      category: "Groceries",
-      status: "completed",
-      logo: "WW"
-    }
-  ];
-
-  return (
-    <div className="bg-white rounded-xl shadow-sm mt-6">
-      <div className="p-6 border-b border-gray-100">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-semibold">Recent Transactions</h3>
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input 
-                type="text"
-                placeholder="Search transactions"
-                className="pl-10 pr-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50">
-              <Filter className="w-4 h-4" />
-              <span className="text-sm">Filter</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          {transactions.map((transaction) => (
-            <div key={transaction.id} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-medium text-gray-600">
-                  {transaction.logo}
-                </div>
-                <div>
-                  <p className="font-medium">{transaction.merchant}</p>
-                  <p className="text-sm text-gray-500">{transaction.category}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className={`font-medium ${transaction.amount > 0 ? 'text-green-600' : 'text-gray-900'}`}>
-                  R{Math.abs(transaction.amount).toFixed(2)}
-                </p>
-                <p className="text-sm text-gray-500">{transaction.date}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const CreditCardComponent = ({ onApplyClick }) => {
   const cardDetails = {
