@@ -27,6 +27,7 @@ const assessCredit = async (req, res) => {
       sme_id,
       credit_score: initialScore,
       credit_limit: creditLimit,
+      remaining_credit: creditLimit,
       risk_category: riskCategory,
       created_at: new Date(),
     });

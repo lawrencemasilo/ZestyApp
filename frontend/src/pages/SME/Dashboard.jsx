@@ -40,7 +40,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
       try {
         const response = await axios.get(`credit/${user._id}`);
         setUserCreditInfo(response.data.creditScore);
-        setMaxCredit(response.data.creditScore.credit_limit)
+        setMaxCredit(response.data.creditScore.remaining_credit)
         //console.log(response.data);
       } catch (err) {
         console.error('Error fetching user credit info:', err);
@@ -79,16 +79,22 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
   //sme_id, total_amount, months_remaining, email
   const submitApplication = async () => {
     try {
-      const response = await axios.post(`/bnpl`, {
-        "sme_id": userCreditInfo.sme_id,
-        "total_amount": amount,
-        "months_remaining": term
+      if (!userCreditInfo || !userCreditInfo.sme_id) {
+        throw new Error("SME ID is undefined or not available.");
+      }
+  
+      const response = await axios.post("bnpl/", {
+        sme_id: String(userCreditInfo.sme_id),
+        total_amount: amount,
+        months_remaining: term === 30 ? 1 : term === 60 ? 2 : 3,
+        email: user.email,
       });
-      console.log(response.data);
+  
+      console.log("Response:", response.data);
     } catch (err) {
-      console.error('Error fetching user credit info:', err);
+      console.error("Error submitting application:", err.message || err);
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -107,7 +113,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Available Credit</label>
             <div className="text-2xl font-semibold text-gray-900">
-              R{availableCredit.toFixed(2)}
+              R{availableCredit}
             </div>
             <div className="w-full h-2 bg-gray-100 rounded-full">
               <div 
@@ -126,6 +132,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 max={availableCredit}
+                min={0}
                 className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:outline-none focus:ring-[#005EFF] focus:border-[#005EFF]"
                 placeholder="Enter amount"
               />
@@ -249,7 +256,8 @@ const EnhancedCreditScore = ({ score }) => {
 export default EnhancedCreditScore;
 
 
-const MetricCard = ({ metric, onSelect, selected }) => {
+const MetricCard = ({ metric, onSelect, selected, userCreditInfo }) => {
+
   const data = {
     'Repayment History': {
       current: 98,
@@ -266,8 +274,8 @@ const MetricCard = ({ metric, onSelect, selected }) => {
       detail: 'Recent credit inquiries affected score'
     },
     'Credit Usage': {
-      current: 32,
-      previous: 28,
+      current: 100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100,
+      previous: 19,
       trend: 'up',
       color: 'green',
       detail: 'Well below 50% threshold'
@@ -446,7 +454,7 @@ const CreditCardComponent = ({ onApplyClick }) => {
     cardNumber: "**** **** **** 0321",
     cardHolder: '',
     expiryDate: "09/26",
-    availableCredit: userCreditInfo ? userCreditInfo.credit_limit: '',
+    availableCredit: userCreditInfo ? userCreditInfo.remaining_credit: '',
     totalLimit: userCreditInfo ? userCreditInfo.credit_limit: '',
     recentActivity: {
       spent: 3580.20,
@@ -609,6 +617,7 @@ export const Dashboard = () => {
               key={metric.name}
               metric={metric}
               selected={selectedMetric === metric.name}
+              userCreditInfo={userCreditInfo}
               onSelect={setSelectedMetric}
             />
           ))}
