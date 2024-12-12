@@ -32,10 +32,10 @@ const LoadingScreen = ({ onLoadingComplete }) => {
   }, []);
 
   useEffect(() => {
-    if (progress === 100 && user.verified)
+    if (progress === 100 && user && user.verified)
         navigate("/dashboard");
 
-    if ( progress === 100 && !user.verified)
+    if ( progress === 100 && user && !user.verified)
         navigate("/getting-started");
 
   }, [progress])

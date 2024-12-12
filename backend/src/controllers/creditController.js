@@ -12,9 +12,9 @@ const assessCredit = async (req, res) => {
 
     // We assess initial credit limit based on the documents provided
     let initialScore = 300;
-    if (documents.revenueProof) initialScore += 50;
-    if (documents.taxReturns) initialScore += 50;
-    if (documents.bankStatements) initialScore += 50;
+    if (documents.revenue_proof) initialScore += 150;
+    if (documents.tax_returns) initialScore += 80;
+    if (documents.bank_statements) initialScore += 100;
 
     // Here we determine initial risk category and credit limit
     const riskCategory = 

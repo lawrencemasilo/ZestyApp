@@ -102,46 +102,14 @@ const MobileTransactionsPage = () => {
 
   return (
     <div className="flex min-h-screen w-full h-full bg-gray-50">
-      {/* Sidebar for Mobile and Desktop */}
-      {/*<Sidebar 
-        isOpen={isSidebarOpen} 
-        onClose={() => setIsSidebarOpen(false)} 
-      />*/}
 
       <div className="flex-1 flex flex-col mt-2">
-        {/* Mobile Header with Hamburger */}
-        {/*<div className="md:hidden p-4 flex justify-between items-center bg-white shadow-sm">
-          <button onClick={() => setIsSidebarOpen(true)}>
-            <Menu size={24} />
-          </button>
-          <h1 className="text-xl font-semibold">Transactions</h1>
-          <NotificationsPopover />
-        </div>*/}
         <Header />
         <div className="flex justify-between items-center p-4 py-5 px-4">
             <h2 className="text-xl font-semibold text-gray-800">Transactions</h2>
-            {/*<button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg bg-white hover:bg-gray-50">
-                <Download className="w-4 h-4" />
-                <span>Download</span>
-            </button>*/}
         </div>
 
         <div className="p-4 md:p-8 overflow-y-auto">
-          {/* Desktop Header */}
-          {/*<div className="hidden md:flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-2xl font-semibold text-gray-800">Transactions</h1>
-              <p className="text-sm text-gray-500">View and manage your transaction history</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
-                <Download className="w-4 h-4" />
-                Download
-              </button>
-              <NotificationsPopover />
-            </div>
-          </div>*/}
-
           {/* Transactions Table */}
           <div className="bg-white rounded-xl shadow-sm p-4 md:p-6">
             <div className="mb-4 flex flex-col md:flex-row gap-4 md:justify-between md:items-center">

@@ -14,15 +14,10 @@ const ResetPasswordPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
   const [showSuggestion, setShowSuggestion] = useState(false);
-
-  // Get token from URL
-  //const { token } = useParams();
-  //const [searchParams] = useSearchParams();
-    //const token = searchParams.get('token');
   const { token } = useParams();
-  console.log(token);
 
   useEffect(() => {
+    // Validate token on component mount
     if (!token) {
       setStatus({
         type: 'error',
@@ -83,25 +78,14 @@ const ResetPasswordPage = () => {
     setStatus({ type: '', message: '' });
 
     try {
-      
       const response = await axios.post(`/auth/reset-password/${token}`, { 
-        token: token, 
+        token,
         newPassword: formData.password 
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
       });
 
-      //const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(response.message || 'Failed to reset password');
-      }
-      
       setStatus({
         type: 'success',
-        message: 'Password has been successfully reset'
+        message: response.data.message || 'Password has been successfully reset'
       });
       
       // Redirect to login after successful reset
@@ -111,12 +95,13 @@ const ResetPasswordPage = () => {
     } catch (error) {
       setStatus({
         type: 'error',
-        message: error.message || 'Something went wrong. Please try again.'
+        message: error.response?.data?.error || 'Something went wrong. Please try again.'
       });
     } finally {
       setIsLoading(false);
     }
   };
+
 
   // Generate password functions remain the same...
   const generateStrongPassword = () => {

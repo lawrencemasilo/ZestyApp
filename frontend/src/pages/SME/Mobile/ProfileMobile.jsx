@@ -154,14 +154,16 @@ const ProfileMobilePage = () => {
           {/* Profile Header */}
           <div className="p-4 md:p-6 border-b border-gray-200">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-blue-100 flex items-center justify-center">
-                <span className="text-xl md:text-2xl font-bold text-[#005EFF]">
-                {user ? user.firstName[0] + user.lastName[0] : ''}
-                </span>
-              </div>
-              <div className="flex-1">
-                <h1 className="text-xl md:text-2xl font-semibold">{profileData.personal.fullName}</h1>
-                <p className="text-gray-500">{profileData.business.companyName}</p>
+              <div className="flex flex-rol">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full mr-4 bg-blue-100 flex items-center justify-center">
+                  <span className="text-xl md:text-2xl font-bold text-[#005EFF]">
+                  {user ? user.firstName[0] + user.lastName[0] : ''}
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <h1 className="text-xl md:text-2xl font-semibold">{profileData.personal.fullName}</h1>
+                  <p className="text-gray-500">{profileData.business.companyName}</p>
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <button 
