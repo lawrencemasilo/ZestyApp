@@ -51,7 +51,7 @@ const Header = () => {
   return (
     <div className="sticky top-0 z-10 bg-gray-50">
       {/* Top Bar with Logo, Notifications, and Profile */}
-      <div className="flex items-center justify-between p-4 px-0 pt-2 ">
+      <div className="flex items-center justify-between p-4 px-4 pt-2 ">
         <h1 className="text-3xl font-bold text-blue-600">Zesty</h1>
         <div className="flex items-center gap-4">
           <NotificationsPopover />
@@ -108,7 +108,7 @@ const MobileTransactionsPage = () => {
         onClose={() => setIsSidebarOpen(false)} 
       />*/}
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col mt-2">
         {/* Mobile Header with Hamburger */}
         {/*<div className="md:hidden p-4 flex justify-between items-center bg-white shadow-sm">
           <button onClick={() => setIsSidebarOpen(true)}>

@@ -135,7 +135,7 @@ const MobileSupplierPage = () => {
 
   return (
     <div className="flex bg-gray-50 min-h-screen">
-      <div className="flex-1 p-8 px-4 pt-0 overflow-y-auto mb-12">
+      <div className="flex-1 p-8 px-4 pt-0 overflow-y-auto mb-12 mt-2">
         {/* Header */}
         <Header />
         <div className="flex justify-between items-center p-4 py-5 px-0">

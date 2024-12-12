@@ -39,24 +39,9 @@ const Header = () => {
         <h1 className="text-3xl font-bold text-blue-600">Zesty</h1>
         <div className="flex items-center gap-4">
           <NotificationsPopover />
-            {/*<div className="flex items-center gap-2" onClick={() => setSelectedItem('profile')}>
-            <Link to="/profile" >
-              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-600 text-sm font-medium">NM</span>
-              </div>
-            </Link>
-            </div>*/}
         </div>
       </div>
       
-      {/* Sub Header with Page Title and Actions */}
-      {/*<div className="flex justify-between items-center p-4">
-        <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
-        <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg bg-white hover:bg-gray-50">
-          <Download className="w-4 h-4" />
-          <span>Download</span>
-        </button>
-      </div>*/}
     </div>
     )
   };
@@ -207,7 +192,7 @@ const ProfileMobilePage = () => {
           </div>
 
           {/* Profile Navigation */}
-          <div className=" border-gray-200">
+          <div className=" border-gray-200 overflow-x-auto">
             <nav className="flex whitespace-nowrap">
               <button
                 onClick={() => setActiveTab('personal')}

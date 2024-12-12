@@ -11,6 +11,7 @@ const CreditPage = () => {
   const [user, setUser] = useState([]);
   const [userCreditInfo, setUserCreditInfo] = useState([]);
   const [bnplCredits, setBnplCredits] = useState([]);
+  const [showDepositInfo, setShowDepositInfo] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -78,38 +79,6 @@ const CreditPage = () => {
     //console.log(userCreditInfo);
     //console.log(bnplCredits)
   }, [userCreditInfo])
-  
-
-  const recentTransactions = [
-    { id: 1, date: '2024-05-22', description: 'Online Purchase', amount: -450.75, category: 'Shopping' },
-    { id: 2, date: '2024-05-20', description: 'Grocery Store', amount: -230.50, category: 'Groceries' },
-    { id: 3, date: '2024-05-18', description: 'Fuel Station', amount: -175.25, category: 'Transportation' },
-  ];
-
-  
-
-  /*const bnplCredits = [
-    { 
-      id: 1, 
-      vendor: 'Electronics Store', 
-      totalAmount: 5000, 
-      remainingBalance: 3750, 
-      monthsRemaining: 3, 
-      monthlyPayment: 1250,
-      interestRate: 15,
-      startDate: '2024-03-15'
-    },
-    { 
-      id: 2, 
-      vendor: 'Furniture Shop', 
-      totalAmount: 8000, 
-      remainingBalance: 6400, 
-      monthsRemaining: 4, 
-      monthlyPayment: 2000,
-      interestRate: 12,
-      startDate: '2024-02-01'
-    }
-  ];*/
 
   const renderAvailableCreditModal = () => {
     return (
@@ -198,22 +167,6 @@ const CreditPage = () => {
       </div>
     );
   };
-
-          {/*
-  createdAt: "2024-12-12T10:52:25.177Z"
-  credit_id: "BNPL-W8PVPU8S"
-  interest_rate: 3
-  monthly_payment: 343.3333333333333
-  months_remaining: 3
-  remaining_balance: 9000
-  sme_id: "6759f1ce78d74aefea9c9e5e"
-  start_date: "2024-12-12T10:52:25.173Z"
-  status: "active"
-  total_amount: 1000
-  updatedAt: "2024-12-12T10:52:25.177Z"
-  __v: 0
-  _id: "675ac069b7f258fea84bcc11"
-  */}
   
   const renderBNPLModal = (bnpl) => {
     return (
@@ -259,13 +212,100 @@ const CreditPage = () => {
     );
   };
 
+  const renderPaymentModal = () => {
+    return (
+      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="bg-[#005EFF] text-white p-6">
+          <h2 className="text-2xl font-bold">Payment Details</h2>
+        </div>
+        <div className="p-6 space-y-4">
+          {/* Payment Summary */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Due Date</p>
+              <p className="text-xl font-semibold text-[#005EFF]">
+                {new Date(creditDetails.paymentDueDate).toLocaleDateString()}
+              </p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Minimum Payment</p>
+              <p className="text-xl font-semibold text-green-600">
+                R{(creditDetails.currentBalance * 0.1).toFixed(2)}
+              </p>
+            </div>
+          </div>
+  
+          {/* Current Balance and Past Due */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Current Balance</p>
+              <p className="text-xl font-semibold">R{creditDetails.currentBalance}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <p className="text-gray-500 mb-2">Past Due Amount</p>
+              <p className="text-xl font-semibold text-red-600">
+                R{creditDetails.pastDueAmount}
+              </p>
+            </div>
+          </div>
+  
+          {/* Payment Method Toggle */}
+          <div className="bg-gray-50 p-4 rounded-xl">
+            <div className="flex justify-between items-center mb-4">
+              <p className="font-semibold">Show Deposit Information</p>
+              <button
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  showDepositInfo ? 'bg-[#005EFF]' : 'bg-gray-300'
+                }`}
+                onClick={() => setShowDepositInfo(!showDepositInfo)}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    showDepositInfo ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+  
+            {showDepositInfo && (
+              <div className="space-y-3 mt-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">Bank Name:</span>
+                  <span className="font-medium">First National Bank</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">Account Number:</span>
+                  <span className="font-medium">62834498291</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">Branch Code:</span>
+                  <span className="font-medium">250655</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">Reference:</span>
+                  <span className="font-medium">{user._id}</span>
+                </div>
+              </div>
+            )}
+          </div>
+  
+          {/* Payment Button */}
+          <button className="w-full bg-[#005EFF] text-white py-3 rounded-lg hover:bg-blue-700 transition">
+            Make Payment
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const renderModal = () => {
     if (!selectedDetailModal && !selectedBNPLModal) return null;
 
     const modalContent = 
       selectedDetailModal === 'available-credit' ? renderAvailableCreditModal() :
       selectedDetailModal === 'credit-score' ? renderCreditScoreModal() :
-      selectedBNPLModal ? renderBNPLModal(selectedBNPLModal) : null;
+      selectedBNPLModal ? renderBNPLModal(selectedBNPLModal) :
+      selectedDetailModal === 'payment'? renderPaymentModal(): null;
 
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -359,7 +399,7 @@ const CreditPage = () => {
           </div>
 
           {/* Payment Due Date */}
-          <div className="p-6 bg-white rounded-xl shadow-sm">
+          <div className="p-6 bg-white rounded-xl shadow-sm hover:cursor-pointer hover:bg-blue-50" onClick={() => setSelectedDetailModal("payment")}>
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-gray-700 flex items-center gap-2">
                 <Calendar className="w-5 h-5" />
@@ -405,30 +445,6 @@ const CreditPage = () => {
             ))}
           </div>
         </div>
-
-        {/* Recent Transactions */}
-        {/*<div className="mt-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Recent Transactions</h2>
-            <button className="text-[#005EFF] text-sm hover:underline">View All</button>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm">
-            {recentTransactions.map(transaction => (
-              <div 
-                key={transaction.id} 
-                className="flex justify-between items-center p-4 border-b last:border-b-0 hover:bg-gray-50"
-              >
-                <div>
-                  <p className="font-medium">{transaction.description}</p>
-                  <p className="text-sm text-gray-500">{transaction.date}</p>
-                </div>
-                <span className={`font-semibold ${transaction.amount < 0 ? 'text-red-500' : 'text-green-500'}`}>
-                  R{Math.abs(transaction.amount).toFixed(2)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>*/}
       </div>
     </div>
   );

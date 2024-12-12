@@ -185,7 +185,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
 
 
 
-const EnhancedCreditScore = ({ score }) => {
+const EnhancedCreditScore = ({ score, userCreditInfo }) => {
   // Simulated realistic credit history
   const [history, setHistory] = useState([400, 420, 440, 450]); // Example history
   
@@ -245,7 +245,7 @@ const EnhancedCreditScore = ({ score }) => {
           </div>
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="text-sm text-gray-500">Credit Usage</div>
-            <div className="text-lg font-semibold text-gray-700">32%</div>
+            <div className="text-lg font-semibold text-gray-700">{100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100}%</div>
           </div>
         </div>
       </div>
@@ -584,7 +584,7 @@ export const Dashboard = () => {
         {/* Main Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           <CreditCardComponent onApplyClick={() => setIsApplyModalOpen(true)} />
-          <EnhancedCreditScore score={ userCreditInfo.credit_score } />
+          <EnhancedCreditScore score={ userCreditInfo.credit_score } userCreditInfo={ userCreditInfo } />
           <div className="p-6 bg-white rounded-xl shadow-sm">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-gray-700 flex items-center gap-2">
