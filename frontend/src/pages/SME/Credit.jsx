@@ -116,7 +116,7 @@ const CreditPage = () => {
             <div className="flex justify-between items-center mb-2">
               <p className="text-gray-500">Credit Utilization</p>
               <p className={`font-semibold ${creditDetails && (((creditDetails.totalLimit/100) - creditDetails.creditUtilization) / 100)  > 0.5 ? 'text-red-500' : 'text-green-500'}`}>
-                {creditDetails && (creditDetails.totalLimit/100) - creditDetails.creditUtilization}%
+                {creditDetails && ((creditDetails.totalLimit/100) - creditDetails.creditUtilization).toFixed(2)}%
               </p>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2.5">

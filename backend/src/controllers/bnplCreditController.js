@@ -28,7 +28,7 @@ const createBnplCredit = async (req, res) => {
     }
 
     // Calculate monthly payment and interest
-    const interestRate = months_remaining === 3 ? 3 : months_remaining === 6 ? 6 : 9;
+    const interestRate = months_remaining === 1 ? 3 : months_remaining === 2 ? 6 : 9;
     const monthlyPayment = (total_amount * (1 + interestRate / 100)) / months_remaining;
 
     const newBnplCredit = new BnplCredit({

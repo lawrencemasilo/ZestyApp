@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { TrendingUp, Clock, ArrowUpRight, ArrowDownRight, 
          LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2,
-         PlusCircle, DollarSign } from 'lucide-react';
+         PlusCircle } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -91,7 +91,7 @@ const NavItem = ({ icon, text, active }) => (
   </div>
 );
 
-const CreditApplicationModal = ({ isOpen, onClose }) => {
+const CreditApplicationModal = ({ isOpen, onClose, setIsApplyModalOpen }) => {
   const [term, setTerm] = useState(30);
   const [amount, setAmount] = useState('');
   const [maxCredit, setMaxCredit] = useState(0);
@@ -178,10 +178,11 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
       const response = await axios.post("bnpl/", {
         sme_id: userCreditInfo.sme_id,
         total_amount: amount,
-        months_remaining: term === 30 ? 1 : term === 60 ? 2 : 3,
+        months_remaining: 3,
       });
   
       console.log("Response:", response.data);
+      setIsApplyModalOpen(false);
     } catch (err) {
       console.error("Error submitting application:", err.message || err);
     }
@@ -335,7 +336,7 @@ const EnhancedCreditScore = ({ userCreditInfo }) => {
           </div>
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="text-sm text-gray-500">Credit Usage</div>
-            <div className="text-lg font-semibold text-gray-700">{100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100}%</div>
+            <div className="text-lg font-semibold text-gray-700">{(100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100).toFixed(2)}%</div>
           </div>
         </div>
       </div>
@@ -364,7 +365,7 @@ const MetricCard = ({ metric, onSelect, selected, userCreditInfo }) => {
       detail: 'Recent credit inquiries affected score'
     },
     'Credit Usage': {
-      current: 100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100,
+      current: (100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100).toFixed(2),
       previous: 19,
       trend: 'up',
       color: 'green',
@@ -634,6 +635,7 @@ export const MobileDashboard = () => {
       <CreditApplicationModal 
         isOpen={isApplyModalOpen}
         onClose={() => setIsApplyModalOpen(false)}
+        setIsApplyModalOpen={setIsApplyModalOpen}
       />
     </div>
   )

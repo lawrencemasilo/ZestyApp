@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Download, TrendingUp, Clock, ArrowUpRight, ArrowDownRight, 
-         PlusCircle, DollarSign, Search, Filter } from 'lucide-react';
+import { TrendingUp, Clock, ArrowUpRight, ArrowDownRight, 
+         PlusCircle, Search, Filter } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import axios from '../../api/axios';
 
 
 
-const CreditApplicationModal = ({ isOpen, onClose }) => {
+const CreditApplicationModal = ({ isOpen, onClose, setIsApplyModalOpen }) => {
   const [term, setTerm] = useState(30);
   const [amount, setAmount] = useState('');
   const [maxCredit, setMaxCredit] = useState(0);
@@ -96,15 +96,14 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
       if (!userCreditInfo || !userCreditInfo.sme_id) {
         throw new Error("SME ID is undefined or not available.");
       }
-  
       const response = await axios.post("bnpl/", {
-        sme_id: String(userCreditInfo.sme_id),
+        sme_id: userCreditInfo.sme_id,
         total_amount: amount,
-        months_remaining: term === 30 ? 1 : term === 60 ? 2 : 3,
-        email: user.email,
+        months_remaining: 3,
       });
   
       console.log("Response:", response.data);
+      setIsApplyModalOpen(false);
     } catch (err) {
       console.error("Error submitting application:", err.message || err);
     }
@@ -175,7 +174,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
           <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
             <div className="flex justify-between">
               <span className="text-sm text-gray-600">Interest Rate</span>
-              <span className="font-medium">{getInterestRate(term)}%</span>
+              <span className="font-medium">{getInterestRate(term).toFixed(2)}%</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-gray-600">Monthly Payment</span>
@@ -259,7 +258,7 @@ const EnhancedCreditScore = ({ score, userCreditInfo }) => {
           </div>
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="text-sm text-gray-500">Credit Usage</div>
-            <div className="text-lg font-semibold text-gray-700">{100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100}%</div>
+            <div className="text-lg font-semibold text-gray-700">{(100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100).toFixed(2)}%</div>
           </div>
         </div>
       </div>
@@ -288,7 +287,7 @@ const MetricCard = ({ metric, onSelect, selected, userCreditInfo }) => {
       detail: 'Recent credit inquiries affected score'
     },
     'Credit Usage': {
-      current: 100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100,
+      current: (100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100).toFixed(2),
       previous: 19,
       trend: 'up',
       color: 'green',
@@ -672,6 +671,7 @@ export const Dashboard = () => {
       <CreditApplicationModal 
         isOpen={isApplyModalOpen}
         onClose={() => setIsApplyModalOpen(false)}
+        setIsApplyModalOpen={setIsApplyModalOpen}
       />
     </div>
   )
