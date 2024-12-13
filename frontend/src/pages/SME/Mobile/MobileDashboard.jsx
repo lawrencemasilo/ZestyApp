@@ -98,6 +98,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
   const availableCredit = maxCredit;
   const [user, setUser] = useState([]);
   const [userCreditInfo, setUserCreditInfo] = useState([]);
+  const [smeInfo, setSmeInfo] = useState([]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -116,18 +117,31 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
   useEffect(() => {
     const fetchUserCrefitInfo = async () => {
       try {
-        const response = await axios.get(`credit/${user._id}`);
+        const response = await axios.get(`credit/${smeInfo._id}`);
         setUserCreditInfo(response.data.creditScore);
-        setMaxCredit(response.data.creditScore.remaining_credit)
-        //console.log(response.data);
+        setMaxCredit(response.data.creditScore.remaining_credit);
       } catch (err) {
         console.error('Error fetching user credit info:', err);
       }
     };
   
     fetchUserCrefitInfo();
-    //console.log(userCreditInfo);
-    //console.log(user)
+  }, [smeInfo]);
+
+  useEffect(() => {
+    if (!user || !user._id) return;
+
+    const fetchSmeProfile = async () => {
+      try {
+        const response = await axios.get(`/sme/${user._id}`);
+        const smeData = response.data.sme;
+        setSmeInfo(smeData);
+      } catch (err) {
+        console.error("Error fetching SME profile:", err);
+      }
+    };
+
+    fetchSmeProfile();
   }, [user]);
 
   // Correct interest rate mapping
@@ -162,10 +176,9 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
       }
   
       const response = await axios.post("bnpl/", {
-        sme_id: String(userCreditInfo.sme_id),
+        sme_id: userCreditInfo.sme_id,
         total_amount: amount,
         months_remaining: term === 30 ? 1 : term === 60 ? 2 : 3,
-        email: user.email,
       });
   
       console.log("Response:", response.data);
@@ -196,7 +209,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
             <div className="w-full h-2 bg-gray-100 rounded-full">
               <div 
                 className="h-full bg-[#005EFF] rounded-full"
-                style={{ width: `${(1 - availableCredit/maxCredit) * 100}%` }}
+                style={{ width: `${(availableCredit/maxCredit) * 100}%` }}
               />
             </div>
           </div>
@@ -400,6 +413,7 @@ const MetricCard = ({ metric, onSelect, selected, userCreditInfo }) => {
 const CreditCardComponent = ({ onApplyClick }) => {
   const [user, setUser] = useState([]);
   const [userCreditInfo, setUserCreditInfo] = useState([]);
+  const [smeInfo, setSmeInfo] = useState([]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -418,17 +432,30 @@ const CreditCardComponent = ({ onApplyClick }) => {
   useEffect(() => {
     const fetchUserCrefitInfo = async () => {
       try {
-        const response = await axios.get(`credit/${user._id}`);
+        const response = await axios.get(`credit/${smeInfo._id}`);
         setUserCreditInfo(response.data.creditScore);
-        //console.log(response.data);
       } catch (err) {
         console.error('Error fetching user credit info:', err);
       }
     };
   
     fetchUserCrefitInfo();
-    //console.log(userCreditInfo.creditScore);
-    //console.log(user)
+  }, [smeInfo]);
+
+  useEffect(() => {
+    if (!user || !user._id) return;
+
+    const fetchSmeProfile = async () => {
+      try {
+        const response = await axios.get(`/sme/${user._id}`);
+        const smeData = response.data.sme;
+        setSmeInfo(smeData);
+      } catch (err) {
+        console.error("Error fetching SME profile:", err);
+      }
+    };
+
+    fetchSmeProfile();
   }, [user]);
 
   const cardDetails = {
@@ -497,6 +524,7 @@ export const MobileDashboard = () => {
   const [selectedMetric, setSelectedMetric] = useState(null);
   const [user, setUser] = useState([]);
   const [userCreditInfo, setUserCreditInfo] = useState([]);
+  const [smeInfo, setSmeInfo] = useState([]);
   
   const metrics = [
     { name: 'Repayment History', trend: 'up', color: 'green' },
@@ -522,15 +550,30 @@ export const MobileDashboard = () => {
   useEffect(() => {
     const fetchUserCrefitInfo = async () => {
       try {
-        const response = await axios.get(`credit/${user._id}`);
+        const response = await axios.get(`credit/${smeInfo._id}`);
         setUserCreditInfo(response.data.creditScore);
-        //console.log(response.data);
       } catch (err) {
         console.error('Error fetching user credit info:', err);
       }
     };
   
     fetchUserCrefitInfo();
+  }, [smeInfo]);
+
+  useEffect(() => {
+    if (!user || !user._id) return;
+
+    const fetchSmeProfile = async () => {
+      try {
+        const response = await axios.get(`/sme/${user._id}`);
+        const smeData = response.data.sme;
+        setSmeInfo(smeData);
+      } catch (err) {
+        console.error("Error fetching SME profile:", err);
+      }
+    };
+
+    fetchSmeProfile();
   }, [user]);
 
   return (

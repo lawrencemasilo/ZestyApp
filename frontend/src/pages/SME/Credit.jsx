@@ -12,6 +12,7 @@ const CreditPage = () => {
   const [userCreditInfo, setUserCreditInfo] = useState([]);
   const [bnplCredits, setBnplCredits] = useState([]);
   const [showDepositInfo, setShowDepositInfo] = useState(false);
+  const [smeInfo, setSmeInfo] = useState([]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -30,17 +31,30 @@ const CreditPage = () => {
   useEffect(() => {
     const fetchUserCrefitInfo = async () => {
       try {
-        const response = await axios.get(`credit/${user._id}`);
+        const response = await axios.get(`credit/${smeInfo._id}`);
         setUserCreditInfo(response.data.creditScore);
-        //console.log(response.data);
       } catch (err) {
         console.error('Error fetching user credit info:', err);
       }
     };
   
     fetchUserCrefitInfo();
-    //console.log(userCreditInfo);
-    //console.log(user)
+  }, [smeInfo]);
+
+  useEffect(() => {
+    if (!user || !user._id) return;
+
+    const fetchSmeProfile = async () => {
+      try {
+        const response = await axios.get(`/sme/${user._id}`);
+        const smeData = response.data.sme;
+        setSmeInfo(smeData);
+      } catch (err) {
+        console.error("Error fetching SME profile:", err);
+      }
+    };
+
+    fetchSmeProfile();
   }, [user]);
 
   const creditDetails = {
@@ -68,7 +82,7 @@ const CreditPage = () => {
   useEffect(() => {
     const fetchBnplInfo = async () => {
       try {
-        const response = await axios.get(`/bnpl/${user._id}`);
+        const response = await axios.get(`/bnpl/${smeInfo._id}`);
         setBnplCredits(response.data.credits);
       } catch (err) {
         console.error('Error fetching user credit info:', err);
@@ -78,7 +92,7 @@ const CreditPage = () => {
     fetchBnplInfo();
     //console.log(userCreditInfo);
     //console.log(bnplCredits)
-  }, [userCreditInfo])
+  }, [smeInfo])
 
   const renderAvailableCreditModal = () => {
     return (

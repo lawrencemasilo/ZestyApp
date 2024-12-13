@@ -45,21 +45,8 @@ const smeSchema = new mongoose.Schema(
     bank_details: {
       account_number: { type: String, required: true },
       bank_name: { type: String, required: true },
+      //proof_of_banking: { type: String, required: true },
     },
-    documents: {
-      revenue_proof: {
-        type: String,
-        required: true
-      },
-      tax_returns: {
-        type: String,
-        required: true
-      },
-      bank_statements: {
-        type: String,
-        required: true
-      }
-    }
   },
   { timestamps: true }
 );

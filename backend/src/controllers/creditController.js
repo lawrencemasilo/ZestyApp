@@ -3,18 +3,18 @@ const Transaction = require("../models/Transactions");
 
 const assessCredit = async (req, res) => {
   try {
-    const { sme_id, documents } = req.body; // Assume documents include revenue proof, etc.
+    const { sme_id } = req.body; // Assume documents include revenue proof, etc.
 
     // Basic validation (we need to ensure required data is present)
-    if (!sme_id || !documents) {
+    if (!sme_id) {
       return res.status(400).json({ message: "Missing required fields." });
     }
 
     // We assess initial credit limit based on the documents provided
-    let initialScore = 300;
-    if (documents.revenue_proof) initialScore += 150;
+    let initialScore = 450;
+    /*if (documents.revenue_proof) initialScore += 150;
     if (documents.tax_returns) initialScore += 80;
-    if (documents.bank_statements) initialScore += 100;
+    if (documents.bank_statements) initialScore += 100;*/
 
     // Here we determine initial risk category and credit limit
     const riskCategory = 

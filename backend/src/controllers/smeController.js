@@ -1,41 +1,45 @@
 const SME = require("../models/SME");
-const { assessCredit } = require("./creditController"); 
+const { assessCredit } = require("./creditController");
+const { updateUser } = require("./userController");
 
 const saveBusinessInfo = async (req, res) => {
   try {
-    const { user_id } = req.params; // User ID from the frontend
-    const { 
-      business_name, 
-      industry, 
-      registration_number, 
-      tax_id, 
-      monthly_revenue, 
-      address, 
-      contact_person, 
+    const { user_id } = req.params;
+
+    if (!user_id) {
+      return res.status(400).json({ message: "User ID is required." });
+    }
+
+    const {
+      business_name,
+      industry,
+      registration_number,
+      tax_id,
+      monthly_revenue,
+      address,
+      contact_person,
       bank_details,
-      documents
     } = req.body;
 
-    // Verify business registration and tax ID
+    // Validate business details
     const isRegistrationValid = /^[A-Z0-9]{10}$/.test(registration_number);
     const isTaxValid = /^[0-9]{9}$/.test(tax_id);
 
     if (!isRegistrationValid || !isTaxValid) {
-      return res.status(400).json({ message: "Invalid business registration number or tax ID." });
+      return res.status(400).json({
+        message: "Invalid business registration number or tax ID.",
+      });
     }
 
-    // Check if SME already exists
+    // Check if business already exists
     const existingSme = await SME.findOne({ registration_number });
     if (existingSme) {
-      return res.status(400).json({ message: "Business already exists with this registration number." });
+      return res.status(400).json({
+        message: "Business already exists with this registration number.",
+      });
     }
 
-    // Validate document URLs
-    /*if (!documents || !documents.revenue_proof || !documents.tax_returns || !documents.bank_statements) {
-      return res.status(400).json({ message: "All documents (revenue proof, tax returns, bank statements) are required." });
-    }*/
-
-    // Create SME and link to user
+    // Save new business
     const newSme = new SME({
       user_id,
       business_name,
@@ -46,53 +50,66 @@ const saveBusinessInfo = async (req, res) => {
       address,
       contact_person,
       bank_details,
-      documents: {
-        revenue_proof: documents.revenue_proof,
-        tax_returns: documents.tax_returns,
-        bank_statements: documents.bank_statements
-      }
     });
 
-    // Save SME information
     await newSme.save();
+
+    // Update user verification
+    await updateUserVerification(user_id);
 
     // Trigger credit assessment
     try {
-      const creditAssessmentReq = {
-        body: {
-          sme_id: newSme._id, 
-          documents: {
-            revenueProof: documents.revenue_proof,
-            taxReturns: documents.tax_returns,
-            bankStatements: documents.bank_statements
-          }
-        }
-      };
-
-      const creditAssessmentRes = {
-        status: (statusCode) => ({
-          json: (response) => {
-            // This is a mock response method to match Express response object
-            console.log(`Credit Assessment Status ${statusCode}:`, response);
-            return { statusCode, response };
-          }
-        })
-      };
-
-      await assessCredit(creditAssessmentReq, creditAssessmentRes);
+      await triggerCreditAssessment(newSme._id);
     } catch (creditErr) {
       console.error("Credit assessment failed:", creditErr);
-      // Note: We don't return an error here as the SME was successfully saved
     }
 
-    res.status(201).json({ 
-      message: "Business information saved successfully. Credit assessment initiated.", 
-      sme: newSme 
+    // Final response
+    return res.status(201).json({
+      message: "Business information saved successfully.",
+      sme: newSme,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error saving business information." });
+    return res.status(500).json({ message: "Error saving business information." });
   }
+};
+
+// Helper function to update user verification
+const updateUserVerification = async (user_id) => {
+  try {
+    await updateUser(
+      {
+        params: { id: user_id },
+        body: { verified: true },
+      },
+      {
+        status: (statusCode) => ({
+          json: (data) => {
+            if (statusCode >= 400) {
+              throw new Error(`Failed to update user: ${data.error}`);
+            }
+            console.log(`User update successful: ${data.message}`);
+          },
+        }),
+      }
+    );
+  } catch (err) {
+    console.error("Failed to update user verification:", err);
+    throw new Error("User verification update failed.");
+  }
+};
+
+// Helper function to trigger credit assessment
+const triggerCreditAssessment = async (sme_id) => {
+  const creditAssessmentReq = { body: { sme_id: sme_id.toString() } };
+  const creditAssessmentRes = {
+    status: (statusCode) => ({
+      json: (response) =>
+        console.log(`Credit Status ${statusCode}:`, response),
+    }),
+  };
+  await assessCredit(creditAssessmentReq, creditAssessmentRes);
 };
 
 const getBusinessInfo = async (req, res) => {
@@ -111,11 +128,11 @@ const getBusinessInfo = async (req, res) => {
       sme: {
         ...sme.toObject(),
         // Optionally, you might want to sanitize or partially hide document URLs
-        documents: {
+        /*documents: {
           revenue_proof: sme.documents.revenue_proof ? '[DOCUMENT URL]' : null,
           tax_returns: sme.documents.tax_returns ? '[DOCUMENT URL]' : null,
           bank_statements: sme.documents.bank_statements ? '[DOCUMENT URL]' : null
-        }
+        }*/
       }
     });
   } catch (err) {

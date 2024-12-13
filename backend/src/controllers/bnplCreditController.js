@@ -19,7 +19,7 @@ const createBnplCredit = async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    const { sme_id, total_amount, months_remaining, email } = req.body;
+    const { sme_id, total_amount, months_remaining } = req.body;
 
     // Fetch SME's credit score
     const creditScore = await CreditScore.findOne({ sme_id });
@@ -46,7 +46,7 @@ const createBnplCredit = async (req, res) => {
     await creditScore.save();
 
     // Generate repayment records
-    const repayments = [];
+    /*const repayments = [];
     for (let i = 1; i <= months_remaining; i++) {
       repayments.push({
         transaction_id: newBnplCredit._id,
@@ -54,7 +54,7 @@ const createBnplCredit = async (req, res) => {
         amount_due: monthlyPayment,
       });
     }
-    await Repayments.insertMany(repayments);
+    await Repayments.insertMany(repayments);*/
 
     // Generate secure PIN for checkout
     const securePin = Math.floor(10000 + Math.random() * 90000); // Generate 5-digit PIN

@@ -122,7 +122,6 @@ const BusinessOnboarding = () => {
                     address,
                     contact_person,
                     bank_details,
-                    documents
                 } = formData;
     
                 const response = await axios.post(
@@ -147,11 +146,7 @@ const BusinessOnboarding = () => {
                             bank_name: bank_details.bank_name,
                         },
                         // Add document handling
-                        documents: {
-                            revenue_proof: documents.revenue_proof ? documents.revenue_proof.name : null,
-                            tax_returns: documents.tax_returns ? documents.tax_returns.name : null,
-                            bank_statements: documents.bank_statements ? documents.bank_statements.name : null
-                        }
+                        
                     }
                 );
                 console.log("Response from backend (JSON):", response.data);
@@ -349,7 +344,7 @@ const BusinessOnboarding = () => {
     );
 
     
-    useEffect(() => {
+    /*useEffect(() => {
         const handleVerified = async () => {
             try {              
                 const response = await axios.patch(`/users/${user && user._id}`, {
@@ -364,7 +359,7 @@ const BusinessOnboarding = () => {
         if (step === 4) {
             handleVerified();
         }
-    }, [step]);
+    }, [step]);*/
     
 
     const renderStep = () => {
@@ -374,6 +369,7 @@ const BusinessOnboarding = () => {
                 return (
                     <div className="space-y-2">
                         <h2 className="text-xl font-bold text-gray-800">Business Details</h2>
+                        <p className='text-red-600'>Disclaimer: This is a demo. Please enter only mock business data!</p>
                         <p className="text-gray-500 -mt-4">Tell us about your business</p>
                         
                         {renderInput('business_name', 'Business Name', errors.business_name, {
@@ -422,6 +418,7 @@ const BusinessOnboarding = () => {
                 return (
                     <div className="space-y-2">
                         <h2 className="text-xl font-bold text-gray-800">Business Location</h2>
+                        <p className='text-red-600'>Disclaimer: This is a demo. Please enter only mock business data!</p>
                         <p className="text-gray-500 -mt-4">Provide your business addresses</p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -455,6 +452,7 @@ const BusinessOnboarding = () => {
                 return (
                     <div className="space-y-2">
                         <h2 className="text-xl font-bold text-gray-800">Bank Details</h2>
+                        <p className='text-red-600'>Disclaimer: This is a demo. Please enter only mock business data!</p>
                         <p className="text-gray-500 -mt-4">Provide your banking information</p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -517,12 +515,12 @@ const BusinessOnboarding = () => {
                 return (
                     <div className="space-y-2">
                         <h2 className="text-xl font-bold text-gray-800">Revenue Documents</h2>
+                        <p className='text-red-600'>Disclaimer: This is a demo. Please enter only mock business data!</p>
                         <p className="text-gray-500 -mt-4">Upload financial documentation</p>
 
                         <div className="space-y-6">
-                            {renderDocumentUpload('revenueProof', 'Revenue Proof')}
-                            {renderDocumentUpload('taxReturns', 'Tax Returns')}
-                            {renderDocumentUpload('bankStatements', 'Bank Statements')}
+                            {renderDocumentUpload('taxReturns', 'Bank statement')}
+                            {renderDocumentUpload('taxReturns', 'Additional Documents')}
                         </div>
                     </div>
                 );
