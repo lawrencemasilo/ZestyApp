@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { assessCredit, updateCreditScore } = require("../controllers/creditController");
+const { assessCredit, updateCreditScore, getCreditScore } = require("../controllers/creditController");
 
 // Credit Assessment
 router.post("/assess", assessCredit);
-router.post("/update", updateCreditScore);
+router.patch("/update", updateCreditScore);
+router.get("/:sme_id", getCreditScore);
 
 module.exports = router;

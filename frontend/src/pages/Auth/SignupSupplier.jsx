@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { CircleArrowLeft, CircleArrowRight } from 'lucide-react';
+import useIsDesktop from '../../hooks/useIsDesktop';
 
 
 const FormInput = ({ label, id, ...props }) => (
@@ -41,6 +42,7 @@ const FormSelect = ({ label, id, options, ...props }) => (
 
 
 const SignupSupplier = () => {
+  const isDesktop = useIsDesktop();
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle signup logic
@@ -52,16 +54,18 @@ const SignupSupplier = () => {
         {/* Left Column */}
         <div className="bg-[#005EFF] text-white lg:w-2/5 p-6 lg:p-12 flex flex-col">
           <div className="mb-8">
+            <Link to="/">
             <h1 className="text-2xl md:text-3xl font-bold">Zesty</h1>
+            </Link>
           </div>
           
           <div className="flex-grow flex flex-col justify-center">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6">
               Start Building Your Future with Zesty
             </h1>
-            <p className="text-lg text-blue-100 mb-8">
+            {isDesktop && <p className="text-lg text-blue-100 mb-8">
             Are you a small-to-medium enterprise looking to access flexible financing solutions? Let's get you started with a few details.
-            </p>
+            </p>}
             
               <Link 
                 to="/account-type"

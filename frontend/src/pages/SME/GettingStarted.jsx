@@ -1,8 +1,10 @@
 import axios from '../../api/axios';
-import React, { useState } from 'react';
-import { ChevronRight, Building2, FileCheck, AlertCircle, ArrowLeft } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { ChevronRight, Building2, FileCheck, AlertCircle, ArrowLeft, CheckCircle2, Upload } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const BusinessOnboarding = () => {
+    const [user, setUser] = useState(null);
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
         business_name: '',
@@ -23,11 +25,22 @@ const BusinessOnboarding = () => {
             account_number: '',
             bank_name: '',
             proof_of_banking: null
+        },
+        documents: {
+            revenue_proof: null,
+            tax_returns: null,
+            bank_statements: null
         }
     });
 
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const fileInputRefs = {
+        revenue_proof: useRef(null),
+        taxReturns: useRef(null),
+        bank_statements: useRef(null),
+        proof_of_banking: useRef(null),
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -46,6 +59,20 @@ const BusinessOnboarding = () => {
             return { ...prev, [field]: value };
         });
     };
+    
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+          try {
+            const response = await axios.get("/auth/profile");
+            const userData = response.data;
+            setUser(userData);
+          } catch (err) {
+            console.error("Error fetching user profile:", err);
+          }
+        };
+    
+        fetchUserProfile();
+      }, []);
 
     const validateStep1 = () => {
         const newErrors = {};
@@ -84,7 +111,7 @@ const BusinessOnboarding = () => {
         setErrors({});
     
         try {
-            if (step === 3) {
+            if (step === 4) {  // Changed from step 3 to step 4
                 // Destructure and prepare the individual fields
                 const {
                     business_name,
@@ -97,49 +124,32 @@ const BusinessOnboarding = () => {
                     bank_details,
                 } = formData;
     
-                const payload = {
-                    business_name,
-                    industry,
-                    registration_number,
-                    tax_id,
-                    monthly_revenue: parseInt(monthly_revenue, 10), // Ensure number format
-                    address,
-                    contact_person,
-                    bank_details: {
-                        account_number: bank_details.account_number,
-                        bank_name: bank_details.bank_name,
-                    },
-                };
-    
-                // Replace this with the actual user ID
-                const userId = "6752c7eae8126058e8a837f1";
-    
-                
-                    // Send as JSON payload when no file exists
-                    const response = await axios.post(
-                        `http://localhost:5000/api/sme/${userId}`,
-                        {
-                            business_name,
-                            industry,
-                            registration_number,
-                            tax_id,
-                            monthly_revenue: parseInt(monthly_revenue, 10),
-                            address: {
-                                physical: address.physical,
-                                operational: address.operational,
-                            },
-                            contact_person: {
-                                name: contact_person.name,
-                                email: contact_person.email,
-                                phone: contact_person.phone,
-                            },
-                            bank_details: {
-                                account_number: bank_details.account_number,
-                                bank_name: bank_details.bank_name,
-                            },
-                        }
-                    );
-                    console.log("Response from backend (JSON):", response.data);
+                const response = await axios.post(
+                    `/sme/${user._id}`,
+                    {
+                        business_name,
+                        industry,
+                        registration_number,
+                        tax_id,
+                        monthly_revenue: parseInt(monthly_revenue, 10),
+                        address: {
+                            physical: address.physical,
+                            operational: address.operational,
+                        },
+                        contact_person: {
+                            name: contact_person.name,
+                            email: contact_person.email,
+                            phone: contact_person.phone,
+                        },
+                        bank_details: {
+                            account_number: bank_details.account_number,
+                            bank_name: bank_details.bank_name,
+                        },
+                        // Add document handling
+                        
+                    }
+                );
+                console.log("Response from backend (JSON):", response.data);
                 
             }
     
@@ -160,8 +170,150 @@ const BusinessOnboarding = () => {
             setLoading(false);
         }
     };
+
+    // Add a new method for file upload validation
+    const handleDocumentUpload = (e, documentType) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type and size
+            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
     
+            if (!allowedTypes.includes(file.type)) {
+                setErrors(prev => ({
+                    ...prev,
+                    [`documents.${documentType}`]: 'Invalid file type. Please upload PDF or image.'
+                }));
+                return;
+            }
     
+            if (file.size > maxSize) {
+                setErrors(prev => ({
+                    ...prev,
+                    [`documents.${documentType}`]: 'File size exceeds 5MB limit.'
+                }));
+                return;
+            }
+    
+            setFormData(prev => ({
+                ...prev,
+                documents: {
+                    ...prev.documents,
+                    [documentType]: file  // Use the passed documentType directly
+                }
+            }));
+            setErrors(prev => {
+                const { [`documents.${documentType}`]: _, ...rest } = prev;
+                return rest;
+            });
+        }
+    };
+
+    // Modify renderFileUpload to handle multiple documents
+    const renderDocumentUpload = (documentType, label) => {
+        const file = formData.documents[documentType];
+        return (
+            <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                    {label}
+                    <span className="text-gray-500 ml-1">(PDF or Image, max 5MB)</span>
+                </label>
+                <div 
+                    onClick={() => {
+                        if (fileInputRefs[documentType]?.current) {
+                            fileInputRefs[documentType].current.click();
+                        } else {
+                            console.error(`Ref for ${documentType} is not initialized.`);
+                        }
+                    }}
+                    className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer 
+                        transition-all duration-300 
+                        ${errors[`documents.${documentType}`] 
+                            ? 'border-red-400 bg-red-50' 
+                            : 'border-gray-300 hover:border-[#005EFF] hover:bg-blue-50'}`}
+                >
+                    <input
+                        type="file"
+                        ref={fileInputRefs[documentType]}
+                        onChange={(e) => handleDocumentUpload(e, documentType)}
+                        className="hidden"
+                        accept="image/jpeg,image/png,application/pdf"
+                    />
+                    {file ? (
+                        <div className="flex items-center justify-center gap-3">
+                            <CheckCircle2 className="text-green-500 w-6 h-6" />
+                            <span className="text-gray-700">{file.name}</span>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center">
+                            <Upload className="w-10 h-10 text-[#005EFF] mb-2" />
+                            <p className="text-[#005EFF] hover:text-blue-800">
+                                Click to upload document
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Supported formats: PDF, JPEG, PNG
+                            </p>
+                        </div>
+                    )}
+                </div>
+                {errors[`documents.${documentType}`] && (
+                    <p className="text-sm text-red-500 pl-2">
+                        {errors[`documents.${documentType}`]}
+                    </p>
+                )}
+            </div>
+        );
+    };
+    
+    const handleFileUpload = (e, fileType) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type and size
+            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+
+            if (!allowedTypes.includes(file.type)) {
+                setErrors(prev => ({
+                    ...prev,
+                    [`${fileType}`]: 'Invalid file type. Please upload PDF or image.'
+                }));
+                return;
+            }
+
+            if (file.size > maxSize) {
+                setErrors(prev => ({
+                    ...prev,
+                    [`${fileType}`]: 'File size exceeds 5MB limit.'
+                }));
+                return;
+            }
+
+            // Handle different file upload types
+            if (fileType.startsWith('bank_details')) {
+                setFormData(prev => ({
+                    ...prev,
+                    bank_details: {
+                        ...prev.bank_details,
+                        proof_of_banking: file
+                    }
+                }));
+            } else {
+                setFormData(prev => ({
+                    ...prev,
+                    documents: {
+                        ...prev.documents,
+                        [fileType]: file
+                    }
+                }));
+            }
+
+            // Clear any existing errors for this file type
+            setErrors(prev => {
+                const { [`${fileType}`]: _, ...rest } = prev;
+                return rest;
+            });
+        }
+    };
 
     const handleBack = () => {
         if (step > 1) {
@@ -191,12 +343,33 @@ const BusinessOnboarding = () => {
         </div>
     );
 
+    
+    /*useEffect(() => {
+        const handleVerified = async () => {
+            try {              
+                const response = await axios.patch(`/users/${user && user._id}`, {
+                    verified: true,
+                });
+                console.log("Verification Response:", response.data);
+            } catch (err) {
+                console.error("Error during verification:", err.message);
+            }
+        };
+    
+        if (step === 4) {
+            handleVerified();
+        }
+    }, [step]);*/
+    
+
     const renderStep = () => {
+
         switch(step) {
             case 1:
                 return (
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                         <h2 className="text-xl font-bold text-gray-800">Business Details</h2>
+                        <p className='text-red-600'>Disclaimer: This is a demo. Please enter only mock business data!</p>
                         <p className="text-gray-500 -mt-4">Tell us about your business</p>
                         
                         {renderInput('business_name', 'Business Name', errors.business_name, {
@@ -243,8 +416,9 @@ const BusinessOnboarding = () => {
 
             case 2:
                 return (
-                    <div className="space-y-6">
+                    <div className="space-y-2">
                         <h2 className="text-xl font-bold text-gray-800">Business Location</h2>
+                        <p className='text-red-600'>Disclaimer: This is a demo. Please enter only mock business data!</p>
                         <p className="text-gray-500 -mt-4">Provide your business addresses</p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -257,7 +431,7 @@ const BusinessOnboarding = () => {
                             })}
                         </div>
 
-                        <div className="space-y-6">
+                        <div className="space-y-2">
                             {renderInput('contact_person.name', 'Contact Person Name', errors['contact_person.name'], {
                                 placeholder: 'Full name'
                             })}
@@ -274,10 +448,11 @@ const BusinessOnboarding = () => {
                     </div>
                 );
 
-            case 3:
+                case 3:  // Bank details step
                 return (
-                    <div className="space-y-6">
+                    <div className="space-y-2">
                         <h2 className="text-xl font-bold text-gray-800">Bank Details</h2>
+                        <p className='text-red-600'>Disclaimer: This is a demo. Please enter only mock business data!</p>
                         <p className="text-gray-500 -mt-4">Provide your banking information</p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -291,42 +466,68 @@ const BusinessOnboarding = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">Proof of Banking</label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                            <label className="block text-sm font-semibold text-gray-700">
+                                Proof of Banking
+                                <span className="text-gray-500 ml-1">(PDF or Image, max 5MB)</span>
+                            </label>
+                            <div 
+                                
+                                className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer 
+                                    transition-all duration-300 
+                                    ${errors['bank_details.proof_of_banking'] 
+                                        ? 'border-red-400 bg-red-50' 
+                                        : 'border-gray-300 hover:border-[#005EFF] hover:bg-blue-50'}`}
+                            >
                                 <input
                                     type="file"
-                                    onChange={(e) => {
-                                        setFormData(prev => ({
-                                            ...prev,
-                                            bank_details: {
-                                                ...prev.bank_details,
-                                                proof_of_banking: e.target.files[0]
-                                            }
-                                        }));
-                                    }}
+                                    ref={fileInputRefs.proof_of_banking}
+                                    onChange={(e) => handleFileUpload(e, 'bank_details.proof_of_banking')}
                                     className="hidden"
-                                    id="file-upload"
-                                    accept="image/*,.pdf"
+                                    accept="image/jpeg,image/png,application/pdf"
                                 />
-                                <label 
-                                    htmlFor="file-upload" 
-                                    className="cursor-pointer text-[#005EFF] hover:text-blue-800 transition-colors"
-                                >
-                                    Click to upload document
-                                </label>
-                                {formData.bank_details.proof_of_banking && (
-                                    <p className="text-sm text-gray-500 mt-2">
-                                        {formData.bank_details.proof_of_banking.name}
-                                    </p>
+                                {formData.bank_details.proof_of_banking ? (
+                                    <div className="flex items-center justify-center gap-3">
+                                        <CheckCircle2 className="text-green-500 w-6 h-6" />
+                                        <span className="text-gray-700">{formData.bank_details.proof_of_banking.name}</span>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center">
+                                        <Upload className="w-10 h-10 text-[#005EFF] mb-2" />
+                                        <p className="text-[#005EFF] hover:text-blue-800">
+                                            Click to upload document
+                                        </p>
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Supported formats: PDF, JPEG, PNG
+                                        </p>
+                                    </div>
                                 )}
                             </div>
+                            {errors['bank_details.proof_of_banking'] && (
+                                <p className="text-sm text-red-500 pl-2">
+                                    {errors['bank_details.proof_of_banking']}
+                                </p>
+                            )}
                         </div>
                     </div>
                 );
 
-            case 4:
+            case 4:  // New step for revenue documents
                 return (
-                    <div className="text-center py-8 space-y-6">
+                    <div className="space-y-2">
+                        <h2 className="text-xl font-bold text-gray-800">Revenue Documents</h2>
+                        <p className='text-red-600'>Disclaimer: This is a demo. Please enter only mock business data!</p>
+                        <p className="text-gray-500 -mt-4">Upload financial documentation</p>
+
+                        <div className="space-y-6">
+                            {renderDocumentUpload('taxReturns', 'Bank statement')}
+                            {renderDocumentUpload('taxReturns', 'Additional Documents')}
+                        </div>
+                    </div>
+                );
+
+            case 5:  // Updated final verification step
+                return (
+                    <div className="text-center py-8 space-y-2">
                         <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <FileCheck className="w-12 h-12 text-green-500" />
                         </div>
@@ -335,45 +536,53 @@ const BusinessOnboarding = () => {
                             Your business has been verified. You can now access all features 
                             and start your journey with us.
                         </p>
-                        <button 
-                            className="px-10 py-4 bg-[#005EFF] text-white rounded-xl 
-                            hover:bg-blue-700 transition-colors inline-flex items-center gap-3 
-                            shadow-lg hover:shadow-xl mx-auto"
-                        >
-                            Continue to Dashboard
-                            <ChevronRight className="w-5 h-5" />
-                        </button>
+                        <Link to='/dashboard'>
+                          <button 
+                              className="px-10 py-4 bg-[#005EFF] text-white rounded-xl 
+                              hover:bg-blue-700 transition-colors inline-flex items-center gap-3 
+                              shadow-lg hover:shadow-xl mx-auto"
+                          >
+                              Continue to Dashboard
+                              <ChevronRight className="w-5 h-5" />
+                          </button>
+                        </Link>
                     </div>
                 );
         }
     };
 
+    // Modify renderProgressIndicator to reflect new step count
+    const renderProgressIndicator = () => (
+        <div className="flex items-center justify-center mb-6 space-x-4">
+            {[1, 2, 3, 4].map((stepNumber) => (
+                <div key={stepNumber} className="flex items-center">
+                    <div 
+                        className={`w-12 h-1.5 rounded-full transition-all 
+                            ${step >= stepNumber ? 'bg-[#005EFF]' : 'bg-gray-300'}`}
+                    />
+                    
+                </div>
+            ))}
+        </div>
+    );
+
+    // Modify the header to reflect updated step count
     return (
-        <div className="flex w-full h-screen justify-center min-h-screen overflow-y-auto bg-gray-50">
-            <div className="h-screen bg-white rounded-2xl py-5">
-                <div className=" bg-gradient-to-r from-[#005EFF] to-blue-600 rounded-t-2xl text-white p-5 px-10 flex items-center justify-between ">
+        <div className="flex w-full min-h-screen h-screen bg-gray-50 justify-center items-center p-4 py-6 overflow-y-auto rounded-3xl">
+            <div className="w-full max-w-2xl bg-white shadow-2xl rounded-3xl overflow-y-auto">
+                <div className="w-full bg-gradient-to-r from-[#005EFF] to-blue-600 text-white p-6 px-10 flex items-center justify-between rounded-t-3xl">
                     <div>
-                        <h1 className="text-xl font-bold">Business Verification</h1>
-                        <p className="text-white text-l">Step {step} of 4</p>
+                        <h1 className="text-2xl font-bold">Business Verification</h1>
+                        <p className="text-white text-opacity-80">Step {step} of 5</p>
                     </div>
-                    <Building2 className="w-8 h-8 text-white" />
+                    <Building2 className="w-10 h-10 text-white opacity-80" />
                 </div>
 
-                <div className="flex justify-center flex-col w-full p-6 md:p-10 md:py-7">
-                    {step < 4 && (
-                        <div className="flex items-center justify-center mb-6 space-x-4">
-                            {[1, 2, 3].map((stepNumber) => (
-                                <div 
-                                    key={stepNumber}
-                                    className={`w-12 h-1.5 rounded-full transition-all 
-                                        ${step >= stepNumber ? 'bg-[#005EFF]' : 'bg-gray-300'}`}
-                                />
-                            ))}
-                        </div>
-                    )}
+                <div className="px-10 mt-2">
+                    {step < 5 && renderProgressIndicator()}
 
                     {errors.submit && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-2 mb-6">
+                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center gap-2 mb-6 shadow-sm">
                             <AlertCircle className="h-5 w-5" />
                             <p>{errors.submit}</p>
                         </div>
@@ -381,8 +590,8 @@ const BusinessOnboarding = () => {
 
                     {renderStep()}
 
-                    {step < 4 && (
-                        <div className="mt-3 flex justify-between">
+                    {step < 5 && (
+                        <div className="mt-5 flex justify-between mb-5">
                             {step > 1 && (
                                 <button
                                     onClick={handleBack}
@@ -396,12 +605,13 @@ const BusinessOnboarding = () => {
                                 onClick={() => {
                                     if (step === 1 && validateStep1()) handleSubmit();
                                     else if (step === 2 && validateStep2()) handleSubmit();
-                                    else if (step === 3) handleSubmit();
+                                    else if (step === 3 || step === 4) handleSubmit();
                                 }}
                                 disabled={loading}
-                                className="ml-auto px-8 py-3 bg-[#005EFF] text-white rounded-xl 
-                                hover:bg-blue-700 transition-colors disabled:opacity-50 
-                                disabled:cursor-not-allowed flex items-center gap-2"
+                                className="ml-auto px-8 py-3 bg-gradient-to-r from-[#005EFF] to-blue-600 
+                                text-white rounded-xl hover:opacity-90 transition-all 
+                                disabled:opacity-50 disabled:cursor-not-allowed 
+                                flex items-center gap-2 shadow-lg hover:shadow-xl"
                             >
                                 {loading ? (
                                     <>
@@ -410,7 +620,7 @@ const BusinessOnboarding = () => {
                                     </>
                                 ) : (
                                     <>
-                                        {step === 3 ? 'Complete Verification' : 'Continue'}
+                                        {step === 4 ? 'Complete Verification' : 'Continue'}
                                         <ChevronRight className="w-5 h-5" />
                                     </>
                                 )}

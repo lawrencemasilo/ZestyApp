@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Outlet } from "react-router-dom";
 import Login from "./pages/Auth/Login";
-import { ForgotPassword } from "./pages/Auth/ForgotPassword";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
 import { Register } from "./pages/Auth/Register";
 import { Dashboard } from "./pages/SME/Dashboard";
 import CreditPage from "./pages/SME/Credit";
@@ -12,12 +12,10 @@ import SupDashboard from "./pages/Supplier/Dashboard";
 import SupTransaction from "./pages/Supplier/Transactions";
 import { NavBar } from "./components/SME/NavBar";
 import useIsDesktop from "./hooks/useIsDesktop";
-import { MobileHeader } from "./components/SME/MobileHeader";
-import { MobileNavBar } from "./components/SME/MobileNavBar";
 import AccountSelection from "./pages/Auth/AccountSelection";
 import { SignupSme } from "./pages/Auth/SignupSme";
 import SignupSupplier from "./pages/Auth/SignupSupplier";
-import ProfilePage, { Profile } from "./pages/SME/Profile";
+import ProfilePage from "./pages/SME/Profile";
 import LandingPage from "./pages/Landing/LandingPage";
 import { MobileDashboard } from "./pages/SME/Mobile/MobileDashboard";
 import GettingStarted from "./pages/SME/GettingStarted";
@@ -28,57 +26,41 @@ import MobileGettingStarted from "./pages/SME/Mobile/GettingStartedMobile";
 import ProtectedRoute from './components/ProtectedRoute';
 import WelcomePopup from "./components/SME/WelcomePopup";
 
+
 import axios from './api/axios';
+import ProfileMobilePage from './pages/SME/Mobile/ProfileMobile';
+import LoadingScreen from './pages/SME/Loading';
+import ResetPassword from './pages/Auth/ResetPassword';
 
 // Layout for non-authenticated and authenticated pages (with navbar)
 function Layout() {
   const isDesktop = useIsDesktop();
   const [onClose, setOnClose] = useState(true);
   const [user, setUser] = useState([]);
-  const [userId, setUserId] = useState('');
-  const [verified, setVerified] = useState(false);
+
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get('auth/profile');
-        setUser(response); // Use `response.data` to access the actual user data
+        setUser(response.data);
         /*const verificationResponse = await axios.post('verify/business', response.data._id, 123456789);
         setVerification(verificationResponse );*/
-        setUserId(response.data._id);
+        //setVerified(response.data.verified)
       } catch (err) {
         console.error('Error fetching user profile:', err);
       }
     };
-  
-
-    const checkBusinessInfo = async (userId) => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/sme/${userId}`);
-        setVerified(true);
-        console.log("Business info:", response.data);
-        return response.data;
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          console.log("Business information not found.");
-          return null; // Render "Getting Started" page
-        } else {
-          console.error("Error fetching business information:", error);
-          throw error; // Handle other errors
-        }
-      }
-    };
-
 
     fetchUserProfile();
-    checkBusinessInfo(userId);
+
 
   }, []);
 
   return (
     <div className="bg-[#FAFBFC]" style={{ fontFamily: '"Inter", serif' }}>
       
-        {!verified && onClose && <WelcomePopup setOnClose={setOnClose} />}
+        {user && !user.verified && onClose && <WelcomePopup setOnClose={setOnClose} />}
         <div className="flex flex-row h-screen w-full">
           {isDesktop && <NavBar />}
           <Outlet />
@@ -123,7 +105,10 @@ function App() {
         {isDesktop? <Route path="credit" element={<ProtectedRoute><CreditPage /></ProtectedRoute>} />:
           <Route path="credit" element={<ProtectedRoute><MobileCreditPage /></ProtectedRoute>} />
         }
-
+        
+        {isDesktop? <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />:
+          <Route path="profile" element={<ProtectedRoute><ProfileMobilePage /></ProtectedRoute>} />
+        }
         <Route path="settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
         {isDesktop? <Route path="suppliers" element={<ProtectedRoute><SupplierPage /></ProtectedRoute>} />:
           <Route path="suppliers" element={<ProtectedRoute><MobileSupplierPage /></ProtectedRoute>} />
@@ -142,9 +127,11 @@ function App() {
 
       {/* Auth Layout */}
       <Route element={<AuthLayout />}>
+        <Route path="loading" element={<LoadingScreen />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="account-type" element={<AccountSelection />} />
         <Route path="signup-sme" element={<SignupSme />} />
         <Route path="signup-supplier" element={<SignupSupplier />} />
