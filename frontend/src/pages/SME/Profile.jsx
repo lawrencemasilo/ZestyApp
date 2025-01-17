@@ -3,11 +3,13 @@ import { Settings, User, Building, Edit, Save, ChevronRight, Shield, Moon, Sun, 
 import { Switch } from "../../components/ui/switch";
 import { logout } from "../../services/authService";
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('personal');
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [settings, setSettings] = useState({
     darkMode: false,
     notifications: true,
@@ -35,11 +37,34 @@ const ProfilePage = () => {
 
   const handleEdit = () => {
     setIsEditing(true);
+    setError(null);
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    // Here you would typically make an API call to save the data
+  const handleSave = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      //Send data in single request
+      const response = await axios.put('/profile', {
+        personal: profileData.personal,
+        business: profileData.business
+      });
+      
+      if (response.data) {
+        setProfileData(response.data);
+        setIsEditing(false);
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || 
+        'Failed to update profile. Please try again.'
+      );
+      //editing on if error occurs
+      return;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
 
