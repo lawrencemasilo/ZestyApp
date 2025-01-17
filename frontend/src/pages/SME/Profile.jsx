@@ -40,30 +40,30 @@ const ProfilePage = () => {
     setError(null);
   };
 
+  
   const handleSave = async () => {
-    setIsLoading(true);
-    setError(null);
-    
     try {
-      //Send data in single request
-      const response = await axios.put('/profile', {
-        personal: profileData.personal,
-        business: profileData.business
-      });
+      const updatedData = {
+        personal: {
+          phone: profileData.personal.phone,
+          address: profileData.personal.address
+        },
+        business: {
+          businessAddress: profileData.business.businessAddress,
+          annualRevenue: profileData.business.annualRevenue
+        }
+      };
+      const response = await axios.put('/profile/update', updatedData);
       
-      if (response.data) {
-        setProfileData(response.data);
+      if (response.status === 200) {
+        // Update successful
         setIsEditing(false);
+        alert('Profile updated successfully');
       }
-    } catch (err) {
-      setError(
-        err.response?.data?.message || 
-        'Failed to update profile. Please try again.'
-      );
-      //editing on if error occurs
-      return;
-    } finally {
-      setIsLoading(false);
+    } catch (error) {
+      // Handle any errors
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile. Please try again.');
     }
   };
 
@@ -239,7 +239,7 @@ const ProfilePage = () => {
                     }
                   />
                 </div>
-
+{/* 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Shield className="w-5 h-5 text-gray-500" />
@@ -254,7 +254,7 @@ const ProfilePage = () => {
                       setSettings({ ...settings, twoFactor: checked })
                     }
                   />
-                </div>
+                </div> */}
               </div>
             )}
           </div>
