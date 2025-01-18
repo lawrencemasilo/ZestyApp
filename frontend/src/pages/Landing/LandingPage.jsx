@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
-import { Mail, MapPin, Menu, X, ArrowRight, CheckCircle2, Smartphone, Store, CreditCard, Clock, Shield, BarChart, DollarSign, Building, Truck, ShoppingCart } from 'lucide-react';
+import { Mail, MapPin, Menu, X, ArrowRight, Smartphone, Store, CreditCard, Clock, Shield, BarChart, DollarSign, Building, ShoppingCart } from 'lucide-react';
 import posman from "../../assets/images/posman.jpg";
+import axios from '../../api/axios';
 
 const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -53,7 +54,7 @@ const LandingPage = () => {
   const howItWorksSME = [
     {
       title: "Quick Application",
-      description: "Complete our simple online application and connect your business accounts",
+      description: "Complete our simple online/USSD application and connect your business accounts",
       icon: Store
     },
     {
@@ -85,6 +86,30 @@ const LandingPage = () => {
       icon: Building
     }
   ];
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  
+    try {
+      await axios.post('/email/send-email', {
+        from: formData.email,
+        to: "zesty@zestytechnologies.co.za",
+        subject: `New Contact Us Message from ${formData.name}`,
+        text: `From: ${formData.name} (${formData.email})\n\nMessage:\n${formData.message}`,
+        html: `<strong>From:</strong> ${formData.name} (<a href="mailto:${formData.email}">${formData.email}</a>)<br><br><strong>Message:</strong><br>${formData.message}`,
+      });
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+        consent: false
+      });
+    } catch (err) {
+      console.error('email error:', err.response?.data || err.message);
+    }
+  };
 
   return (
     <div className="min-h-screen font-[Inter] overflow-x-hidden">
@@ -308,7 +333,7 @@ const LandingPage = () => {
               </div>
             </div>
 
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Name

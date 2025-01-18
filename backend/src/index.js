@@ -10,7 +10,8 @@ const bnplRoutes = require("./routes/bnplRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
 const verificationRoutes = require("./routes/verificationRoutes");
 const supplierRoutes = require("./routes/supplierRoutes");
-
+const userRoutes = require("./routes/userRoutes");
+const repaymentRoutes = require("./routes/repaymentRoutes");
 
 dotenv.config();
 
@@ -31,7 +32,9 @@ app.use("/api/credit", creditRoutes);
 app.use("/api/bnpl", bnplRoutes);
 app.use("/api/transaction", transactionRoutes);
 app.use("/api/verify", verificationRoutes);
-app.use("/api/supplier", supplierRoutes)
+app.use("/api/supplier", supplierRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/repayments", repaymentRoutes);
 
 // Default route
 app.get("/", (req, res) => {

@@ -1,25 +1,86 @@
 import React, { useEffect, useState } from 'react';
-import { Edit, Save, Shield, Moon, Bell } from 'lucide-react';
-import { Switch } from "../../components/ui/switch";
-import { logout } from "../../services/authService";
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { Edit, Save, Shield, Moon, Bell, LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2 } from 'lucide-react';
+import { Switch } from "../../../components/ui/switch";
+import { logout } from "../../../services/authService";
+import { Link, useNavigate } from 'react-router-dom';
+import NotificationsPopover from '../../../components/SME/NotificationsPopover';
+import { useSelectedItem } from '../../../context/SelectedItemContext';
+import axios from '../../../api/axios';
 
+const BottomNav = () => {  
+    const { selectedItem, setSelectedItem } = useSelectedItem();
+    
+    return (
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden p-0">
+        <div className="flex justify-around items-center h-16 w-full pb-0">
+          <Link to="/dashboard" className="flex h-full" onClick={() => setSelectedItem("dashboard")}>
+            <NavItem icon={<LayoutDashboard size={24} />}  text="Dashboard" active={selectedItem === 'dashboard' && true} />
+          </Link>
+          <Link to="/transactions" className="flex h-full" onClick={() => setSelectedItem('transactions')}>
+            <NavItem icon={<ArrowRightLeft size={24} />}  text="Transactions" active={selectedItem === 'transactions' && true} />
+          </Link>
+          <Link to="/credit" className="flex h-full" onClick={() => setSelectedItem('credit')}>
+            <NavItem icon={<CreditCardIcon size={24} />}  text="Credit" active={selectedItem === 'credit' && true} />
+          </Link>
+          <Link to="/suppliers" className="flex h-full" onClick={() => setSelectedItem('suppliers')}>
+            <NavItem icon={<Building2 size={24} />}  text="Suppliers" active={selectedItem === 'suppliers' && true} />
+          </Link>
+        </div>  
+      </div>
+    );
+  }
 
-const ProfilePage = () => {
+const Header = () => {
+  
+    return (
+    <div className="sticky top-0 z-10 bg-gray-50 px-4">
+      {/* Top Bar with Logo, Notifications, and Profile */}
+      <div className="flex items-center justify-between p-4 px-0 ">
+        <h1 className="text-3xl font-bold text-blue-600">Zesty</h1>
+        <div className="flex items-center gap-4">
+          <NotificationsPopover />
+        </div>
+      </div>
+      
+    </div>
+    )
+  };
+
+  const NavItem = ({ icon, text, active }) => (
+    <div className={`flex flex-col items-center px-4  py-3 rounded-lg cursor-pointer ${active ? 'text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+      {icon}
+      <span className="text-sm font-medium">{text}</span>
+    </div>
+  );
+
+const ProfileMobilePage = () => {
   const [activeTab, setActiveTab] = useState('personal');
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
   const [settings, setSettings] = useState({
     darkMode: false,
     notifications: true,
-    twoFactor: true,
+    twoFactor: true
   });
-
   const navigate = useNavigate();
 
-  // Fetch User Profile
+  const [profileData, setProfileData] = useState({
+    personal: {
+      fullName: '',
+      email: '',
+      phone: '',
+      address: '',
+    },
+    business: {
+      companyName: '',
+      registrationNumber: '',
+      vatNumber: '',
+      industry: '',
+      businessAddress: '',
+      monthlyRevenue: '',
+    },
+  });
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -77,86 +138,67 @@ const ProfilePage = () => {
     fetchSmeProfile();
   }, [user]);
 
-  const handleEdit = () => {
-    setIsEditing(true);
-    setError(null);
-  };
-
-  
-  const handleSave = async () => {
-    try {
-      const updatedData = {
-        personal: {
-          phone: profileData.personal.phone,
-          address: profileData.personal.address
-        },
-        business: {
-          businessAddress: profileData.business.businessAddress,
-          annualRevenue: profileData.business.annualRevenue
-        }
-      };
-      const response = await axios.put('/profile/update', updatedData);
-      
-      if (response.status === 200) {
-        // Update successful
-        setIsEditing(false);
-        alert('Profile updated successfully');
-      }
-    } catch (error) {
-      // Handle any errors
-      console.error('Error updating profile:', error);
-      alert('Failed to update profile. Please try again.');
-    }
-  };
-
+  const handleEdit = () => setIsEditing(true);
+  const handleSave = () => setIsEditing(false);
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
   return (
-    <div className="flex-1 bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="flex-1 w-full bg-gray-50 min-h-screen  ">
+      <Header />
+      <div className="max-w-4xl mx-auto  px-4 md:px-6 lg:px-8 overflow-y-auto">
         <div className="bg-white rounded-xl shadow-sm">
+          
           {/* Profile Header */}
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center">
-                <span className="text-2xl font-bold text-[#005EFF]">
+          <div className="p-4 md:p-6 border-b border-gray-200">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              <div className="flex flex-rol">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full mr-4 bg-blue-100 flex items-center justify-center">
+                  <span className="text-xl md:text-2xl font-bold text-[#005EFF]">
                   {user ? user.firstName[0] + user.lastName[0] : ''}
-                </span>
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <h1 className="text-xl md:text-2xl font-semibold">{profileData.personal.fullName}</h1>
+                  <p className="text-gray-500">{profileData.business.companyName}</p>
+                </div>
               </div>
-              <div className="flex-1">
-                <h1 className="text-2xl font-semibold">{user?.firstName || "Loading..."}</h1>
-                <p className="text-gray-500">{profileData.business.companyName}</p>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={handleLogout}
+                  className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50"
+                >
+                  Logout
+                </button>
+                {!isEditing ? (
+                  <button
+                    onClick={handleEdit}
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50"
+                  >
+                    <Edit className="w-4 h-4" />
+                    <span className="hidden md:inline">Edit Profile</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSave}
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm bg-[#005EFF] text-white rounded-lg hover:bg-blue-700"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span className="hidden md:inline">Save Changes</span>
+                  </button>
+                )}
               </div>
-              <button onClick={handleLogout}>Logout</button>
-              {!isEditing ? (
-                <button
-                  onClick={handleEdit}
-                  className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50"
-                >
-                  <Edit className="w-4 h-4" />
-                  Edit Profile
-                </button>
-              ) : (
-                <button
-                  onClick={handleSave}
-                  className="flex items-center gap-2 px-4 py-2 text-sm bg-[#005EFF] text-white rounded-lg hover:bg-blue-700"
-                >
-                  <Save className="w-4 h-4" />
-                  Save Changes
-                </button>
-              )}
             </div>
           </div>
 
           {/* Profile Navigation */}
-          <div className="border-b border-gray-200">
-            <nav className="flex">
+          <div className=" border-gray-200 overflow-x-auto">
+            <nav className="flex whitespace-nowrap">
               <button
                 onClick={() => setActiveTab('personal')}
-                className={`px-6 py-4 text-sm font-medium border-b-2 ${
+                className={`px-4 md:px-6 py-3 md:py-4 text-sm font-medium ${
                   activeTab === 'personal'
                     ? 'border-[#005EFF] text-[#005EFF]'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -166,7 +208,7 @@ const ProfilePage = () => {
               </button>
               <button
                 onClick={() => setActiveTab('business')}
-                className={`px-6 py-4 text-sm font-medium border-b-2 ${
+                className={`px-4 md:px-6 py-3 md:py-4 text-sm font-medium ${
                   activeTab === 'business'
                     ? 'border-[#005EFF] text-[#005EFF]'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -176,7 +218,7 @@ const ProfilePage = () => {
               </button>
               <button
                 onClick={() => setActiveTab('settings')}
-                className={`px-6 py-4 text-sm font-medium border-b-2 ${
+                className={`px-4 md:px-6 py-3 md:py-4 text-sm font-medium ${
                   activeTab === 'settings'
                     ? 'border-[#005EFF] text-[#005EFF]'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -188,11 +230,11 @@ const ProfilePage = () => {
           </div>
 
           {/* Profile Content */}
-          <div className="p-6">
+          <div className="p-4 md:p-6">
             {activeTab === 'personal' && (
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 {Object.entries(profileData.personal).map(([key, value]) => (
-                  <div key={key} className="grid grid-cols-3 gap-4">
+                  <div key={key} className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
                     <label className="text-sm font-medium text-gray-500 capitalize">
                       {key.replace(/([A-Z])/g, ' $1').trim()}
                     </label>
@@ -205,14 +247,14 @@ const ProfilePage = () => {
                             ...profileData,
                             personal: {
                               ...profileData.personal,
-                              [key]: e.target.value,
-                            },
+                              [key]: e.target.value
+                            }
                           })
                         }
-                        className="col-span-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#005EFF] focus:border-[#005EFF]"
+                        className="md:col-span-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#005EFF] focus:border-[#005EFF] w-full"
                       />
                     ) : (
-                      <div className="col-span-2 text-sm text-gray-900">{value}</div>
+                      <div className="md:col-span-2 text-sm text-gray-900">{value}</div>
                     )}
                   </div>
                 ))}
@@ -220,9 +262,9 @@ const ProfilePage = () => {
             )}
 
             {activeTab === 'business' && (
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 {Object.entries(profileData.business).map(([key, value]) => (
-                  <div key={key} className="grid grid-cols-3 gap-4">
+                  <div key={key} className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
                     <label className="text-sm font-medium text-gray-500 capitalize">
                       {key.replace(/([A-Z])/g, ' $1').trim()}
                     </label>
@@ -235,14 +277,14 @@ const ProfilePage = () => {
                             ...profileData,
                             business: {
                               ...profileData.business,
-                              [key]: e.target.value,
-                            },
+                              [key]: e.target.value
+                            }
                           })
                         }
-                        className="col-span-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#005EFF] focus:border-[#005EFF]"
+                        className="md:col-span-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#005EFF] focus:border-[#005EFF] w-full"
                       />
                     ) : (
-                      <div className="col-span-2 text-sm text-gray-900">{value}</div>
+                      <div className="md:col-span-2 text-sm text-gray-900">{value}</div>
                     )}
                   </div>
                 ))}
@@ -250,8 +292,8 @@ const ProfilePage = () => {
             )}
 
             {activeTab === 'settings' && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
+              <div className="space-y-4 md:space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
                   <div className="flex items-center gap-3">
                     <Moon className="w-5 h-5 text-gray-500" />
                     <div>
@@ -267,7 +309,7 @@ const ProfilePage = () => {
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
                   <div className="flex items-center gap-3">
                     <Bell className="w-5 h-5 text-gray-500" />
                     <div>
@@ -282,8 +324,8 @@ const ProfilePage = () => {
                     }
                   />
                 </div>
-{/* 
-                <div className="flex items-center justify-between">
+
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
                   <div className="flex items-center gap-3">
                     <Shield className="w-5 h-5 text-gray-500" />
                     <div>
@@ -297,14 +339,15 @@ const ProfilePage = () => {
                       setSettings({ ...settings, twoFactor: checked })
                     }
                   />
-                </div> */}
+                </div>
               </div>
             )}
           </div>
         </div>
+      <BottomNav />
       </div>
     </div>
   );
 };
 
-export default ProfilePage;
+export default ProfileMobilePage;

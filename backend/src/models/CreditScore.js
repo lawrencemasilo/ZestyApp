@@ -20,6 +20,10 @@ const creditScoreSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    remaining_credit: {
+      type: Number,
+      required: true,
+    },
     risk_category: {
       type: String,
       enum: ["Low", "Medium", "High"],
