@@ -61,17 +61,10 @@ export const NavBar = () => {
 
       {/* User Profile */}
       <div className="p-4 border-t border-gray-200">
-        <Link
-          to="/profile"
-          className="flex items-center space-x-3 hover:cursor-pointer"
-          onClick={() => setSelectedItem('profile')}
-        >
-          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-600 font-medium">
-              {user && user.firstName && user.lastName
-                ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
-                : ""}
-            </span>
+        <Link to="/profile" className="flex items-center space-x-3 hover:cursor-pointer" onClick={() => setSelectedItem('profile')}>
+        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center p-2">
+         <span className="text-gray-600 text-sm font-medium tracking-wider">NM</span>
+
           </div>
           <div className="flex-1">
             <p className="text-sm font-medium">
