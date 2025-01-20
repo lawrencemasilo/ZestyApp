@@ -19,6 +19,7 @@ const updateUser = async (req, res) => {
     
     if (updates.verified === true) {
       await sendEmail({
+        from: 'Zesty <zesty@zestytechnologies.co.za>',
         to: user.email,
         subject: `You're Verified, ${user.firstName}!`,
         html: `

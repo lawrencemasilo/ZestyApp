@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/2e47e3ba-4a86-4c51-83a2-1ef1dce83eaf/resourceGroups/appsvc_linux_centralus_premium/providers/Microsoft.Web/sites/zesty2024",
+    "appService.deploySubpath": "backend"
+}

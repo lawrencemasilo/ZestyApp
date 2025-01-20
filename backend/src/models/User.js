@@ -7,11 +7,13 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
+      match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email']
     },
     password: {
       type: String,
-      required: true,
-      trim: true,
+      required: [true, 'Password is required'],
+      minlength: [8, 'Password must be at least 8 characters long'],
+      select: false // Don't include password in queries by default
     },
     firstName: {
       type: String,
@@ -43,6 +45,18 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
+    passwordChangedAt: Date,
+    loginAttempts: {
+      type: Number,
+      default: 0
+    },
+    accountLocked: {
+      type: Boolean,
+      default: false
+    },
+    lockUntil: Date
   },
   { timestamps: true }
 );

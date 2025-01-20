@@ -1,30 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Settings, User, Building, Edit, Save, ChevronRight, Shield, Moon, Sun, Bell } from 'lucide-react';
+import { Edit, Save, Shield, Moon, Bell } from 'lucide-react';
 import { Switch } from "../../components/ui/switch";
 import { logout } from "../../services/authService";
 import { useNavigate } from 'react-router-dom';
-import axios from '../../api/axios';
+import axios from 'axios';
+
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('personal');
   const [isEditing, setIsEditing] = useState(false);
-  const [user, setUser] = useState(null);
-  const [profileData, setProfileData] = useState({
-    personal: {
-      fullName: '',
-      email: '',
-      phone: '',
-      address: '',
-    },
-    business: {
-      companyName: '',
-      registrationNumber: '',
-      vatNumber: '',
-      industry: '',
-      businessAddress: '',
-      monthlyRevenue: '',
-    },
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [settings, setSettings] = useState({
     darkMode: false,
     notifications: true,
@@ -64,7 +50,7 @@ const ProfilePage = () => {
 
     const fetchSmeProfile = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/sme/${user._id}`);
+        const response = await axios.get(`/sme/${user._id}`);
         const smeData = response.data.sme;
         setProfileData((prev) => ({
           ...prev,
@@ -93,11 +79,34 @@ const ProfilePage = () => {
 
   const handleEdit = () => {
     setIsEditing(true);
+    setError(null);
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    console.log("Saved profile data:", profileData);
+  
+  const handleSave = async () => {
+    try {
+      const updatedData = {
+        personal: {
+          phone: profileData.personal.phone,
+          address: profileData.personal.address
+        },
+        business: {
+          businessAddress: profileData.business.businessAddress,
+          annualRevenue: profileData.business.annualRevenue
+        }
+      };
+      const response = await axios.put('/profile/update', updatedData);
+      
+      if (response.status === 200) {
+        // Update successful
+        setIsEditing(false);
+        alert('Profile updated successfully');
+      }
+    } catch (error) {
+      // Handle any errors
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile. Please try again.');
+    }
   };
 
   const handleLogout = () => {
@@ -114,7 +123,7 @@ const ProfilePage = () => {
             <div className="flex items-center gap-4">
               <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center">
                 <span className="text-2xl font-bold text-[#005EFF]">
-                  {user ? user.firstName[0] + user.lastName[0] : 'NM'}
+                  {user ? user.firstName[0] + user.lastName[0] : ''}
                 </span>
               </div>
               <div className="flex-1">
@@ -273,7 +282,7 @@ const ProfilePage = () => {
                     }
                   />
                 </div>
-
+{/* 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Shield className="w-5 h-5 text-gray-500" />
@@ -288,7 +297,7 @@ const ProfilePage = () => {
                       setSettings({ ...settings, twoFactor: checked })
                     }
                   />
-                </div>
+                </div> */}
               </div>
             )}
           </div>
