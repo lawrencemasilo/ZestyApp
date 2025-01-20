@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Edit, Save, Shield, Moon, Bell, LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2 } from 'lucide-react';
 import { Switch } from "../../../components/ui/switch";
 import { logout } from "../../../services/authService";
 import { Link, useNavigate } from 'react-router-dom';
 import NotificationsPopover from '../../../components/SME/NotificationsPopover';
 import { useSelectedItem } from '../../../context/SelectedItemContext';
+import axios from '../../../api/axios';
 
 const BottomNav = () => {  
     const { selectedItem, setSelectedItem } = useSelectedItem();
@@ -30,7 +31,6 @@ const BottomNav = () => {
   }
 
 const Header = () => {
-    const { selectedItem, setSelectedItem } = useSelectedItem();
   
     return (
     <div className="sticky top-0 z-10 bg-gray-50 px-4">
@@ -39,24 +39,9 @@ const Header = () => {
         <h1 className="text-3xl font-bold text-blue-600">Zesty</h1>
         <div className="flex items-center gap-4">
           <NotificationsPopover />
-            {/*<div className="flex items-center gap-2" onClick={() => setSelectedItem('profile')}>
-            <Link to="/profile" >
-              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-600 text-sm font-medium">NM</span>
-              </div>
-            </Link>
-            </div>*/}
         </div>
       </div>
       
-      {/* Sub Header with Page Title and Actions */}
-      {/*<div className="flex justify-between items-center p-4">
-        <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
-        <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg bg-white hover:bg-gray-50">
-          <Download className="w-4 h-4" />
-          <span>Download</span>
-        </button>
-      </div>*/}
     </div>
     )
   };
@@ -71,6 +56,7 @@ const Header = () => {
 const ProfileMobilePage = () => {
   const [activeTab, setActiveTab] = useState('personal');
   const [isEditing, setIsEditing] = useState(false);
+  const [user, setUser] = useState(null);
   const [settings, setSettings] = useState({
     darkMode: false,
     notifications: true,
@@ -80,21 +66,77 @@ const ProfileMobilePage = () => {
 
   const [profileData, setProfileData] = useState({
     personal: {
-      fullName: 'Neo Masilo',
-      email: 'neolawrencemasilo@gmail.com',
-      phone: '+27 71 234 5678',
-      address: '123 Main Street, Johannesburg',
-      position: 'Business Owner'
+      fullName: '',
+      email: '',
+      phone: '',
+      address: '',
     },
     business: {
-      companyName: 'Tech Solutions Ltd',
-      registrationNumber: 'REG123456',
-      vatNumber: 'VAT789012',
-      industry: 'Technology',
-      businessAddress: '456 Business Ave, Sandton',
-      annualRevenue: 'R5,000,000 - R10,000,000'
-    }
+      companyName: '',
+      registrationNumber: '',
+      vatNumber: '',
+      industry: '',
+      businessAddress: '',
+      monthlyRevenue: '',
+    },
   });
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get("/auth/profile");
+        const userData = response.data;
+        setUser(userData);
+
+        setProfileData((prev) => ({
+          ...prev,
+          personal: {
+            fullName: userData.firstName || '',
+            email: userData.email || '',
+            phone: userData.phone ? `+27 ${userData.phone}` : '',
+            address: '', // Add real field if available
+          },
+        }));
+      } catch (err) {
+        console.error("Error fetching user profile:", err);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+
+  useEffect(() => {
+    if (!user || !user._id) return;
+
+    const fetchSmeProfile = async () => {
+      try {
+        const response = await axios.get(`/sme/${user._id}`);
+        const smeData = response.data.sme;
+        setProfileData((prev) => ({
+          ...prev,
+          personal: {
+            fullName: user.firstName || '',
+            email: user.email || '',
+            phone: user.phone ? `+27 ${user.phone}` : '',
+            address: smeData.address.physical || '', 
+          },
+          business: {
+            companyName: smeData.business_name || '',
+            registrationNumber: smeData.registration_number || '',
+            vatNumber: smeData.tax_id || '', 
+            industry: smeData.industry || '',
+            businessAddress:  smeData.address.operational || '', 
+            monthlyRevenue: smeData.monthly_revenue || '',
+          },
+        }));
+      } catch (err) {
+        console.error("Error fetching SME profile:", err);
+      }
+    };
+
+    fetchSmeProfile();
+  }, [user]);
 
   const handleEdit = () => setIsEditing(true);
   const handleSave = () => setIsEditing(false);
@@ -112,12 +154,16 @@ const ProfileMobilePage = () => {
           {/* Profile Header */}
           <div className="p-4 md:p-6 border-b border-gray-200">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-blue-100 flex items-center justify-center">
-                <span className="text-xl md:text-2xl font-bold text-[#005EFF]">NM</span>
-              </div>
-              <div className="flex-1">
-                <h1 className="text-xl md:text-2xl font-semibold">{profileData.personal.fullName}</h1>
-                <p className="text-gray-500">{profileData.business.companyName}</p>
+              <div className="flex flex-rol">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full mr-4 bg-blue-100 flex items-center justify-center">
+                  <span className="text-xl md:text-2xl font-bold text-[#005EFF]">
+                  {user ? user.firstName[0] + user.lastName[0] : ''}
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <h1 className="text-xl md:text-2xl font-semibold">{profileData.personal.fullName}</h1>
+                  <p className="text-gray-500">{profileData.business.companyName}</p>
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <button 
@@ -148,7 +194,7 @@ const ProfileMobilePage = () => {
           </div>
 
           {/* Profile Navigation */}
-          <div className=" border-gray-200">
+          <div className=" border-gray-200 overflow-x-auto">
             <nav className="flex whitespace-nowrap">
               <button
                 onClick={() => setActiveTab('personal')}

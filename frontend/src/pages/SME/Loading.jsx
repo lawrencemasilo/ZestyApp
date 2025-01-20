@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { CheckCircle2, Settings, User, Database, Shield } from 'lucide-react';
-import { useUser } from '../../context/userContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from "../../api/axios";
 
 const LoadingScreen = ({ onLoadingComplete }) => {
   const [progress, setProgress] = useState(0);
   const [currentStage, setCurrentStage] = useState(0);
   const [user, setUser] = useState(null);
-  //const { user } = useUser();
   const navigate = useNavigate();
 
 
@@ -34,10 +32,10 @@ const LoadingScreen = ({ onLoadingComplete }) => {
   }, []);
 
   useEffect(() => {
-    if (progress === 100 && user.verified)
+    if (progress === 100 && user && user.verified)
         navigate("/dashboard");
 
-    if ( progress === 100 && !user.verified)
+    if ( progress === 100 && user && !user.verified)
         navigate("/getting-started");
 
   }, [progress])

@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../App.css";
 import { LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, LogOut, ShieldCheck } from 'lucide-react';
-import { useUser } from "../../context/userContext";
 import axios from "../../api/axios";
 
-// NavItem Component
 const NavItem = ({ icon, text, active }) => (
   <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-[#005EFF]' : 'text-gray-600 hover:bg-gray-50'}`}>
     {icon}
@@ -14,7 +12,6 @@ const NavItem = ({ icon, text, active }) => (
 );
 
 export const NavBar = () => {
-  //const { user } = useUser();
   const [user, setUser] = useState(null);
   const [selectedItem, setSelectedItem] = useState('');
 
@@ -64,17 +61,10 @@ export const NavBar = () => {
 
       {/* User Profile */}
       <div className="p-4 border-t border-gray-200">
-        <Link
-          to="/profile"
-          className="flex items-center space-x-3 hover:cursor-pointer"
-          onClick={() => setSelectedItem('profile')}
-        >
-          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-600 font-medium">
-              {user && user.firstName && user.lastName
-                ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
-                : ""}
-            </span>
+        <Link to="/profile" className="flex items-center space-x-3 hover:cursor-pointer" onClick={() => setSelectedItem('profile')}>
+        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center p-2">
+         <span className="text-gray-600 text-sm font-medium tracking-wider">NM</span>
+
           </div>
           <div className="flex-1">
             <p className="text-sm font-medium">

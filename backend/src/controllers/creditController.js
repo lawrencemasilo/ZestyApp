@@ -3,22 +3,22 @@ const Transaction = require("../models/Transactions");
 
 const assessCredit = async (req, res) => {
   try {
-    const { sme_id, documents } = req.body; // Assume documents include revenue proof, etc.
+    const { sme_id } = req.body; // Assume documents include revenue proof, etc.
 
     // Basic validation (we need to ensure required data is present)
-    if (!sme_id || !documents) {
+    if (!sme_id) {
       return res.status(400).json({ message: "Missing required fields." });
     }
 
     // We assess initial credit limit based on the documents provided
-    let initialScore = 300;
-    if (documents.revenueProof) initialScore += 50;
-    if (documents.taxReturns) initialScore += 50;
-    if (documents.bankStatements) initialScore += 50;
+    let initialScore = 450;
+    /*if (documents.revenue_proof) initialScore += 150;
+    if (documents.tax_returns) initialScore += 80;
+    if (documents.bank_statements) initialScore += 100;*/
 
     // Here we determine initial risk category and credit limit
     const riskCategory = 
-      initialScore > 600 ? "Low" : initialScore > 400 ? "Medium" : "High";
+      initialScore > 600 ? "Low" : initialScore >= 400 ? "Medium" : "High";
     const creditLimit =
       riskCategory === "Low" ? 20000 : riskCategory === "Medium" ? 10000 : 4000;
 
@@ -27,6 +27,7 @@ const assessCredit = async (req, res) => {
       sme_id,
       credit_score: initialScore,
       credit_limit: creditLimit,
+      remaining_credit: creditLimit,
       risk_category: riskCategory,
       created_at: new Date(),
     });
@@ -94,4 +95,30 @@ const updateCreditScore = async (req, res) => {
 };
 
 
-module.exports = { assessCredit, updateCreditScore };
+const getCreditScore = async (req, res) => {
+  try {
+    const { sme_id } = req.params;
+
+    // Validate that sme_id is provided
+    if (!sme_id) {
+      return res.status(400).json({ message: "Missing SME ID." });
+    }
+
+    // Retrieve the credit profile from the database
+    const creditProfile = await CreditScore.findOne({ sme_id });
+    if (!creditProfile) {
+      return res.status(404).json({ message: "Credit profile not found." });
+    }
+
+    res.status(200).json({
+      message: "Credit profile retrieved successfully.",
+      creditScore: creditProfile,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error retrieving credit profile." });
+  }
+};
+
+
+module.exports = { assessCredit, updateCreditScore, getCreditScore };

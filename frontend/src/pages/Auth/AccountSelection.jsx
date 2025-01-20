@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Factory, Store, CircleArrowLeft } from 'lucide-react';
 import { Link } from "react-router-dom";
+import useIsDesktop from "../../hooks/useIsDesktop";
 
 const AccountSelection = () => {
   const [selectedAccount, setSelectedAccount] = useState('');
+  const isDesktop = useIsDesktop();
 
   const accountTypes = [
     {
@@ -27,18 +29,20 @@ const AccountSelection = () => {
       {/* Left Section */}
       <div className="bg-[#005EFF] text-white lg:w-2/5 p-6 lg:p-12 flex flex-col">
         <div className="mb-8">
+        <Link to="/">
           <h1 className="text-2xl md:text-3xl font-bold">Zesty</h1>
+        </Link>
         </div>
         
         <div className="flex-grow flex flex-col justify-center">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6">
             Start Building Your Future with Zesty
           </h1>
-          <p className="text-lg text-blue-100 mb-8">
+          {isDesktop && <p className="text-lg text-blue-100 mb-8">
             Are you a small-to-medium enterprise looking to access flexible financing solutions
             or a supplier looking to streamline transactions with your SME partners?
             <span className="font-medium"> Select your role to get started.</span>
-          </p>
+          </p>}
           
           <Link 
             to="/"

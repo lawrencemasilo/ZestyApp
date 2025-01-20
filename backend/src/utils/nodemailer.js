@@ -21,9 +21,9 @@ const mailOptions = {
 };
 */
 
-const sendEmail = async ({ to, subject, text, html }) => {
+const sendEmail = async ({ from, to, subject, text, html }) => {
   const mailOptions = {
-    from: '"Zesty" <zesty@zestytechnologies.co.za>', // Sender address
+    from, //
     to, // Recipient address (dynamic)
     subject, // Subject line
     text, // Plain text body
