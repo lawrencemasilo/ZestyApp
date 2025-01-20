@@ -1,18 +1,67 @@
 const SME = require("../models/SME");
 
 const verifyDocuments = async (req, res) => {
+  try {
     const { registration_number, tax_id, bank_details } = req.body;
+    const files = req.files; // Uploaded files handled by multer middleware
 
-    // Mock validation logic
+    // Here we want to validate inputs and uploaded files
     const isValidRegistration = /^[A-Z0-9]{10}$/.test(registration_number);
     const isValidTaxID = /^[0-9]{9}$/.test(tax_id);
-    const isValidBankDetails = bank_details.account_number && bank_details.bank_name;
+    const isValidBankDetails =
+      bank_details &&
+      bank_details.account_number &&
+      bank_details.bank_name;
 
-    if (isValidRegistration && isValidTaxID && isValidBankDetails) {
-        return res.status(200).json({ message: "Documents verified successfully" });
+    if (!isValidRegistration || !isValidTaxID || !isValidBankDetails) {
+      return res
+        .status(400)
+        .json({ message: "Document verification failed" });
     }
 
-    res.status(400).json({ message: "Document verification failed" });
+    if (!files || files.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "No files uploaded for verification" });
+    }
+
+    //check is sme exists on the database
+    let sme = await SME.findOne({ registration_number, tax_id });
+    if (!sme) {
+      // Create a new SME document if it doesn't exist
+      sme = new SME({
+        user_id: req.user.id,
+        registration_number,
+        tax_id,
+        bank_details,
+        business_name: req.user.business_name || "Unknown Business",
+        industry: req.user.industry || "Unknown Industry",
+        monthly_revenue: req.user.monthly_revenue || 0,
+        address: req.user.address || { physical: "", operational: "" },
+        contact_person: req.user.contact_person || {},
+      });
+    }
+
+    //Add uploaded document details to the SME
+    const documentDetails = files.map((file) => ({
+      type: req.body.documentType || "unspecified",
+      fileName: file.originalname,
+      filePath: file.path,
+      fileType: file.mimetype,
+    }));
+
+    sme.documents = sme.documents.concat(documentDetails); // append new documents to the existing list
+
+    // save the sme with the updated documents
+    await sme.save();
+
+    res
+      .status(200)
+      .json({ message: "Documents verified and saved successfully.", SME: sme });
+  } catch (err) {
+    console.error("Error verifying documents:", err);
+    res.status(500).json({ message: "Server error while verifying documents." });
+  }
 };
 
 
