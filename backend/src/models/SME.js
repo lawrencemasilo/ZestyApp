@@ -47,6 +47,15 @@ const smeSchema = new mongoose.Schema(
       bank_name: { type: String, required: true },
       //proof_of_banking: { type: String, required: true },
     },
+    documents: [
+      {
+        type: { type: String, required: true }, // Type of document (e.g. tax certificate)
+        fileName: { type: String, required: true }, // Name of the file
+        filePath: { type: String, required: true }, // Path to the file
+        fileType: { type: String, required: true }, // MIME type of the file (e.g. application/pdf)
+        uploadedAt: { type: Date, default: Date.now }, // Timestamp of when the file was uploaded
+      },
+    ],
   },
   { timestamps: true }
 );
