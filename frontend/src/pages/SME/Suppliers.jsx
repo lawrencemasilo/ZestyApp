@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Briefcase, Tag, Download, Percent, Star, Calendar, ArrowRight, Clock, ChevronRight, X, LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, LogOut } from 'lucide-react';
+import { Briefcase, Tag, Download, Bell, Percent, Star, Calendar, ArrowRight, Clock, ChevronRight, X, LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, LogOut } from 'lucide-react';
 import NotificationsPopover from '../../components/SME/NotificationsPopover';
+import { ThemeContext } from '../../components/ui/darkmode';
+import { ThemeProvider } from '../../components/ui/darkmode';
 
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -117,10 +119,10 @@ const SupplierPage = () => {
             <p className="text-sm text-gray-500">List of Suppliers for your business needs</p>
           </div>
           <div className="flex items-center gap-4">
-            {/*<button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
               <Download className="w-4 h-4" />
               Download
-            </button>*/}
+            </button>
             {/*<div className="relative" >
               <Bell className="w-5 h-5 text-gray-600 cursor-pointer" />
               <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></div>

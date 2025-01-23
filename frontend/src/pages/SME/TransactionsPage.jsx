@@ -1,13 +1,56 @@
 import React, { useState } from 'react';
 import { 
-  Download, Search, Filter
+  Download, Search, Filter, Bell, 
+  LayoutDashboard, ArrowRightLeft, CreditCardIcon, 
+  Building2, LogOut 
 } from 'lucide-react';
 import NotificationsPopover from '../../components/SME/NotificationsPopover';
+import { ThemeContext } from '../../components/ui/darkmode';
+import { ThemeProvider } from '../../components/ui/darkmode';
 
+const Sidebar = () => (
+  <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
+    {/* Logo */}
+    <div className="p-6">
+      <h1 className="text-2xl font-bold text-blue-600">Zesty</h1>
+    </div>
 
+    {/* Navigation Links */}
+    <nav className="flex-1 px-4 space-y-2">
+      <NavItem icon={<LayoutDashboard size={20} />} text="Dashboard" />
+      <NavItem icon={<ArrowRightLeft size={20} />} text="Transactions" active />
+      <NavItem icon={<CreditCardIcon size={20} />} text="Credit" />
+      <NavItem icon={<Building2 size={20} />} text="Suppliers" />
+    </nav>
+
+    {/* User Profile */}
+    <div className="p-4 border-t border-gray-200">
+      <div className="flex items-center space-x-3">
+        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+          <span className="text-gray-600 font-medium">NM</span>
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-medium">Neo Masilo</p>
+          <p className="text-xs text-gray-500">neolawrencemasilo@gmail.com</p>
+        </div>
+        <LogOut size={18} className="text-gray-400 cursor-pointer" />
+      </div>
+    </div>
+  </div>
+);
+
+// NavItem Component
+const NavItem = ({ icon, text, active }) => (
+  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+    {icon}
+    <span className="text-sm font-medium">{text}</span>
+  </div>
+);
 
 const TransactionsPage = () => {
   const [isAllSelected, setIsAllSelected] = useState(false);
+  const [sortBy, setSortBy] = useState('');
+
   const transactions = [
     {
       id: 1,

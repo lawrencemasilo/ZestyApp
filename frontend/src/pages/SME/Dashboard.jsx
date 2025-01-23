@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { TrendingUp, Clock, ArrowUpRight, ArrowDownRight, 
-         PlusCircle, Search, Filter } from 'lucide-react';
+import { Bell, Download, CreditCard, TrendingUp, Clock, ArrowUpRight, ArrowDownRight, 
+         LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, ChevronRight, LogOut,
+         PlusCircle, X, DollarSign, Calendar, Search, Filter, Menu } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -10,103 +11,178 @@ import {
 } from "../../components/ui/dialog";
 import NotificationsPopover from '../../components/SME/NotificationsPopover';
 import axios from '../../api/axios';
+import { ThemeContext } from '../../components/ui/darkmode';
+import { ThemeProvider } from '../../components/ui/darkmode';
 
+const BottomNav = () => (
+  <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden">
+    <div className="flex justify-around items-center h-16">
+      <NavButton icon={<LayoutDashboard size={24} />} text="Dashboard" active />
+      <NavButton icon={<ArrowRightLeft size={24} />} text="Transactions" />
+      <NavButton icon={<CreditCard size={24} />} text="Credit" />
+      <NavButton icon={<Building2 size={24} />} text="Suppliers" />
+    </div>
+  </div>
+);
 
+const NavButton = ({ icon, text, active }) => (
+  <button 
+    className={`flex flex-col items-center justify-center w-full h-full space-y-1
+               ${active ? 'text-[#005EFF]' : 'text-gray-600'}`}
+  >
+    {icon}
+    <span className="text-xs font-medium">{text}</span>
+  </button>
+);
 
-const CreditApplicationModal = ({ isOpen, onClose, setIsApplyModalOpen }) => {
+const Header = () => (
+  <div className="sticky top-0 z-10 bg-gray-50">
+    {/* Top Bar with Logo, Notifications, and Profile */}
+    <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <h1 className="text-2xl font-bold text-[#005EFF]">Zesty</h1>
+      <div className="flex items-center gap-4">
+        <NotificationsPopover />
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-600 text-sm font-medium">NM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    {/* Sub Header with Page Title and Actions */}
+    <div className="flex justify-between items-center p-4">
+      <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
+      <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg bg-white hover:bg-gray-50">
+        <Download className="w-4 h-4" />
+        <span>Download</span>
+      </button>
+    </div>
+  </div>
+);
+
+const Sheet = ({ children, open, onOpenChange }) => {
+  if (!open) return null;
+  
+  return (
+    <>
+      <div 
+        className="fixed inset-0 bg-black/20 z-40"
+        onClick={() => onOpenChange(false)}
+      />
+      {children}
+    </>
+  );
+};
+
+const SheetContent = ({ children, onClose }) => (
+  <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50 animate-in slide-in-from-left">
+    <button 
+      onClick={onClose}
+      className="absolute right-4 top-4 p-1 hover:bg-gray-100 rounded-lg"
+    >
+      <X className="w-5 h-5" />
+    </button>
+    {children}
+  </div>
+);
+
+const MobileNav = ({ children }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <button 
+        onClick={() => setOpen(true)} 
+        className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+      >
+        <Menu className="w-6 h-6" />
+      </button>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent onClose={() => setOpen(false)}>
+          {children}
+        </SheetContent>
+      </Sheet>
+    </>
+  );
+};
+
+const Sidebar = () => {
+  const SidebarContent = () => (
+    <div className="h-full bg-white flex flex-col">
+      {/* Logo */}
+      <div className="p-6">
+        <h1 className="text-2xl font-bold text-[#005EFF]">Zesty</h1>
+      </div>
+
+      {/* Navigation Links */}
+      <nav className="flex-1 px-4 space-y-2">
+        <NavItem icon={<LayoutDashboard size={20} />} text="Dashboard" active />
+        <NavItem icon={<ArrowRightLeft size={20} />} text="Transactions" />
+        <NavItem icon={<CreditCardIcon size={20} />} text="Credit" />
+        <NavItem icon={<Building2 size={20} />} text="Suppliers" />
+      </nav>
+
+      {/* User Profile */}
+      <div className="p-4 border-t border-gray-200">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-600 font-medium">NM</span>
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-medium">Neo Masilo</p>
+            <p className="text-xs text-gray-500">neolawrencemasilo@gmail.com</p>
+          </div>
+          <LogOut size={18} className="text-gray-400 cursor-pointer" />
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block w-64 h-screen bg-white border-r border-gray-200">
+        <SidebarContent />
+      </div>
+
+      {/* Mobile Sidebar */}
+      <MobileNav>
+        <SidebarContent />
+      </MobileNav>
+    </>
+  );
+};
+
+// NavItem Component remains the same
+const NavItem = ({ icon, text, active }) => (
+  <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer ${active ? 'bg-blue-50 text-[#005EFF]' : 'text-gray-600 hover:bg-gray-50'}`}>
+    {icon}
+    <span className="text-sm font-medium">{text}</span>
+  </div>
+);
+
+const CreditApplicationModal = ({ isOpen, onClose }) => {
   const [term, setTerm] = useState(30);
   const [amount, setAmount] = useState('');
-  const [maxCredit, setMaxCredit] = useState(0);
-  const availableCredit = maxCredit;
-  const [user, setUser] = useState([]);
-  const [userCreditInfo, setUserCreditInfo] = useState([]);
-  const [smeInfo, setSmeInfo] = useState([]);
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get('auth/profile');
-        setUser(response.data);
-        //console.log(response.data);
-      } catch (err) {
-        console.error('Error fetching user profile:', err);
-      }
-    };
+  const maxCredit = 50000;
+  const availableCredit = maxCredit - 16480.50;
   
-    fetchUserProfile();
-  }, []);
-
-  useEffect(() => {
-    const fetchUserCrefitInfo = async () => {
-      try {
-        const response = await axios.get(`credit/${smeInfo._id}`);
-        setUserCreditInfo(response.data.creditScore);
-        setMaxCredit(response.data.creditScore.remaining_credit);
-      } catch (err) {
-        console.error('Error fetching user credit info:', err);
-      }
-    };
-  
-    fetchUserCrefitInfo();
-  }, [smeInfo]);
-
-  useEffect(() => {
-    if (!user || !user._id) return;
-
-    const fetchSmeProfile = async () => {
-      try {
-        const response = await axios.get(`/sme/${user._id}`);
-        const smeData = response.data.sme;
-        setSmeInfo(smeData);
-      } catch (err) {
-        console.error("Error fetching SME profile:", err);
-      }
-    };
-
-    fetchSmeProfile();
-  }, [user]);
-
-  // Correct interest rate mapping
   const getInterestRate = (term) => {
     const rates = {
-      30: 3,
-      60: 6,
-      90: 9
+      30: 12.5,
+      60: 14.5,
+      90: 16.5
     };
     return rates[term];
   };
 
-  // Correct monthly payment logic
   const calculateMonthlyPayment = () => {
     const principal = parseFloat(amount);
-    const rate = getInterestRate(term) / 100; // Rate is in percentage
-    const months = term / 30; // Convert term to months
-
-    if (!principal || !rate || !months) return 0;
-
-    // Simple interest calculation
-    const totalWithInterest = principal * (1 + rate); // Interest applies once for the term
-    const monthlyPayment = totalWithInterest / months; // Divide over term's months
-
-    return monthlyPayment;
-  };
-  //sme_id, total_amount, months_remaining, email
-  const submitApplication = async () => {
-    try {
-      if (!userCreditInfo || !userCreditInfo.sme_id) {
-        throw new Error("SME ID is undefined or not available.");
-      }
-      const response = await axios.post("bnpl/", {
-        sme_id: userCreditInfo.sme_id,
-        total_amount: amount,
-        months_remaining: 3,
-      });
-  
-      console.log("Response:", response.data);
-      setIsApplyModalOpen(false);
-    } catch (err) {
-      console.error("Error submitting application:", err.message || err);
-    }
+    const rate = getInterestRate(term) / 100 / 12;
+    const months = term / 30;
+    if (!principal) return 0;
+    return (principal * rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
   };
 
   return (
@@ -126,7 +202,7 @@ const CreditApplicationModal = ({ isOpen, onClose, setIsApplyModalOpen }) => {
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Available Credit</label>
             <div className="text-2xl font-semibold text-gray-900">
-              R{availableCredit}
+              R{availableCredit.toFixed(2)}
             </div>
             <div className="w-full h-2 bg-gray-100 rounded-full">
               <div 
@@ -139,13 +215,12 @@ const CreditApplicationModal = ({ isOpen, onClose, setIsApplyModalOpen }) => {
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Amount</label>
             <div className="relative">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 mt-[-5px] ml-1 text-gray-500">R</div>
+              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
               <input
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 max={availableCredit}
-                min={0}
                 className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:outline-none focus:ring-[#005EFF] focus:border-[#005EFF]"
                 placeholder="Enter amount"
               />
@@ -174,7 +249,7 @@ const CreditApplicationModal = ({ isOpen, onClose, setIsApplyModalOpen }) => {
           <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
             <div className="flex justify-between">
               <span className="text-sm text-gray-600">Interest Rate</span>
-              <span className="font-medium">{getInterestRate(term).toFixed(2)}%</span>
+              <span className="font-medium">{getInterestRate(term)}%</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-gray-600">Monthly Payment</span>
@@ -186,7 +261,6 @@ const CreditApplicationModal = ({ isOpen, onClose, setIsApplyModalOpen }) => {
             className="w-full py-2 px-4 bg-[#005EFF] text-white rounded-lg hover:bg-blue-700 
                        transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={!amount || amount > availableCredit}
-            onClick={() => submitApplication()}
           >
             Submit Application
           </button>
@@ -196,20 +270,10 @@ const CreditApplicationModal = ({ isOpen, onClose, setIsApplyModalOpen }) => {
   );
 };
 
-
-
-const EnhancedCreditScore = ({ score, userCreditInfo }) => {
-  // Simulated realistic credit history
-  const [history, setHistory] = useState([400, 420, 440, 450]); // Example history
+const EnhancedCreditScore = () => {
+  const score = 75;
+  const history = [65, 68, 72, 75];
   
-  useEffect(() => {
-    // Add the current score to the history when the component mounts
-    setHistory((prevHistory) => [...prevHistory, score]);
-
-    //console.log(`Current Score: ${score}`);
-    //console.log(`History: ${[...history, score]}`);
-  }, [score]); // Re-run if the score changes
-
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm">
       <div className="flex justify-between items-start mb-6">
@@ -219,38 +283,33 @@ const EnhancedCreditScore = ({ score, userCreditInfo }) => {
         </h3>
         <div className="text-right">
           <div className="text-3xl font-bold text-[#005EFF]">{score}</div>
-          <div className="text-sm text-gray-500">out of 700</div>
+          <div className="text-sm text-gray-500">out of 100</div>
         </div>
       </div>
 
       <div className="space-y-4">
-        {/* Progress Bar */}
         <div className="relative pt-4">
           <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-[#005EFF] to-blue-400 rounded-full 
                          transition-all duration-500"
-              style={{ width: `${(score / 700) * 100}%` }}
+              style={{ width: `${score}%` }}
             />
           </div>
           <div className="absolute top-0 left-0 w-full flex justify-between text-xs text-gray-400">
             <span>0</span>
-            <span>175</span>
-            <span>350</span>
-            <span>525</span>
-            <span>700</span>
+            <span>25</span>
+            <span>50</span>
+            <span>75</span>
+            <span>100</span>
           </div>
         </div>
 
-        {/* Trend Indicator */}
         <div className="flex items-center gap-2">
           <ArrowUpRight className="w-4 h-4 text-green-500" />
-          <span className="text-sm text-green-500">
-            +{score - history[history.length - 2] || 0} points this month
-          </span>
+          <span className="text-sm text-green-500">+{score - history[history.length-2]} points this month</span>
         </div>
 
-        {/* Additional Information */}
         <div className="grid grid-cols-2 gap-4 mt-4">
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="text-sm text-gray-500">Payment History</div>
@@ -258,7 +317,7 @@ const EnhancedCreditScore = ({ score, userCreditInfo }) => {
           </div>
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="text-sm text-gray-500">Credit Usage</div>
-            <div className="text-lg font-semibold text-gray-700">{(100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100).toFixed(2)}%</div>
+            <div className="text-lg font-semibold text-gray-700">32%</div>
           </div>
         </div>
       </div>
@@ -266,11 +325,7 @@ const EnhancedCreditScore = ({ score, userCreditInfo }) => {
   );
 };
 
-export default EnhancedCreditScore;
-
-
-const MetricCard = ({ metric, onSelect, selected, userCreditInfo }) => {
-
+const MetricCard = ({ metric, onSelect, selected }) => {
   const data = {
     'Repayment History': {
       current: 98,
@@ -287,8 +342,8 @@ const MetricCard = ({ metric, onSelect, selected, userCreditInfo }) => {
       detail: 'Recent credit inquiries affected score'
     },
     'Credit Usage': {
-      current: (100 - (userCreditInfo.remaining_credit / userCreditInfo.credit_limit) * 100).toFixed(2),
-      previous: 19,
+      current: 32,
+      previous: 28,
       trend: 'up',
       color: 'green',
       detail: 'Well below 50% threshold'
@@ -430,59 +485,12 @@ const TransactionsList = () => {
 };
 
 const CreditCardComponent = ({ onApplyClick }) => {
-  const [user, setUser] = useState([]);
-  const [userCreditInfo, setUserCreditInfo] = useState([]);
-  const [smeInfo, setSmeInfo] = useState([]);
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get('auth/profile');
-        setUser(response.data);
-        //console.log(response.data);
-      } catch (err) {
-        console.error('Error fetching user profile:', err);
-      }
-    };
-  
-    fetchUserProfile();
-  }, []);
-
-  useEffect(() => {
-    const fetchUserCrefitInfo = async () => {
-      try {
-        const response = await axios.get(`credit/${smeInfo._id}`);
-        setUserCreditInfo(response.data.creditScore);
-      } catch (err) {
-        console.error('Error fetching user credit info:', err);
-      }
-    };
-  
-    fetchUserCrefitInfo();
-  }, [smeInfo]);
-
-  useEffect(() => {
-    if (!user || !user._id) return;
-
-    const fetchSmeProfile = async () => {
-      try {
-        const response = await axios.get(`/sme/${user._id}`);
-        const smeData = response.data.sme;
-        setSmeInfo(smeData);
-      } catch (err) {
-        console.error("Error fetching SME profile:", err);
-      }
-    };
-
-    fetchSmeProfile();
-  }, [user]);
-
   const cardDetails = {
     cardNumber: "**** **** **** 0321",
-    cardHolder: '',
+    cardHolder: "Neo Masilo",
     expiryDate: "09/26",
-    availableCredit: userCreditInfo ? userCreditInfo.remaining_credit: '',
-    totalLimit: userCreditInfo ? userCreditInfo.credit_limit: '',
+    availableCredit: 16480.50,
+    totalLimit: 50000,
     recentActivity: {
       spent: 3580.20,
       payments: 2500.00
@@ -504,7 +512,7 @@ const CreditCardComponent = ({ onApplyClick }) => {
 
       <div className="mb-6">
         <p className="text-sm opacity-75 mb-1">Available Credit</p>
-        <p className="text-2xl font-semibold">R{cardDetails.availableCredit}</p>
+        <p className="text-2xl font-semibold">R{cardDetails.availableCredit.toFixed(2)}</p>
         <div className="w-full h-1 bg-white/20 rounded-full mt-2">
           <div 
             className="h-full bg-white/50 rounded-full"
@@ -516,11 +524,11 @@ const CreditCardComponent = ({ onApplyClick }) => {
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
           <p className="text-sm opacity-75 mb-1">Recent Spend</p>
-          <p className="font-semibold">R{cardDetails.recentActivity.spent}</p>
+          <p className="font-semibold">R{cardDetails.recentActivity.spent.toFixed(2)}</p>
         </div>
         <div>
           <p className="text-sm opacity-75 mb-1">Recent Payments</p>
-          <p className="font-semibold">R{cardDetails.recentActivity.payments}</p>
+          <p className="font-semibold">R{cardDetails.recentActivity.payments.toFixed(2)}</p>
         </div>
       </div>
 
@@ -542,8 +550,6 @@ export const Dashboard = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState(null);
   const [user, setUser] = useState([]);
-  const [userCreditInfo, setUserCreditInfo] = useState([]);
-  const [smeInfo, setSmeInfo] = useState([]);
 ;
   
   const metrics = [
@@ -558,8 +564,8 @@ export const Dashboard = () => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get('auth/profile');
-        setUser(response.data);
-        //console.log(response.data);
+        setUser(response.data); // Use `response.data` to access the actual user data
+        console.log(response.data);
       } catch (err) {
         console.error('Error fetching user profile:', err);
       }
@@ -567,35 +573,6 @@ export const Dashboard = () => {
   
     fetchUserProfile();
   }, []);
-
-  useEffect(() => {
-    const fetchUserCrefitInfo = async () => {
-      try {
-        const response = await axios.get(`credit/${smeInfo._id}`);
-        setUserCreditInfo(response.data.creditScore);
-      } catch (err) {
-        console.error('Error fetching user credit info:', err);
-      }
-    };
-  
-    fetchUserCrefitInfo();
-  }, [smeInfo]);
-
-  useEffect(() => {
-    if (!user || !user._id) return;
-
-    const fetchSmeProfile = async () => {
-      try {
-        const response = await axios.get(`/sme/${user._id}`);
-        const smeData = response.data.sme;
-        setSmeInfo(smeData);
-      } catch (err) {
-        console.error("Error fetching SME profile:", err);
-      }
-    };
-
-    fetchSmeProfile();
-  }, [user]);
   
   return (
     <div className="flex w-full bg-gray-50 min-h-screen">
@@ -616,10 +593,10 @@ export const Dashboard = () => {
             </div>
           </div>
           <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
-            {/*<button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
               <Download className="w-4 h-4" />
               <span className="hidden sm:inline">Download</span>
-            </button>*/}
+            </button>
             <NotificationsPopover />
           </div>
         </div>
@@ -627,7 +604,7 @@ export const Dashboard = () => {
         {/* Main Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           <CreditCardComponent onApplyClick={() => setIsApplyModalOpen(true)} />
-          <EnhancedCreditScore score={ userCreditInfo.credit_score } userCreditInfo={ userCreditInfo } />
+          <EnhancedCreditScore />
           <div className="p-6 bg-white rounded-xl shadow-sm">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-gray-700 flex items-center gap-2">
@@ -660,7 +637,6 @@ export const Dashboard = () => {
               key={metric.name}
               metric={metric}
               selected={selectedMetric === metric.name}
-              userCreditInfo={userCreditInfo}
               onSelect={setSelectedMetric}
             />
           ))}
@@ -671,7 +647,6 @@ export const Dashboard = () => {
       <CreditApplicationModal 
         isOpen={isApplyModalOpen}
         onClose={() => setIsApplyModalOpen(false)}
-        setIsApplyModalOpen={setIsApplyModalOpen}
       />
     </div>
   )
