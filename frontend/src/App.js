@@ -121,8 +121,8 @@ function App() {
       </Route>
 
       {/* Landing Page Layout (without navbar) */}
-      <Route path="/" element={<LandingPageLayout />}>
-        <Route index element={<LandingPage />} />
+      <Route path="/" element={<AuthLayout />}>
+        <Route index element={<AccountSelection />} />
       </Route>
 
       {/* Auth Layout */}
