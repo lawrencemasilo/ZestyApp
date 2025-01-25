@@ -16,3 +16,11 @@
   background-color: theme('colors.customHoverBg');
   color: theme('colors.customHoverText');
 }
+.dark {
+  background-color: #1a202c; /* Dark background */
+  color: #e2e8f0; /* Light text */
+}
+
+.dark body {
+  background-color: #1a202c;
+}

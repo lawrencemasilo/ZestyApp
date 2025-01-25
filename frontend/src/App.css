@@ -31,3 +31,11 @@
     border: 3px solid #005EFF;
     background-color: #005eff1e;
 }
+.dark {
+    background-color: #1a202c; 
+    color: #e2e8f0; 
+  }
+  
+  .dark body {
+    background-color: #1a202c;
+  }

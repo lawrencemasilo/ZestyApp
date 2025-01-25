@@ -66,6 +66,7 @@ const Sheet = ({ children, open, onOpenChange }) => {
   
   return (
     <>
+
       <div 
         className="fixed inset-0 bg-black/20 z-40"
         onClick={() => onOpenChange(false)}
@@ -275,6 +276,7 @@ const EnhancedCreditScore = () => {
   const history = [65, 68, 72, 75];
   
   return (
+    // <ThemeProvider>
     <div className="p-6 bg-white rounded-xl shadow-sm">
       <div className="flex justify-between items-start mb-6">
         <h3 className="text-gray-700 flex items-center gap-2">
