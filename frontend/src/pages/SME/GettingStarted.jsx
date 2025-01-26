@@ -124,7 +124,7 @@ const BusinessOnboarding = () => {
                     bank_details,
                 } = formData;
     
-                /*const response = await axios.post(
+                const response = await axios.post(
                     `/sme/${user._id}`,
                     {
                         business_name,
@@ -154,36 +154,7 @@ const BusinessOnboarding = () => {
                         
                     }
                 );
-                console.log("Response from backend (JSON):", response.data);*/
-                console.log(
-                    {
-                        business_name,
-                        industry,
-                        registration_number,
-                        tax_id,
-                        monthly_revenue: parseInt(monthly_revenue, 10),
-                        address: {
-                            physical: address.physical,
-                            operational: address.operational,
-                        },
-                        contact_person: {
-                            name: contact_person.name,
-                            email: contact_person.email,
-                            phone: contact_person.phone,
-                        },
-                        bank_details: {
-                            account_number: bank_details.account_number,
-                            bank_name: bank_details.bank_name,
-                        },
-                        documents: {
-                            proof_of_banking: bank_details.proof_of_banking,
-                            bank_statements: formData.documents.bank_statements,
-                            additional_documents: formData.documents.additional_documents,
-                        }
-                        // Add document handling
-                        
-                    }
-                )
+                console.log("Response from backend (JSON):", response.data);
                 
             }
     
