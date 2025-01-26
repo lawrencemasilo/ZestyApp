@@ -27,8 +27,8 @@ const BusinessOnboarding = () => {
             proof_of_banking: null
         },
         documents: {
-            revenue_proof: null,
-            tax_returns: null,
+            banking_proof: null,
+            additional_documents: null,
             bank_statements: null
         }
     });
@@ -36,8 +36,8 @@ const BusinessOnboarding = () => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const fileInputRefs = {
-        revenue_proof: useRef(null),
-        taxReturns: useRef(null),
+        banking_proof: useRef(null),
+        additional_documents: useRef(null),
         bank_statements: useRef(null),
         proof_of_banking: useRef(null),
     };
@@ -124,7 +124,7 @@ const BusinessOnboarding = () => {
                     bank_details,
                 } = formData;
     
-                const response = await axios.post(
+                /*const response = await axios.post(
                     `/sme/${user._id}`,
                     {
                         business_name,
@@ -145,11 +145,45 @@ const BusinessOnboarding = () => {
                             account_number: bank_details.account_number,
                             bank_name: bank_details.bank_name,
                         },
+                        documents: {
+                            proof_of_banking: bank_details.proof_of_banking,
+                            bank_statements: formData.documents.bank_statements,
+                            additional_documents: formData.documents.additional_documents,
+                        }
                         // Add document handling
                         
                     }
                 );
-                console.log("Response from backend (JSON):", response.data);
+                console.log("Response from backend (JSON):", response.data);*/
+                console.log(
+                    {
+                        business_name,
+                        industry,
+                        registration_number,
+                        tax_id,
+                        monthly_revenue: parseInt(monthly_revenue, 10),
+                        address: {
+                            physical: address.physical,
+                            operational: address.operational,
+                        },
+                        contact_person: {
+                            name: contact_person.name,
+                            email: contact_person.email,
+                            phone: contact_person.phone,
+                        },
+                        bank_details: {
+                            account_number: bank_details.account_number,
+                            bank_name: bank_details.bank_name,
+                        },
+                        documents: {
+                            proof_of_banking: bank_details.proof_of_banking,
+                            bank_statements: formData.documents.bank_statements,
+                            additional_documents: formData.documents.additional_documents,
+                        }
+                        // Add document handling
+                        
+                    }
+                )
                 
             }
     
@@ -171,8 +205,135 @@ const BusinessOnboarding = () => {
         }
     };
 
+    
+    useEffect(() => {
+        // Load saved files from local storage
+        const savedData = localStorage.getItem('businessFormData');
+        if (savedData) {
+            setFormData(JSON.parse(savedData));
+        }
+    }, []);
+    
+    const saveFormDataToLocalStorage = (data) => {
+        localStorage.setItem('businessFormData', JSON.stringify(data));
+    };
+    
+    // Function to handle file uploads for steps 3 and 4
+    const handleDocumentUpload = (e, fileType, isStep3 = false) => {
+        const file = e.target.files[0];
+        if (file) {
+            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            const maxSize = 5 * 1024 * 1024;
+    
+            if (!allowedTypes.includes(file.type)) {
+                setErrors((prev) => ({
+                    ...prev,
+                    [isStep3 ? `bank_details.${fileType}` : `documents.${fileType}`]:
+                        'Invalid file type. Please upload PDF or image.',
+                }));
+                return;
+            }
+    
+            if (file.size > maxSize) {
+                setErrors((prev) => ({
+                    ...prev,
+                    [isStep3 ? `bank_details.${fileType}` : `documents.${fileType}`]:
+                        'File size exceeds 5MB limit.',
+                }));
+                return;
+            }
+    
+            const reader = new FileReader();
+            reader.onload = () => {
+                setFormData((prev) => {
+                    const updatedForm = isStep3
+                        ? {
+                              ...prev,
+                              bank_details: {
+                                  ...prev.bank_details,
+                                  [fileType]: reader.result, // Save Base64 string for proof_of_banking
+                              },
+                          }
+                        : {
+                              ...prev,
+                              documents: {
+                                  ...prev.documents,
+                                  [fileType]: reader.result, // Save Base64 string for documents
+                              },
+                          };
+    
+                    saveFormDataToLocalStorage(updatedForm);
+                    return updatedForm;
+                });
+    
+                // Clear errors for this file type
+                setErrors((prev) => {
+                    const { [isStep3 ? `bank_details.${fileType}` : `documents.${fileType}`]: _, ...rest } = prev;
+                    return rest;
+                });
+            };
+    
+            reader.readAsDataURL(file);
+        }
+    };
+    
+    // Modify Step 3 and Step 4 file upload rendering to use updated logic
+    const renderDocumentUpload = (documentType, label, isStep3 = false) => {
+        const file = isStep3 ? formData.bank_details[documentType] : formData.documents[documentType];
+    
+        return (
+            <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                    {label}
+                    <span className="text-gray-500 ml-1">(PDF or Image, max 5MB)</span>
+                </label>
+                <div
+                    onClick={() => {
+                        if (fileInputRefs[documentType]?.current) {
+                            fileInputRefs[documentType].current.click();
+                        }
+                    }}
+                    className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer 
+                        transition-all duration-300 
+                        ${errors[isStep3 ? `bank_details.${documentType}` : `documents.${documentType}`] 
+                            ? 'border-red-400 bg-red-50' 
+                            : 'border-gray-300 hover:border-[#005EFF] hover:bg-blue-50'}`}
+                >
+                    <input
+                        type="file"
+                        ref={fileInputRefs[documentType]}
+                        onChange={(e) => handleDocumentUpload(e, documentType, isStep3)}
+                        className="hidden"
+                        accept="image/jpeg,image/png,application/pdf"
+                    />
+                    {file ? (
+                        <div className="flex items-center justify-center gap-3">
+                            <CheckCircle2 className="text-green-500 w-6 h-6" />
+                            <span className="text-gray-700">{file.name || 'Uploaded File'}</span>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center">
+                            <Upload className="w-10 h-10 text-[#005EFF] mb-2" />
+                            <p className="text-[#005EFF] hover:text-blue-800">
+                                Click to upload document
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Supported formats: PDF, JPEG, PNG
+                            </p>
+                        </div>
+                    )}
+                </div>
+                {errors[isStep3 ? `bank_details.${documentType}` : `documents.${documentType}`] && (
+                    <p className="text-sm text-red-500 pl-2">
+                        {errors[isStep3 ? `bank_details.${documentType}` : `documents.${documentType}`]}
+                    </p>
+                )}
+            </div>
+        );
+    };
+    
     // Add a new method for file upload validation
-    const handleDocumentUpload = (e, documentType) => {
+    /*const handleDocumentUpload = (e, documentType) => {
         const file = e.target.files[0];
         if (file) {
             // Validate file type and size
@@ -263,7 +424,7 @@ const BusinessOnboarding = () => {
                 )}
             </div>
         );
-    };
+    };*/
     
     const handleFileUpload = (e, fileType) => {
         const file = e.target.files[0];
@@ -466,11 +627,12 @@ const BusinessOnboarding = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">
+                            {/*<label className="block text-sm font-semibold text-gray-700">
                                 Proof of Banking
                                 <span className="text-gray-500 ml-1">(PDF or Image, max 5MB)</span>
-                            </label>
-                            <div 
+                            </label>*/}
+                            {renderDocumentUpload('banking_proof', 'Proof of Banking')}
+                            {/*<div 
                                 
                                 className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer 
                                     transition-all duration-300 
@@ -501,7 +663,7 @@ const BusinessOnboarding = () => {
                                         </p>
                                     </div>
                                 )}
-                            </div>
+                            </div>*/}
                             {errors['bank_details.proof_of_banking'] && (
                                 <p className="text-sm text-red-500 pl-2">
                                     {errors['bank_details.proof_of_banking']}
@@ -519,8 +681,8 @@ const BusinessOnboarding = () => {
                         <p className="text-gray-500 -mt-4">Upload financial documentation</p>
 
                         <div className="space-y-6">
-                            {renderDocumentUpload('taxReturns', 'Bank statement')}
-                            {renderDocumentUpload('taxReturns', 'Additional Documents')}
+                            {renderDocumentUpload('bank_statements', 'Bank statement')}
+                            {renderDocumentUpload('additional_documents', 'Additional Documents')}
                         </div>
                     </div>
                 );
