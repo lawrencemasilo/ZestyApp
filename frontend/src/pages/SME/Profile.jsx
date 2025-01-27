@@ -4,10 +4,10 @@ import { Switch } from "../../components/ui/switch";
 import { logout } from "../../services/authService";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ThemeContext } from '../../components/ui/darkmode';
-import { ThemeProvider } from '../../components/ui/darkmode';
+import { useTheme } from '../../components/ui/darkmode';
 
 const ProfilePage = () => {
+  const { darkMode, toggleDarkMode } = useTheme();
   const [activeTab, setActiveTab] = useState('personal');
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +42,6 @@ const ProfilePage = () => {
     setError(null);
   };
 
-  
   const handleSave = async () => {
     try {
       const updatedData = {
@@ -58,17 +57,14 @@ const ProfilePage = () => {
       const response = await axios.put('/profile/update', updatedData);
       
       if (response.status === 200) {
-        // Update successful
         setIsEditing(false);
         alert('Profile updated successfully');
       }
     } catch (error) {
-      // Handle any errors
       console.error('Error updating profile:', error);
       alert('Failed to update profile. Please try again.');
     }
   };
-
 
   const handleLogout = () => {
     logout();
@@ -76,24 +72,24 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="flex-1 bg-gray-50 p-8">
+    <div className="flex-1 bg-gray-50 dark:bg-gray-900 p-8">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-xl shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
           {/* Profile Header */}
-          <div className="p-6 border-b border-gray-200">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center">
-                <span className="text-2xl font-bold text-[#005EFF]">NM</span>
+              <div className="w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                <span className="text-2xl font-bold text-[#005EFF] dark:text-blue-400">NM</span>
               </div>
               <div className="flex-1">
-                <h1 className="text-2xl font-semibold">{profileData.personal.fullName}</h1>
-                <p className="text-gray-500">{profileData.business.companyName}</p>
+                <h1 className="text-2xl font-semibold dark:text-white">{profileData.personal.fullName}</h1>
+                <p className="text-gray-500 dark:text-gray-400">{profileData.business.companyName}</p>
               </div>
-              <button onClick={() => handleLogout()}>Logout</button>
+              <button onClick={() => handleLogout()} className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">Logout</button>
               {!isEditing ? (
                 <button
                   onClick={handleEdit}
-                  className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50"
+                  className="flex items-center gap-2 px-4 py-2 text-sm border dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white"
                 >
                   <Edit className="w-4 h-4" />
                   Edit Profile
@@ -101,7 +97,7 @@ const ProfilePage = () => {
               ) : (
                 <button
                   onClick={handleSave}
-                  className="flex items-center gap-2 px-4 py-2 text-sm bg-[#005EFF] text-white rounded-lg hover:bg-blue-700"
+                  className="flex items-center gap-2 px-4 py-2 text-sm bg-[#005EFF] dark:bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-700"
                 >
                   <Save className="w-4 h-4" />
                   Save Changes
@@ -111,14 +107,14 @@ const ProfilePage = () => {
           </div>
 
           {/* Profile Navigation */}
-          <div className="border-b border-gray-200">
+          <div className="border-b border-gray-200 dark:border-gray-700">
             <nav className="flex">
               <button
                 onClick={() => setActiveTab('personal')}
                 className={`px-6 py-4 text-sm font-medium border-b-2 ${
                   activeTab === 'personal'
-                    ? 'border-[#005EFF] text-[#005EFF]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    ? 'border-[#005EFF] text-[#005EFF] dark:border-blue-400 dark:text-blue-400'
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
               >
                 Personal Information
@@ -127,8 +123,8 @@ const ProfilePage = () => {
                 onClick={() => setActiveTab('business')}
                 className={`px-6 py-4 text-sm font-medium border-b-2 ${
                   activeTab === 'business'
-                    ? 'border-[#005EFF] text-[#005EFF]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    ? 'border-[#005EFF] text-[#005EFF] dark:border-blue-400 dark:text-blue-400'
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
               >
                 Business Details
@@ -137,8 +133,8 @@ const ProfilePage = () => {
                 onClick={() => setActiveTab('settings')}
                 className={`px-6 py-4 text-sm font-medium border-b-2 ${
                   activeTab === 'settings'
-                    ? 'border-[#005EFF] text-[#005EFF]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    ? 'border-[#005EFF] text-[#005EFF] dark:border-blue-400 dark:text-blue-400'
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
               >
                 Settings
@@ -152,7 +148,7 @@ const ProfilePage = () => {
               <div className="space-y-6">
                 {Object.entries(profileData.personal).map(([key, value]) => (
                   <div key={key} className="grid grid-cols-3 gap-4">
-                    <label className="text-sm font-medium text-gray-500 capitalize">
+                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400 capitalize">
                       {key.replace(/([A-Z])/g, ' $1').trim()}
                     </label>
                     {isEditing ? (
@@ -168,10 +164,10 @@ const ProfilePage = () => {
                             }
                           })
                         }
-                        className="col-span-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#005EFF] focus:border-[#005EFF]"
+                        className="col-span-2 px-3 py-2 border dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-[#005EFF] dark:focus:ring-blue-500 focus:border-[#005EFF] dark:focus:border-blue-500"
                       />
                     ) : (
-                      <div className="col-span-2 text-sm text-gray-900">{value}</div>
+                      <div className="col-span-2 text-sm text-gray-900 dark:text-gray-200">{value}</div>
                     )}
                   </div>
                 ))}
@@ -182,7 +178,7 @@ const ProfilePage = () => {
               <div className="space-y-6">
                 {Object.entries(profileData.business).map(([key, value]) => (
                   <div key={key} className="grid grid-cols-3 gap-4">
-                    <label className="text-sm font-medium text-gray-500 capitalize">
+                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400 capitalize">
                       {key.replace(/([A-Z])/g, ' $1').trim()}
                     </label>
                     {isEditing ? (
@@ -198,10 +194,10 @@ const ProfilePage = () => {
                             }
                           })
                         }
-                        className="col-span-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#005EFF] focus:border-[#005EFF]"
+                        className="col-span-2 px-3 py-2 border dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-[#005EFF] dark:focus:ring-blue-500 focus:border-[#005EFF] dark:focus:border-blue-500"
                       />
                     ) : (
-                      <div className="col-span-2 text-sm text-gray-900">{value}</div>
+                      <div className="col-span-2 text-sm text-gray-900 dark:text-gray-200">{value}</div>
                     )}
                   </div>
                 ))}
@@ -212,13 +208,13 @@ const ProfilePage = () => {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Moon className="w-5 h-5 text-gray-500" />
+                    <Moon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                     <div>
-                      <p className="font-medium">Dark Mode</p>
-                      <p className="text-sm text-gray-500">Switch to dark theme</p>
+                      <p className="font-medium dark:text-white">Dark Mode</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Switch to dark theme</p>
                     </div>
                   </div>
-                  <Switch
+                  <Switch onClick={toggleDarkMode}
                     checked={settings.darkMode}
                     onCheckedChange={(checked) =>
                       setSettings({ ...settings, darkMode: checked })
@@ -228,10 +224,10 @@ const ProfilePage = () => {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Bell className="w-5 h-5 text-gray-500" />
+                    <Bell className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                     <div>
-                      <p className="font-medium">Notifications</p>
-                      <p className="text-sm text-gray-500">Receive app notifications</p>
+                      <p className="font-medium dark:text-white">Notifications</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Receive app notifications</p>
                     </div>
                   </div>
                   <Switch
@@ -241,7 +237,7 @@ const ProfilePage = () => {
                     }
                   />
                 </div>
-{/* 
+                {/* 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Shield className="w-5 h-5 text-gray-500" />

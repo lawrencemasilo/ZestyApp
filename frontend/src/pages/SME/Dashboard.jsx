@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Bell, Download, CreditCard, TrendingUp, Clock, ArrowUpRight, ArrowDownRight, 
          LayoutDashboard, ArrowRightLeft, CreditCardIcon, Building2, ChevronRight, LogOut,
-         PlusCircle, X, DollarSign, Calendar, Search, Filter, Menu } from 'lucide-react';
+         PlusCircle, X, DollarSign, Calendar, Search, Moon, Sun,Filter, Menu } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -11,11 +11,10 @@ import {
 } from "../../components/ui/dialog";
 import NotificationsPopover from '../../components/SME/NotificationsPopover';
 import axios from '../../api/axios';
-import { ThemeContext } from '../../components/ui/darkmode';
-import { ThemeProvider } from '../../components/ui/darkmode';
+import { useTheme } from '../../components/ui/darkmode';
 
 const BottomNav = () => (
-  <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden">
+  <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 lg:hidden">
     <div className="flex justify-around items-center h-16">
       <NavButton icon={<LayoutDashboard size={24} />} text="Dashboard" active />
       <NavButton icon={<ArrowRightLeft size={24} />} text="Transactions" />
@@ -24,11 +23,10 @@ const BottomNav = () => (
     </div>
   </div>
 );
-
 const NavButton = ({ icon, text, active }) => (
   <button 
     className={`flex flex-col items-center justify-center w-full h-full space-y-1
-               ${active ? 'text-[#005EFF]' : 'text-gray-600'}`}
+               ${active ? 'text-[#005EFF]' : 'text-gray-600 dark:text-gray-400'}`}
   >
     {icon}
     <span className="text-xs font-medium">{text}</span>
@@ -36,26 +34,25 @@ const NavButton = ({ icon, text, active }) => (
 );
 
 const Header = () => (
-  <div className="sticky top-0 z-10 bg-gray-50">
+  <div className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900">
     {/* Top Bar with Logo, Notifications, and Profile */}
-    <div className="flex items-center justify-between p-4 border-b border-gray-200">
+    <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
       <h1 className="text-2xl font-bold text-[#005EFF]">Zesty</h1>
       <div className="flex items-center gap-4">
         <NotificationsPopover />
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-600 text-sm font-medium">NM</span>
+          <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+            <span className="text-gray-600 dark:text-gray-300 text-sm font-medium">NM</span>
           </div>
         </div>
       </div>
     </div>
-    
     {/* Sub Header with Page Title and Actions */}
     <div className="flex justify-between items-center p-4">
-      <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
-      <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg bg-white hover:bg-gray-50">
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dashboard</h2>
+      <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
         <Download className="w-4 h-4" />
-        <span>Download</span>
+        <span className="dark:text-gray-300">Download</span>
       </button>
     </div>
   </div>
@@ -66,9 +63,8 @@ const Sheet = ({ children, open, onOpenChange }) => {
   
   return (
     <>
-
       <div 
-        className="fixed inset-0 bg-black/20 z-40"
+        className="fixed inset-0 bg-black/20 dark:bg-black/40 z-40"
         onClick={() => onOpenChange(false)}
       />
       {children}
@@ -77,12 +73,12 @@ const Sheet = ({ children, open, onOpenChange }) => {
 };
 
 const SheetContent = ({ children, onClose }) => (
-  <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50 animate-in slide-in-from-left">
+  <div className="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-900 shadow-lg z-50 animate-in slide-in-from-left">
     <button 
       onClick={onClose}
-      className="absolute right-4 top-4 p-1 hover:bg-gray-100 rounded-lg"
+      className="absolute right-4 top-4 p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
     >
-      <X className="w-5 h-5" />
+      <X className="w-5 h-5 dark:text-gray-400" />
     </button>
     {children}
   </div>
@@ -95,9 +91,9 @@ const MobileNav = ({ children }) => {
     <>
       <button 
         onClick={() => setOpen(true)} 
-        className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+        className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
       >
-        <Menu className="w-6 h-6" />
+        <Menu className="w-6 h-6 dark:text-gray-400" />
       </button>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent onClose={() => setOpen(false)}>
@@ -110,7 +106,7 @@ const MobileNav = ({ children }) => {
 
 const Sidebar = () => {
   const SidebarContent = () => (
-    <div className="h-full bg-white flex flex-col">
+    <div className="h-full bg-white dark:bg-gray-900 flex flex-col">
       {/* Logo */}
       <div className="p-6">
         <h1 className="text-2xl font-bold text-[#005EFF]">Zesty</h1>
@@ -125,16 +121,16 @@ const Sidebar = () => {
       </nav>
 
       {/* User Profile */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-gray-200 dark:border-gray-800">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-600 font-medium">NM</span>
+          <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+            <span className="text-gray-600 dark:text-gray-300 font-medium">NM</span>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-medium">Neo Masilo</p>
-            <p className="text-xs text-gray-500">neolawrencemasilo@gmail.com</p>
+            <p className="text-sm font-medium dark:text-gray-200">Neo Masilo</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">neolawrencemasilo@gmail.com</p>
           </div>
-          <LogOut size={18} className="text-gray-400 cursor-pointer" />
+          <LogOut size={18} className="text-gray-400 dark:text-gray-500 cursor-pointer" />
         </div>
       </div>
     </div>
@@ -143,7 +139,7 @@ const Sidebar = () => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden lg:block w-64 h-screen bg-white border-r border-gray-200">
+      <div className="hidden lg:block dark:lg:block w-64 h-screen bg-white border-r border-gray-200">
         <SidebarContent />
       </div>
 
@@ -188,48 +184,48 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] dark:bg-gray-800">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 dark:text-white">
             <PlusCircle className="w-5 h-5 text-[#005EFF]" />
             Apply for Credit
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="dark:text-gray-300">
             Apply for additional credit based on your current standing
           </DialogDescription>
         </DialogHeader>
-
+  
         <div className="space-y-6 py-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Available Credit</label>
-            <div className="text-2xl font-semibold text-gray-900">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Available Credit</label>
+            <div className="text-2xl font-semibold text-gray-900 dark:text-white">
               R{availableCredit.toFixed(2)}
             </div>
-            <div className="w-full h-2 bg-gray-100 rounded-full">
+            <div className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded-full">
               <div 
                 className="h-full bg-[#005EFF] rounded-full"
                 style={{ width: `${(1 - availableCredit/maxCredit) * 100}%` }}
               />
             </div>
           </div>
-
+  
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Amount</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Amount</label>
             <div className="relative">
-              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
               <input
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 max={availableCredit}
-                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:outline-none focus:ring-[#005EFF] focus:border-[#005EFF]"
+                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:outline-none focus:ring-[#005EFF] focus:border-[#005EFF] dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 placeholder="Enter amount"
               />
             </div>
           </div>
-
+  
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Term (Days)</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Term (Days)</label>
             <div className="grid grid-cols-3 gap-4">
               {[30, 60, 90].map((days) => (
                 <button
@@ -237,8 +233,8 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
                   onClick={() => setTerm(days)}
                   className={`py-2 px-4 rounded-lg border ${
                     term === days 
-                      ? 'bg-blue-50 border-blue-600 text-[#005EFF]' 
-                      : 'hover:bg-gray-50'
+                      ? 'bg-blue-50 border-blue-600 text-[#005EFF] dark:bg-blue-900 dark:border-blue-500' 
+                      : 'hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700'
                   }`}
                 >
                   {days} days
@@ -246,18 +242,18 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
               ))}
             </div>
           </div>
-
-          <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+  
+          <div className="space-y-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Interest Rate</span>
-              <span className="font-medium">{getInterestRate(term)}%</span>
+              <span className="text-sm text-gray-600 dark:text-gray-300">Interest Rate</span>
+              <span className="font-medium dark:text-white">{getInterestRate(term)}%</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Monthly Payment</span>
-              <span className="font-medium">R{calculateMonthlyPayment().toFixed(2)}</span>
+              <span className="text-sm text-gray-600 dark:text-gray-300">Monthly Payment</span>
+              <span className="font-medium dark:text-white">R{calculateMonthlyPayment().toFixed(2)}</span>
             </div>
           </div>
-
+  
           <button
             className="w-full py-2 px-4 bg-[#005EFF] text-white rounded-lg hover:bg-blue-700 
                        transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -268,7 +264,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
         </div>
       </DialogContent>
     </Dialog>
-  );
+  );  
 };
 
 const EnhancedCreditScore = () => {
@@ -276,29 +272,28 @@ const EnhancedCreditScore = () => {
   const history = [65, 68, 72, 75];
   
   return (
-    // <ThemeProvider>
-    <div className="p-6 bg-white rounded-xl shadow-sm">
+    <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
       <div className="flex justify-between items-start mb-6">
-        <h3 className="text-gray-700 flex items-center gap-2">
+        <h3 className="text-gray-700 dark:text-gray-200 flex items-center gap-2">
           <TrendingUp className="w-5 h-5" />
           Credit Score
         </h3>
         <div className="text-right">
           <div className="text-3xl font-bold text-[#005EFF]">{score}</div>
-          <div className="text-sm text-gray-500">out of 100</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">out of 100</div>
         </div>
       </div>
 
       <div className="space-y-4">
         <div className="relative pt-4">
-          <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-[#005EFF] to-blue-400 rounded-full 
-                         transition-all duration-500"
+          <div className="w-full h-3 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-[#005EFF] to-blue-400 rounded-full
+                        transition-all duration-500"
               style={{ width: `${score}%` }}
             />
           </div>
-          <div className="absolute top-0 left-0 w-full flex justify-between text-xs text-gray-400">
+          <div className="absolute top-0 left-0 w-full flex justify-between text-xs text-gray-400 dark:text-gray-500">
             <span>0</span>
             <span>25</span>
             <span>50</span>
@@ -313,13 +308,13 @@ const EnhancedCreditScore = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-4 mt-4">
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-500">Payment History</div>
-            <div className="text-lg font-semibold text-gray-700">98%</div>
+          <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <div className="text-sm text-gray-500 dark:text-gray-400">Payment History</div>
+            <div className="text-lg font-semibold text-gray-700 dark:text-gray-200">98%</div>
           </div>
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-500">Credit Usage</div>
-            <div className="text-lg font-semibold text-gray-700">32%</div>
+          <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <div className="text-sm text-gray-500 dark:text-gray-400">Credit Usage</div>
+            <div className="text-lg font-semibold text-gray-700 dark:text-gray-200">32%</div>
           </div>
         </div>
       </div>
@@ -364,11 +359,11 @@ const MetricCard = ({ metric, onSelect, selected }) => {
   return (
     <div 
       onClick={() => onSelect(metric.name)}
-      className={`p-4 bg-white rounded-xl shadow-sm cursor-pointer transition-all
+      className={`p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm cursor-pointer transition-all
                  ${selected ? 'ring-2 ring-[#005EFF]' : 'hover:shadow-md'}`}
     >
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium">{metric.name}</span>
+        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{metric.name}</span>
         {metricData.trend === 'up' ? (
           <ArrowUpRight className={`w-4 h-4 text-${metricData.color}-500`} />
         ) : (
@@ -376,14 +371,18 @@ const MetricCard = ({ metric, onSelect, selected }) => {
         )}
       </div>
       
-      <div className="text-2xl font-bold mb-1">{metricData.current}%</div>
+      <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+        {metricData.current}%
+      </div>
       
       <div className={`text-xs text-${metricData.color}-500 flex items-center gap-1`}>
         {metricData.trend === 'up' ? '+' : ''}{metricData.current - metricData.previous}%
       </div>
       
       {selected && (
-        <div className="mt-4 text-sm text-gray-500">{metricData.detail}</div>
+        <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+          {metricData.detail}
+        </div>
       )}
     </div>
   );
@@ -439,21 +438,24 @@ const TransactionsList = () => {
     }
   ];
 
+ 
   return (
-    <div className="bg-white rounded-xl shadow-sm mt-6">
-      <div className="p-6 border-b border-gray-100">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm mt-6">
+      <div className="p-6 border-b border-gray-100 dark:border-gray-700">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-semibold">Recent Transactions</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Recent Transactions</h3>
           <div className="flex items-center gap-4">
             <div className="relative">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input 
                 type="text"
                 placeholder="Search transactions"
-                className="pl-10 pr-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#005EFF] focus:border-[#005EFF]"
+                className="pl-10 pr-4 py-2 border dark:border-gray-600 dark:bg-gray-700 rounded-lg text-sm 
+                         focus:ring-2 focus:ring-[#005EFF] focus:border-[#005EFF] dark:text-gray-100"
               />
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50">
+            <button className="flex items-center gap-2 px-4 py-2 border dark:border-gray-600 rounded-lg 
+                             hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-100">
               <Filter className="w-4 h-4" />
               <span className="text-sm">Filter</span>
             </button>
@@ -462,21 +464,23 @@ const TransactionsList = () => {
 
         <div className="space-y-4">
           {transactions.map((transaction) => (
-            <div key={transaction.id} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition-colors">
+            <div key={transaction.id} className="flex items-center justify-between p-4 hover:bg-gray-50 
+                                               dark:hover:bg-gray-700 rounded-lg transition-colors">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-medium text-gray-600">
+                <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center 
+                              justify-center font-medium text-gray-600 dark:text-gray-300">
                   {transaction.logo}
                 </div>
                 <div>
-                  <p className="font-medium">{transaction.merchant}</p>
-                  <p className="text-sm text-gray-500">{transaction.category}</p>
+                  <p className="font-medium dark:text-gray-100">{transaction.merchant}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{transaction.category}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className={`font-medium ${transaction.amount > 0 ? 'text-green-600' : 'text-gray-900'}`}>
+                <p className={`font-medium ${transaction.amount > 0 ? 'text-green-600' : 'text-gray-900 dark:text-gray-100'}`}>
                   R{Math.abs(transaction.amount).toFixed(2)}
                 </p>
-                <p className="text-sm text-gray-500">{transaction.date}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{transaction.date}</p>
               </div>
             </div>
           ))}
@@ -549,11 +553,11 @@ const CreditCardComponent = ({ onApplyClick }) => {
 };
 
 export const Dashboard = () => {
+  const { darkMode, toggleDarkMode } = useTheme();
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState(null);
   const [user, setUser] = useState([]);
-;
-  
+
   const metrics = [
     { name: 'Repayment History', trend: 'up', color: 'green' },
     { name: 'External Credit', trend: 'down', color: 'red' },
@@ -561,13 +565,11 @@ export const Dashboard = () => {
     { name: 'Cash Flow', trend: 'up', color: 'green' }
   ];
 
-
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get('auth/profile');
-        setUser(response.data); // Use `response.data` to access the actual user data
-        console.log(response.data);
+        setUser(response.data);
       } catch (err) {
         console.error('Error fetching user profile:', err);
       }
@@ -577,25 +579,34 @@ export const Dashboard = () => {
   }, []);
   
   return (
-    <div className="flex w-full bg-gray-50 min-h-screen">
-      {/*<Sidebar />*/}
-      
+    <div className="flex w-full bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex-1 p-8 lg:pt-5 overflow-y-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div className="flex items-center gap-4 w-full sm:w-auto">
-            {/*<div className="lg:hidden">
-              <MobileNav>
-              </MobileNav>
-                <Sidebar />
-            </div>*/}
             <div>
-              <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
-              <p className="text-sm text-gray-500">Welcome back, <span className="text-[#005EFF]">{user.firstName} {user.lastName}</span></p>
+              <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">Dashboard</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Welcome back, 
+                <span className="text-[#005EFF]">{user.firstName} {user.lastName}</span>
+              </p>
             </div>
           </div>
+           {/* Dark Mode Toggle */}
+                               <div className="flex items-center gap-4">
+                                <button 
+                                  onClick={toggleDarkMode}
+                                  className={`p-2 rounded-full transition-colors ${
+                                    darkMode 
+                                      ? 'hover:bg-gray-700 bg-gray-800 text-yellow-500' 
+                                      : 'hover:bg-gray-100 bg-white text-gray-700'
+                                  }`}
+                                >
+                                  {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                                </button>
+                            </div>
           <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
-            <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm border dark:border-gray-600 
+                             rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-100">
               <Download className="w-4 h-4" />
               <span className="hidden sm:inline">Download</span>
             </button>
@@ -607,9 +618,9 @@ export const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           <CreditCardComponent onApplyClick={() => setIsApplyModalOpen(true)} />
           <EnhancedCreditScore />
-          <div className="p-6 bg-white rounded-xl shadow-sm">
+          <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-gray-700 flex items-center gap-2">
+              <h3 className="text-gray-700 dark:text-gray-200 flex items-center gap-2">
                 <Clock className="w-5 h-5" />
                 Quick Stats
               </h3>
@@ -617,15 +628,15 @@ export const Dashboard = () => {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <div className="text-sm">
-                  <p className="text-gray-500">Monthly Spend</p>
-                  <p className="text-lg font-semibold text-gray-800">R12,450.60</p>
+                  <p className="text-gray-500 dark:text-gray-400">Monthly Spend</p>
+                  <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">R12,450.60</p>
                 </div>
                 <ArrowUpRight className="w-5 h-5 text-green-500" />
               </div>
               <div className="flex justify-between items-center">
                 <div className="text-sm">
-                  <p className="text-gray-500">Payment Streak</p>
-                  <p className="text-lg font-semibold text-gray-800">6 months</p>
+                  <p className="text-gray-500 dark:text-gray-400">Payment Streak</p>
+                  <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">6 months</p>
                 </div>
                 <TrendingUp className="w-5 h-5 text-[#005EFF]" />
               </div>
@@ -651,5 +662,5 @@ export const Dashboard = () => {
         onClose={() => setIsApplyModalOpen(false)}
       />
     </div>
-  )
+  );
 };

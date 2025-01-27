@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import NotificationsPopover from '../../components/SME/NotificationsPopover';
 import { useTheme } from '../../components/ui/darkmode';
-import { ThemeProvider } from '../../components/ui/darkmode';
+
 
 const CreditPage = () => {
   const { darkMode, toggleDarkMode } = useTheme();
@@ -227,7 +227,6 @@ const CreditPage = () => {
   };
 
   return (
-    <ThemeProvider>
     <div className={`flex justify-center w-full min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-black'}`}>
       {renderModal()}
 
@@ -385,7 +384,6 @@ const CreditPage = () => {
         </div>
       </div>
     </div>
-  </ThemeProvider>
   );
 };
 

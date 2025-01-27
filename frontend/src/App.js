@@ -25,6 +25,7 @@ import MobileTransactionsPage from "./pages/SME/Mobile/TransactionsMobile";
 import MobileGettingStarted from "./pages/SME/Mobile/GettingStartedMobile";
 import ProtectedRoute from './components/ProtectedRoute';
 import WelcomePopup from "./components/SME/WelcomePopup";
+import { ThemeProvider } from './components/ui/darkmode';
 
 
 import axios from './api/axios';
@@ -90,6 +91,7 @@ function AuthLayout() {
 function App() {
   const isDesktop = useIsDesktop();
   return (
+    <ThemeProvider>
     <Routes>
       {/* Main Layout with Navbar */}
       <Route path="/" element={<Layout />}>
@@ -140,6 +142,7 @@ function App() {
       {/* Fallback */}
       <Route path="*" element={<div>Page not found</div>} />
     </Routes>
+    </ThemeProvider>
   );
 }
 

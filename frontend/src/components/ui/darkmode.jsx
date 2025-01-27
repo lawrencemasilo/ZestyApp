@@ -1,36 +1,52 @@
+// darkmode.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-// Create the Theme 
 export const ThemeContext = createContext({
   darkMode: false,
   toggleDarkMode: () => {}
 });
 
-// Theme Provider Component
 export const ThemeProvider = ({ children }) => {
   const [darkMode, setDarkMode] = useState(() => {
-   
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) return savedTheme === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // Check local storage first
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        return savedTheme === 'dark';
+      }
+      // If no saved theme, check system preference
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
   });
 
-  const toggleDarkMode = () => {
-    setDarkMode(prevMode => {
-      const newMode = !prevMode;
-      localStorage.setItem('theme', newMode ? 'dark' : 'light');
-      return newMode;
-    });
-  };
-
   useEffect(() => {
-    const root = document.documentElement;
+    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+    
+
     if (darkMode) {
-      root.classList.add('dark');
+      document.documentElement.classList.add('dark');
     } else {
-      root.classList.remove('dark');
+      document.documentElement.classList.remove('dark');
     }
   }, [darkMode]);
+
+  // Listen for system theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e) => {
+      if (!localStorage.getItem('theme')) {
+        setDarkMode(e.matches);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  const toggleDarkMode = () => {
+    setDarkMode(prevMode => !prevMode);
+  };
 
   return (
     <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
@@ -39,11 +55,10 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('Theme not availble');
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
 };

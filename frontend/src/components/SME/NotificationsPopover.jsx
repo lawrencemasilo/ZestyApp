@@ -15,17 +15,17 @@ const NotificationItem = ({ notification, onDismiss }) => {
   };
 
   return (
-    <div className="p-3 border-b last:border-b-0 hover:bg-gray-50">
+    <div className="p-3 border-b dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700/50">
       <div className="flex items-start gap-3">
         {getIcon(notification.type)}
         <div className="flex-1">
-          <p className="text-sm font-medium">{notification.title}</p>
-          <p className="text-xs text-gray-500">{notification.message}</p>
-          <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
+          <p className="text-sm font-medium dark:text-gray-100">{notification.title}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{notification.message}</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{notification.time}</p>
         </div>
         <button 
           onClick={() => onDismiss(notification.id)}
-          className="text-gray-400 hover:text-gray-600"
+          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
         >
           <X className="w-4 h-4" />
         </button>
@@ -64,11 +64,11 @@ const NotificationsPopover = () => {
   };
 
   const notificationContent = (
-    <div className="w-80">
-      <div className="p-4 border-b">
+    <div className="w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+      <div className="p-4 border-b dark:border-gray-700">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold">Notifications</h3>
-          <span className="text-xs text-gray-500">{notifications.length} new</span>
+          <h3 className="font-semibold dark:text-gray-100">Notifications</h3>
+          <span className="text-xs text-gray-500 dark:text-gray-400">{notifications.length} new</span>
         </div>
       </div>
       <div className="max-h-96 overflow-y-auto">
@@ -81,7 +81,7 @@ const NotificationsPopover = () => {
             />
           ))
         ) : (
-          <div className="p-4 text-center text-gray-500 text-sm">
+          <div className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
             No new notifications
           </div>
         )}
@@ -92,7 +92,7 @@ const NotificationsPopover = () => {
   return (
     <Popover content={notificationContent}>
       <div className="relative">
-        <Bell className="w-5 h-5 text-gray-600 cursor-pointer" />
+        <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400 cursor-pointer hover:text-gray-800 dark:hover:text-gray-200" />
         {notifications.length > 0 && (
           <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
         )}
