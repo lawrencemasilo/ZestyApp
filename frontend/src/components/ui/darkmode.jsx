@@ -1,4 +1,3 @@
-// darkmode.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 export const ThemeContext = createContext({
