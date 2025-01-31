@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { CircleArrowLeft, AlertCircle } from 'lucide-react';
+import axios from '../../api/axios';
 import useIsDesktop from '../../hooks/useIsDesktop';
 
 const FormInput = ({ label, id, error, ...props }) => (
@@ -74,31 +75,56 @@ const Login = () => {
     setIsLoading(true);
   
     try {
-      // Simulate login with hardcoded credentials
-      if (email === 'user@example.com' && password === 'password123') {
-        // Simulate token generation
-        const token = 'fake_jwt_token_' + Date.now();
-        
-        // Save the token in localStorage
-        localStorage.setItem('jwtToken', token);
-        
-        // Navigate to dashboard
-        navigate("/dashboard");
-      } else {
-        // Simulate authentication failure
+      const response = await axios.post('/auth/login', { email, password });
+      const token = response.data.token; 
+
+      // Save the token in localStorage
+      localStorage.setItem('jwtToken', token);
+      navigate("/loading");
+    } catch (err) {
+      // Handle different types of errors
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        switch (err.response.status) {
+          case 401:
+            setErrors(prev => ({
+              ...prev, 
+              general: 'Invalid email or password. Please try again.'
+            }));
+            break;
+          case 403:
+            setErrors(prev => ({
+              ...prev, 
+              general: 'Account is locked. Please contact support.'
+            }));
+            break;
+          case 500:
+            setErrors(prev => ({
+              ...prev, 
+              general: 'Server error. Please try again later.'
+            }));
+            break;
+          default:
+            setErrors(prev => ({
+              ...prev, 
+              general: 'An unexpected error occurred. Please try again.'
+            }));
+        }
+      } else if (err.request) {
+        // The request was made but no response was received
         setErrors(prev => ({
           ...prev, 
-          general: 'Invalid email or password. Please try again.'
+          general: 'No response from server. Check your internet connection.'
+        }));
+      } else {
+        // Something happened in setting up the request
+        setErrors(prev => ({
+          ...prev, 
+          general: 'Error setting up the request. Please try again.'
         }));
       }
-    } catch (err) {
-      // Simulate error handling
-      setErrors(prev => ({
-        ...prev, 
-        general: 'An unexpected error occurred. Please try again.'
-      }));
       
-      console.error('Login error:', err);
+      console.error('Login error:', err.response?.data || err.message);
     } finally {
       setIsLoading(false);
     }
@@ -189,6 +215,7 @@ const Login = () => {
                 Forgot password?
               </Link>
             </div>
+
             <button
               type="submit"
               disabled={isLoading}
@@ -215,5 +242,4 @@ const Login = () => {
     </>
   );
 };
-
 export default Login;
