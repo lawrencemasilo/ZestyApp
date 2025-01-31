@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bell, X, Settings, AlertCircle, CheckCircle2 } from 'lucide-react';
+import axios from '../../api/axios';
 import Popover from '../ui/Popover';
 
 const NotificationItem = ({ notification, onDismiss }) => {
@@ -21,10 +22,12 @@ const NotificationItem = ({ notification, onDismiss }) => {
         <div className="flex-1">
           <p className="text-sm font-medium dark:text-gray-100">{notification.title}</p>
           <p className="text-xs text-gray-500 dark:text-gray-400">{notification.message}</p>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{notification.time}</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+            {new Date(notification.createdAt).toLocaleString()}
+          </p>
         </div>
         <button 
-          onClick={() => onDismiss(notification.id)}
+          onClick={() => onDismiss(notification._id)}
           className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
         >
           <X className="w-4 h-4" />
@@ -35,32 +38,46 @@ const NotificationItem = ({ notification, onDismiss }) => {
 };
 
 const NotificationsPopover = () => {
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: 'success',
-      title: 'Payment Successful',
-      message: 'Your payment of R2,500.00 has been processed',
-      time: '2 minutes ago'
-    },
-    {
-      id: 2,
-      type: 'alert',
-      title: 'Credit Limit Warning',
-      message: 'You are approaching your credit limit',
-      time: '1 hour ago'
-    },
-    {
-      id: 3,
-      type: 'info',
-      title: 'New Feature Available',
-      message: 'Check out our new payment analytics dashboard',
-      time: '2 hours ago'
-    }
-  ]);
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const dismissNotification = (id) => {
-    setNotifications(notifications.filter(notif => notif.id !== id));
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get('notifications');
+        
+        //notiiication structure 
+        const formattedNotifications = response.data.notifications.map(notification => ({
+          _id: notification._id,
+          type: notification.type || 'info', // default to 'info' if no type
+          title: notification.title,
+          message: notification.message,
+          createdAt: notification.createdAt
+        }));
+
+        setNotifications(formattedNotifications);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching notifications:', err);
+        setError('Failed to fetch notifications');
+        setLoading(false);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+  const dismissNotification = async (id) => {
+    try {
+      // notification  dismissed
+      await axios.delete(`notifications/${id}`);
+      
+      // Update local state
+      setNotifications(notifications.filter(notif => notif._id !== id));
+    } catch (err) {
+      console.error('Error dismissing notification:', err);
+    }
   };
 
   const notificationContent = (
@@ -68,14 +85,24 @@ const NotificationsPopover = () => {
       <div className="p-4 border-b dark:border-gray-700">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold dark:text-gray-100">Notifications</h3>
-          <span className="text-xs text-gray-500 dark:text-gray-400">{notifications.length} new</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            {notifications.length} new
+          </span>
         </div>
       </div>
       <div className="max-h-96 overflow-y-auto">
-        {notifications.length > 0 ? (
+        {loading ? (
+          <div className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
+            Loading notifications...
+          </div>
+        ) : error ? (
+          <div className="p-4 text-center text-red-500 dark:text-red-400 text-sm">
+            {error}
+          </div>
+        ) : notifications.length > 0 ? (
           notifications.map(notification => (
             <NotificationItem
-              key={notification.id}
+              key={notification._id}
               notification={notification}
               onDismiss={dismissNotification}
             />
