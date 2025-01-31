@@ -184,21 +184,21 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] dark:bg-gray-800">
+      <DialogContent className="sm:max-w-[500px] dark:bg-grey">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 dark:text-white">
-            <PlusCircle className="w-5 h-5 text-[#005EFF]" />
+          <DialogTitle className="flex items-center gap-2 dark:text-black">
+            <PlusCircle className="w-5 h-5 text-[#005EFF] " />
             Apply for Credit
           </DialogTitle>
-          <DialogDescription className="dark:text-gray-300">
+          <DialogDescription className="dark:text-black">
             Apply for additional credit based on your current standing
           </DialogDescription>
         </DialogHeader>
   
         <div className="space-y-6 py-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Available Credit</label>
-            <div className="text-2xl font-semibold text-gray-900 dark:text-white">
+            <label className="text-sm font-medium text-gray-700 dark:text-black">Available Credit</label>
+            <div className="text-2xl font-semibold text-gray-900 dark:text-black">
               R{availableCredit.toFixed(2)}
             </div>
             <div className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded-full">
@@ -210,9 +210,8 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
           </div>
   
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Amount</label>
+            <label className="text-sm text-black font-medium dark:text-black">Amount</label>
             <div className="relative">
-              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
               <input
                 type="number"
                 value={amount}
@@ -225,7 +224,7 @@ const CreditApplicationModal = ({ isOpen, onClose }) => {
           </div>
   
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Term (Days)</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-black">Term (Days)</label>
             <div className="grid grid-cols-3 gap-4">
               {[30, 60, 90].map((days) => (
                 <button
