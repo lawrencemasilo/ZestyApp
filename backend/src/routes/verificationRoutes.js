@@ -4,10 +4,14 @@ const router = express.Router();
 const { verifyDocuments, verifyBusiness } = require("../controllers/verificationController");
 
 // Verification Operations
-router.post(
-    "/documents",
-    upload.array("documents", 5), // Allow up to 5 files to be uploaded
-    verifyDocuments); // Verify documents
+router.post("/documents", (req, res) => {
+    upload.array("documents", 5) (req, res, (err) => {
+        if (err) {
+            return res.status(400).json({ error: err.message });
+        }
+        verifyDocuments(req, res);
+    });
+});
 
 router.post("/business", verifyBusiness); // Verify business
 
