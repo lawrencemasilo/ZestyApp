@@ -1,3 +1,5 @@
+const path = require("path");
+
 /**
  * File filter function for Multer.
  * Filters upload files based on their MIME type.
@@ -15,12 +17,19 @@ const fileFilter = (req, file, cb) => {
         "image/jpg",
     ];
 
-    if (allowedMimeTypes.includes(file.mimetype)) {
+    const allowedExtensions = [".pdf", ".jpeg", ".jpg", ".png"];
+    
+    const fileExtension = path.extname(file.originalname).toLowerCase();
+    const isMimeTypeAllowed = allowedMimeTypes.includes(file.mimetype.toLowerCase());
+    const isExtensionAllowed = allowedExtensions.includes(fileExtension);
+
+    if (isMimeTypeAllowed && isExtensionAllowed) {
         // Accept the file
         cb(null, true);
     } else {
         // Reject the file
-        cb(new Error("Unsupported file type. Only PDF, JPEG, and PNG files are allowed."), false);
+        console.error(`Rejected file: ${file.originalname} (MIME type: ${file.mimetype})`);
+        cb(new Error(`Unsupported file type for ${file.originalname}. Only PDF, JPEG, and PNG files are allowed.`), false);
     }
 };
 
