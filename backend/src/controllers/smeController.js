@@ -21,38 +21,74 @@ const saveBusinessInfo = async (req, res) => {
       bank_details,
     } = req.body;
 
+    // Validate required fields
+    const requiredFields = [
+      "business_name",
+      "industry",
+      "registration_number",
+      "tax_id",
+      "monthly_revenue",
+      "address",
+      "contact_person",
+      "bank_details",
+    ];
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        return res.status(400).json({ message: `${field} is required.` });
+      }
+    }
+
     // Validate business details
     const isRegistrationValid = /^[A-Z0-9]{10}$/.test(registration_number);
     const isTaxValid = /^[0-9]{9}$/.test(tax_id);
 
-    if (!isRegistrationValid || !isTaxValid) {
-      return res.status(400).json({
-        message: "Invalid business registration number or tax ID.",
-      });
+    if (!isRegistrationValid) {
+      return res.status(400).json({ message: "Invalid registration number format." });
+    }
+    if (!isTaxValid) {
+      return res.status(400).json({ message: "Invalid tax ID format." });
     }
 
     // Check if business already exists
-    const existingSme = await SME.findOne({ registration_number });
-    if (existingSme) {
-      return res.status(400).json({
-        message: "Business already exists with this registration number.",
+    let sme = await SME.findOne({ registration_number });
+    if (sme) {
+      // Update existing SME
+      sme.business_name = business_name;
+      sme.industry = industry;
+      sme.tax_id = tax_id;
+      sme.monthly_revenue = monthly_revenue;
+      sme.address = address;
+      sme.contact_person = contact_person;
+      sme.bank_details = bank_details;
+    } else {
+      // Create new SME
+      sme = new SME({
+        user_id,
+        business_name,
+        industry,
+        registration_number,
+        tax_id,
+        monthly_revenue,
+        address,
+        contact_person,
+        bank_details,
       });
     }
 
-    // Save new business
-    const newSme = new SME({
-      user_id,
-      business_name,
-      industry,
-      registration_number,
-      tax_id,
-      monthly_revenue,
-      address,
-      contact_person,
-      bank_details,
-    });
+    // Handle document uploads
+    const files = req.files;
+    if (files && files.length > 0) {
+      const documentDetails = files.map((file) => ({
+        type: req.body.documentType || "unspecified",
+        fileName: file.originalname,
+        filePath: file.path,
+        fileType: file.mimetype,
+      }));
+      sme.documents = sme.documents.concat(documentDetails);
+    }
 
-    await newSme.save();
+    // Save SME
+    await sme.save();
 
     // Update user verification
     await updateUserVerification(user_id);

@@ -1,22 +1,39 @@
 const SME = require("../models/SME");
+const Path = require("path");
 
 const verifyDocuments = async (req, res) => {
   try {
-    const { registration_number, tax_id, bank_details } = req.body;
+    console.log("Headers:", req.headers);
+    console.log("Files:", req.files);
+    console.log("Body:", req.body);
+    
+    const { registration_number, tax_id, bank_details, documentType } = req.body;
     const files = req.files; // Uploaded files handled by multer middleware
+
+    // validate user authentication
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized: User not authenticated" });
+    }
 
     // Here we want to validate inputs and uploaded files
     const isValidRegistration = /^[A-Z0-9]{10}$/.test(registration_number);
     const isValidTaxID = /^[0-9]{9}$/.test(tax_id);
-    const isValidBankDetails =
-      bank_details &&
-      bank_details.account_number &&
-      bank_details.bank_name;
+    const isValidBankDetails = bank_details && bank_details.account_number && bank_details.bank_name;
 
-    if (!isValidRegistration || !isValidTaxID || !isValidBankDetails) {
-      return res
-        .status(400)
-        .json({ message: "Document verification failed" });
+    if (!isValidRegistration) {
+      return res.status(400).json({ message: "Invalid registration number format." });
+    }
+    if (!isValidTaxID) {
+      return res.status(400).json({ message: "Invalid tax ID format." });
+    }
+    if (!isValidBankDetails) {
+      return res.status(400).json({ message: "Invalid or missing bank details." });
+    }
+
+    // validate document type
+    const validDocumentTypes = ["tax_certificate", "bank_statement", "identity_proof"];
+    if (!documentType || !validDocumentTypes.includes(documentType)) {
+      return res.status(400).json({ message: "Invalid or missing document type." });
     }
 
     if (!files || files.length === 0) {
@@ -39,14 +56,15 @@ const verifyDocuments = async (req, res) => {
         monthly_revenue: req.user.monthly_revenue || 0,
         address: req.user.address || { physical: "", operational: "" },
         contact_person: req.user.contact_person || {},
+        documents: [], // initialize documents array
       });
     }
 
     //Add uploaded document details to the SME
     const documentDetails = files.map((file) => ({
-      type: req.body.documentType || "unspecified",
+      type: documentType,
       fileName: file.originalname,
-      filePath: file.path,
+      filePath: path.normalize(file.path),
       fileType: file.mimetype,
     }));
 
