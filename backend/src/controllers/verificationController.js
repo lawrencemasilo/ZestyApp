@@ -4,6 +4,7 @@ const Path = require("path");
 const verifyDocuments = async (req, res) => {
   try {
     console.log("Headers:", req.headers);
+    console.log("User:", req.user);
     console.log("Files:", req.files);
     console.log("Body:", req.body);
     
@@ -77,8 +78,8 @@ const verifyDocuments = async (req, res) => {
       .status(200)
       .json({ message: "Documents verified and saved successfully.", SME: sme });
   } catch (err) {
-    console.error("Error verifying documents:", err);
-    res.status(500).json({ message: "Server error while verifying documents." });
+    console.error("Error verifying documents:", err.message || err);
+    res.status(500).json({ message: "Server error while verifying documents.", error: err.message || err });
   }
 };
 

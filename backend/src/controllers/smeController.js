@@ -91,11 +91,15 @@ const saveBusinessInfo = async (req, res) => {
     await sme.save();
 
     // Update user verification
-    await updateUserVerification(user_id);
+    try {
+      await updateUserVerification(user_id);
+    } catch (err) {
+      console.error("Failed to update user verification:", err);
+    }
 
     // Trigger credit assessment
     try {
-      await triggerCreditAssessment(newSme._id);
+      await triggerCreditAssessment(sme._id);
     } catch (creditErr) {
       console.error("Credit assessment failed:", creditErr);
     }
@@ -103,11 +107,11 @@ const saveBusinessInfo = async (req, res) => {
     // Final response
     return res.status(201).json({
       message: "Business information saved successfully.",
-      sme: newSme,
+      sme: sme,
     });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Error saving business information." });
+    console.error("Error saving business information:", err.message || err);
+    return res.status(500).json({ message: "Error saving business information.", error: err.message || err });
   }
 };
 
