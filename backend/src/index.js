@@ -22,7 +22,7 @@ app.use(express.json()); // Parse JSON bodies
 app.use(cors()); // Enable CORS
 
 // Connect to MongoDB
-connectDB();
+//connectDB();
 
 // Routes
 app.use("/api/auth", authRoutes);

@@ -1,64 +1,82 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require('sequelize');
+const sequelizePromise = require('../config/db.config');  // Import the promise
 
-const userSchema = new mongoose.Schema(
-  {
+async function defineUserModel() {
+  const sequelize = await sequelizePromise;  // Await the resolved sequelize instance
+
+  const User = sequelize.define('User', {
     email: {
-      type: String,
-      required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
-      trim: true,
-      match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email']
+      validate: {
+        isEmail: {
+          msg: 'Please enter a valid email'
+        }
+      }
     },
     password: {
-      type: String,
-      required: [true, 'Password is required'],
-      minlength: [8, 'Password must be at least 8 characters long'],
-      select: false // Don't include password in queries by default
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [8, Infinity],
+      }
     },
     firstName: {
-      type: String,
-      required: true,
-      trim: true,
-      minLength: [3, "First Name too short"],
-      maxLength: [50, "First Name too long"],
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [3, 50],
+      }
     },
     lastName: {
-      type: String,
-      required: true,
-      trim: true,
-      minLength: [3, "Last Name too short"],
-      maxLength: [50, "Last Name too long"],
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [3, 50],
+      }
     },
     phone: {
-      type: String,
-      required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
-      trim: true,
       validate: {
-        validator: function (v) {
-          return /^\+?[0-9]\d{1,14}$/.test(v);
-        },
-        message: (props) => `${props.value} is not a valid phone number!`,
-      },
+        is: {
+          args: [/^\+?[0-9]\d{1,14}$/],
+          msg: `phone number is not a valid phone number!`
+        }
+      }
     },
     verified: {
-      type: Boolean,
-      default: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
-    resetPasswordToken: String,
-    resetPasswordExpires: Date,
-    passwordChangedAt: Date,
+    resetPasswordToken: {
+      type: DataTypes.STRING
+    },
+    resetPasswordExpires: {
+      type: DataTypes.DATE
+    },
+    passwordChangedAt: {
+      type: DataTypes.DATE
+    },
     loginAttempts: {
-      type: Number,
-      default: 0
+      type: DataTypes.INTEGER,
+      defaultValue: 0
     },
     accountLocked: {
-      type: Boolean,
-      default: false
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
-    lockUntil: Date
-  },
-  { timestamps: true }
-);
+    lockUntil: {
+      type: DataTypes.DATE
+    }
+  }, {
+    timestamps: true,
+    tableName: 'users',
+  });
 
-module.exports = mongoose.model("User", userSchema);
+  return User;
+}
+
+module.exports = defineUserModel();

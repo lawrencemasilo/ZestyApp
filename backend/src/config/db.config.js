@@ -1,21 +1,45 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
+require('dotenv').config();
+const { Sequelize } = require('sequelize');
+const { DefaultAzureCredential } = require('@azure/identity');
 
-const connectDB = async () => {
-  const uri = process.env.MONGODB_URI;
+// Function to get Azure token
+async function getAccessToken() {
+  const credential = new DefaultAzureCredential();
+  const tokenResponse = await credential.getToken("https://database.windows.net/.default");
+  return tokenResponse.token;
+}
 
-  if (!uri) {
-    console.error("MongoDB connection string is missing in environment variables");
-    process.exit(1);
-  }
+// Create Sequelize instance with token
+async function createSequelizeInstance() {
+  const accessToken = await getAccessToken();
+
+  const sequelize = new Sequelize(process.env.AZURE_SQL_DATABASE, null, null, {
+    host: process.env.AZURE_SQL_SERVER,
+    dialect: 'mssql',
+    dialectOptions: {
+      authentication: {
+        type: 'azure-active-directory-access-token',
+        options: {
+          token: accessToken,
+        },
+      },
+      options: {
+        encrypt: true,
+        trustServerCertificate: false,
+      },
+    },
+    logging: false,  // Optional: Disable logging for cleaner output
+  });
 
   try {
-    await mongoose.connect(uri);
-    console.log("MongoDB connected successfully");
-  } catch (error) {
-    console.error(`Error connecting to MongoDB: ${error.message}`);
-    process.exit(1);
+    await sequelize.authenticate();
+    console.log("✅ Connected to Azure SQL Database successfully!");
+    return sequelize;
+  } catch (err) {
+    console.error("❌ Connection failed:", err.message);
+    throw err;  // Re-throw error to handle it properly
   }
-};
+}
 
-module.exports = connectDB;
+// Export the promise of the sequelize instance
+module.exports = createSequelizeInstance();
