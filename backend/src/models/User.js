@@ -1,9 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelizePromise = require('../config/db.config');  // Import the promise
+const bcrypt = require('bcrypt');
 
-async function defineUserModel() {
-  const sequelize = await sequelizePromise;  // Await the resolved sequelize instance
-
+module.exports = (sequelize) => {
   const User = sequelize.define('User', {
     email: {
       type: DataTypes.STRING,
@@ -51,15 +49,9 @@ async function defineUserModel() {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-    resetPasswordToken: {
-      type: DataTypes.STRING
-    },
-    resetPasswordExpires: {
-      type: DataTypes.DATE
-    },
-    passwordChangedAt: {
-      type: DataTypes.DATE
-    },
+    resetPasswordToken: DataTypes.STRING,
+    resetPasswordExpires: DataTypes.DATE,
+    passwordChangedAt: DataTypes.DATE,
     loginAttempts: {
       type: DataTypes.INTEGER,
       defaultValue: 0
@@ -72,11 +64,30 @@ async function defineUserModel() {
       type: DataTypes.DATE
     }
   }, {
-    timestamps: true,
     tableName: 'users',
   });
 
-  return User;
-}
+  // Hash password before saving
+  User.beforeCreate(async (user) => {
+    if (user.password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(user.password, salt);
+    }
+  });
 
-module.exports = defineUserModel();
+  // Hash password before updating if it's changed
+  User.beforeUpdate(async (user) => {
+    if (user.changed('password')) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(user.password, salt);
+    }
+  });
+
+  // Method to compare passwords
+  User.prototype.comparePassword = async function (candidatePassword) {
+    return await bcrypt.compare(candidatePassword, this.password);
+  };
+
+  return User;
+};
+

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const { DefaultAzureCredential } = require('@azure/identity');
+const defineUserModel = require('../models/User');
 
 // Function to get Azure token
 async function getAccessToken() {
@@ -34,6 +35,25 @@ async function createSequelizeInstance() {
   try {
     await sequelize.authenticate();
     console.log("✅ Connected to Azure SQL Database successfully!");
+
+    //test your query here while I try to sort out the test.js
+    //const users = await sequelize.query("SELECT * FROM users");
+    //console.log("Users:", users);
+
+    const User = defineUserModel(sequelize);
+    //await sequelize.sync({ force: true }); // Drops existing table and creates new one
+    
+    await User.create({
+      email: 'sima@example.com',
+      password: 'securepassword123',
+      firstName: 'Sima',
+      lastName: 'Njoli',
+      phone: '+1234567892'
+    });
+
+    const users = await User.findAll();
+    console.log("Users:", users);
+    
     return sequelize;
   } catch (err) {
     console.error("❌ Connection failed:", err.message);
